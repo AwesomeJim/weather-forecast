@@ -8,7 +8,7 @@ mapsplatform-secrets = "2.0.1"
 kotlin-serialization = "1.6.10"
 
 # --------SDK--------
-min-sdk = "21"
+min-sdk = "23"
 target-sdk = "34"
 compile-sdk = "34"
 jvm-target = "17"

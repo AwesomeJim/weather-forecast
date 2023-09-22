@@ -56,6 +56,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -101,6 +102,15 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+
+    //-----------Retrofit & okhttp--------------------
+    implementation(libs.retrofit)
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.converter)
+    implementation(libs.kotlinx.serialization)
 
     //-----------Testing dependencies-----------
     androidTestImplementation(platform(libs.androidx.compose.bom))
