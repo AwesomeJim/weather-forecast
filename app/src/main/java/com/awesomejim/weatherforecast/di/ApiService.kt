@@ -7,6 +7,7 @@ import com.awesomejim.weatherforecast.di.network.NetworkUtils.LAT_PARAM
 import com.awesomejim.weatherforecast.di.network.NetworkUtils.LON_PARAM
 import com.awesomejim.weatherforecast.di.network.NetworkUtils.QUERY_PARAM
 import com.awesomejim.weatherforecast.di.network.NetworkUtils.UNITS_PARAM
+import com.awesomejim.weatherforecast.di.network.WeatherItemResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,12 +16,12 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("weather?")
-    suspend fun fetchWeatherWithLatitudeLongitude(
+    suspend fun fetchWeatherDataWithCoordinates(
         @Query(APP_ID_PARAM) appid: String,
         @Query(UNITS_PARAM) units: String,
-        @Query(LAT_PARAM) lat: String,
-        @Query(LON_PARAM) lon: String
-    ): Response<String>
+        @Query(LAT_PARAM) latitude: Double,
+        @Query(LON_PARAM) longitude: Double
+    ): Response<WeatherItemResponse>
 
 
     @GET("weather?")
@@ -28,15 +29,15 @@ interface ApiService {
         @Query(APP_ID_PARAM) appid: String,
         @Query(UNITS_PARAM) units: String,
         @Query(QUERY_PARAM) locationQuery: String
-    ): Response<String>
+    ): Response<WeatherItemResponse>
 
 
     @GET("forecast?")
     suspend fun fetchWeatherForecast(
         @Query(APP_ID_PARAM) appid: String,
         @Query(UNITS_PARAM) units: String,
-        @Query(LAT_PARAM) lat: String,
-        @Query(LON_PARAM) lon: String
+        @Query(LAT_PARAM) latitude: Double,
+        @Query(LON_PARAM) longitude: Double
     ): Response<String>
 
 }
