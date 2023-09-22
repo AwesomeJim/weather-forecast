@@ -44,6 +44,7 @@ android {
                 "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -89,6 +90,11 @@ dependencies {
 
     //-----------COIL--------------------
     implementation(libs.coil.compose)
+    //------------Lottie Amazing Animations ----------
+    implementation(libs.lottie)
+
+    //------------Timber logging----------
+    implementation(libs.timber)
 
     //-----------ROOM--------------------
     implementation(libs.androidx.room.runtime)
