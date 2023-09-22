@@ -15,7 +15,7 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("weather?")
+    @GET("data/2.5/weather?")
     suspend fun fetchWeatherDataWithCoordinates(
         @Query(APP_ID_PARAM) appid: String,
         @Query(UNITS_PARAM) units: String,
@@ -24,7 +24,7 @@ interface ApiService {
     ): Response<WeatherItemResponse>
 
 
-    @GET("weather?")
+    @GET("data/2.5/weather?")
     suspend fun fetchWeatherWithLocationQuery(
         @Query(APP_ID_PARAM) appid: String,
         @Query(UNITS_PARAM) units: String,
@@ -32,7 +32,7 @@ interface ApiService {
     ): Response<WeatherItemResponse>
 
 
-    @GET("forecast?")
+    @GET("data/2.5/forecast?")
     suspend fun fetchWeatherForecast(
         @Query(APP_ID_PARAM) appid: String,
         @Query(UNITS_PARAM) units: String,

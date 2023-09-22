@@ -2,7 +2,7 @@
 # --------plugins--------
 android-gradle-plugin = "8.1.1"
 kotlin-android = "1.8.22"
-hilt-plugin = "2.47"
+hilt-plugin = "2.48"
 ksp = "1.8.22-1.0.11"
 mapsplatform-secrets = "2.0.1"
 kotlin-serialization = "1.6.10"
@@ -15,7 +15,7 @@ jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
-hiltAndroidCompiler = "2.46.1"
+hiltAndroidCompiler = "2.48"
 hiltAndroidTesting = "2.47"
 hilt-nav-compose = "1.0.0"
 

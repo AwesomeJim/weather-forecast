@@ -1,5 +1,6 @@
 package com.awesomejim.weatherforecast.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
@@ -37,12 +38,15 @@ class MainViewModel @Inject constructor(
                     latitude = mainViewUiState.latitude
                 )
                  viewModelScope.launch {
+                     Timber.e("fetchWeatherDataWithCoordinates :: ${defaultLocation.latitude}")
+
                     val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
                          defaultLocation = defaultLocation, units = "metric"
                      )
+                     Log.e("TAG", "fetchWeatherDataWithCoordinates result:: ${result.toString()}")
                      processResult(result)
                  }
-                setState { copy(defaultLocation = defaultLocation) }
+               // setState { copy(defaultLocation = defaultLocation) }
             }
         }
     }

@@ -29,6 +29,7 @@ fun WeatherItemResponse.toCoreModel(unit: String): WeatherItemDataModel =
             weatherConditionId = weatherConditionResponse[0].id, // we pic
             weatherCondition = weatherConditionResponse[0].main,
             weatherConditionDescription =  weatherConditionResponse[0].description,
+            weatherConditionIcon= weatherConditionResponse[0].icon,
             weatherTemp = formatTemperatureValue(currentWeatherMain.weatherTemp,unit),
             weatherTempMin = formatTemperatureValue(currentWeatherMain.weatherTempMin,unit),
             weatherTempMax = formatTemperatureValue(currentWeatherMain.weatherTempMax,unit),

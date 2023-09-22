@@ -20,6 +20,7 @@ data class WeatherStatus(
     val weatherConditionId: Int,
     val weatherCondition: String,
     val weatherConditionDescription: String,
+    val weatherConditionIcon: String,
     val weatherTemp: String,
     val weatherTempMin: String,
     val weatherTempMax: String,

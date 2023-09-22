@@ -5,10 +5,10 @@ plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.google.dagger.hilt)
-   // id(libs.plugins.com.google.devtools.ksp.get().pluginId)
+    id(libs.plugins.com.google.devtools.ksp.get().pluginId)
     alias(libs.plugins.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
-    alias(libs.plugins.org.jetbrains.kotlin.kapt)
+    //alias(libs.plugins.org.jetbrains.kotlin.kapt)
 }
 
 val versionMajor = 1
@@ -32,7 +32,7 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            isDebuggable = false
+            isDebuggable = true
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -41,6 +41,7 @@ android {
 
         release {
             isMinifyEnabled = false
+            isDebuggable = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
@@ -81,6 +82,7 @@ android {
 
     hilt {
         enableAggregatingTask = true
+        enableExperimentalClasspathAggregation = true
     }
 }
 
@@ -96,7 +98,7 @@ dependencies {
 
     // --------Hilt Dependency Injection--------------
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     //-----------COIL--------------------
     implementation(libs.coil.compose)
@@ -110,8 +112,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
-    //ksp(libs.androidx.room.compiler)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.androidx.room.compiler)
+
 
     //-----------Retrofit & okhttp--------------------
     implementation(libs.retrofit)
