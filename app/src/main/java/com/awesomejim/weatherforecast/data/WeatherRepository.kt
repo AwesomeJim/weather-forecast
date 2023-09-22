@@ -9,7 +9,6 @@ interface WeatherRepository {
 
     suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
-        language: String,
         units: String
     ) : RetrialResult<WeatherItemDataModel>
 

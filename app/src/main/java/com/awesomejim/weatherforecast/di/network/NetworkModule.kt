@@ -28,7 +28,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    private fun providesJson(): Json = Json { ignoreUnknownKeys = true }
+    fun providesJson(): Json = Json { ignoreUnknownKeys = true }
 
     @Singleton
     @Provides
@@ -49,7 +49,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    private fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         val level = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor.Level.BODY
         } else HttpLoggingInterceptor.Level.NONE

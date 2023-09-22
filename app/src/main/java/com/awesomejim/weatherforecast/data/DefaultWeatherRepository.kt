@@ -15,7 +15,6 @@ class DefaultWeatherRepository @Inject constructor(
 ) : WeatherRepository {
     override suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
-        language: String,
         units: String
     ): RetrialResult<WeatherItemDataModel> =
         if (networkHelper.isNetworkConnected()) {

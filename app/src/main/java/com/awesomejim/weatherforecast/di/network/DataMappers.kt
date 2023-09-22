@@ -1,7 +1,7 @@
 package com.awesomejim.weatherforecast.di.network
 
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.WeatherApp
+import com.awesomejim.weatherforecast.WeatherForecastApp
 import com.awesomejim.weatherforecast.data.model.Coordinates
 import com.awesomejim.weatherforecast.data.model.WeatherItemDataModel
 import com.awesomejim.weatherforecast.data.model.WeatherStatus
@@ -124,5 +124,5 @@ fun getFormattedWind(windSpeed: Double, degrees: Double): String {
             direction = "NW"
         }
     }
-    return String.format(WeatherApp.applicationContext().getString(windFormat), windSpeed, direction)
+    return String.format(WeatherForecastApp.applicationContext().getString(windFormat), windSpeed, direction)
 }

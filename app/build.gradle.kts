@@ -1,12 +1,14 @@
+
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    id(libs.plugins.com.google.devtools.ksp.get().pluginId)
     alias(libs.plugins.com.google.dagger.hilt)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+   // id(libs.plugins.com.google.devtools.ksp.get().pluginId)
     alias(libs.plugins.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
+    alias(libs.plugins.org.jetbrains.kotlin.kapt)
 }
 
 val versionMajor = 1
@@ -76,6 +78,10 @@ android {
             suppressWarnings = true
         }
     }
+
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {
@@ -85,9 +91,12 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
 
+    //-----------Google Play Services------------------
+    implementation(libs.playservices.location)
+
     // --------Hilt Dependency Injection--------------
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    kapt(libs.hilt.android.compiler)
 
     //-----------COIL--------------------
     implementation(libs.coil.compose)
@@ -101,7 +110,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
-    ksp(libs.androidx.room.compiler)
+    //ksp(libs.androidx.room.compiler)
+    kapt(libs.hilt.android.compiler)
 
     //-----------Retrofit & okhttp--------------------
     implementation(libs.retrofit)
