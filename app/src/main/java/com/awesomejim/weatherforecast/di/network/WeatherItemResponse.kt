@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WeatherItemResponse(
     @SerialName("name") val locationName: String,
-    @SerialName("id") val locationNameId: Long,
+    @SerialName("id") val locationId: Long,
     @SerialName("timezone") val locationNameTimeZoneShift: Long,
     @SerialName("dt") val forecastedTime: Long,
     @SerialName("sys") val countryDetails: CountryDetailsResponse,

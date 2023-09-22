@@ -1,15 +1,17 @@
-package com.awesomejim.weatherforecast.data.source.remote
+package com.awesomejim.weatherforecast.data
 
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.WeatherItemDataModel
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 
-interface RemoteDataSource {
+
+interface WeatherRepository {
 
     suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
+        language: String,
         units: String
-    ): RetrialResult<WeatherItemDataModel>
+    ) : RetrialResult<WeatherItemDataModel>
 
 
     suspend fun fetchWeatherDataWithLocationQuery(

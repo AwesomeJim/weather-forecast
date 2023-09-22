@@ -3,7 +3,7 @@ package com.awesomejim.weatherforecast.data.model
 
 data class WeatherItemDataModel(
     val locationName: String,
-    val locationId: Int,
+    val locationId: Long,
     val locationNameTimeZoneShift: Long,
     var locationDate: Long,
     val locationCoordinates: Coordinates,
@@ -20,11 +20,11 @@ data class WeatherStatus(
     val weatherConditionId: Int,
     val weatherCondition: String,
     val weatherConditionDescription: String,
-    val weatherTemp: Double,
-    val weatherTempMin: Double,
-    val weatherTempMax: Double,
+    val weatherTemp: String,
+    val weatherTempMin: String,
+    val weatherTempMax: String,
     val weatherPressure: Double,
-    val weatherHumidity: Int,
+    val weatherHumidity: Double,
     val weatherWind: Wind
 )
 data class Wind(
