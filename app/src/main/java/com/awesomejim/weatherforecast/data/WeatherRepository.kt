@@ -19,4 +19,11 @@ interface WeatherRepository {
         locationQuery: String,
         units: String
     ): Flow<RetrialResult<LocationItemData>>
+
+
+
+    suspend fun fetchWeatherForecastWithCoordinates(
+        defaultLocation: DefaultLocation,
+        units: String
+    ): Flow<RetrialResult<Map<Int, List<LocationItemData>>>>
 }

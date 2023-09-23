@@ -70,18 +70,37 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun processForecastResult(result: RetrialResult<Map<Int, List<LocationItemData>>>) {
+        when (result) {
+            is RetrialResult.Success -> {
+                val weatherData = result.data
+                Timber.e( "weatherData result:: ${result.data}")
+                Timber.i("Size :: ${weatherData.size}")
+            }
+
+            is RetrialResult.Error -> {
+                Timber.e("Error :: ${result.errorType.toResourceId()}")
+            }
+        }
+    }
+
     fun testAPiCall(){
         if (this::defaultLocation.isInitialized) {
             viewModelScope.launch {
                 Timber.tag("MainViewModel")
                     .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
 
-                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-                    defaultLocation = defaultLocation, units = "metric", 6333993
+//                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
+//                    defaultLocation = defaultLocation, units = "metric", 6333993
+//                )
+//                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+
+                val result = defaultWeatherRepository.fetchWeatherForecastWithCoordinates(
+                    defaultLocation = defaultLocation, units = "metric"
                 )
-                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+                Timber.e("fetchWeatherDataWithCoordinates result:: ${result.toString()}")
                 result.filterNotNull().collect {
-                    processResult(it)
+                    processForecastResult(it)
                 }
             }
         }else {

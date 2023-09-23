@@ -3,6 +3,29 @@ package com.awesomejim.weatherforecast.di.network
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
+data class ForecastResponse(
+    @SerialName("city") val foreCastCity: ForecastCityResponse,
+    @SerialName("list") val foreCastList: List<ForecastLisResponse>
+)
+
+@Serializable
+data class ForecastCityResponse(
+    @SerialName("name") val locationName: String,
+    @SerialName("id") val locationId: Long,
+    @SerialName("timezone") val locationNameTimeZoneShift: Long,
+    @SerialName("country") val locationCountry: String,
+    @SerialName("coord") val locationCoordinates: CoordinatesResponse,
+)
+
+@Serializable
+data class ForecastLisResponse(
+    @SerialName("dt") val forecastedTime: Long,
+    @SerialName("visibility") val currentWeatherVisibility: Double,
+    @SerialName("main") val currentWeatherMain: CurrentWeatherResponse,
+    @SerialName("weather") val weatherConditionResponse: List<WeatherInfoResponse>,
+    @SerialName("wind") val currentWeatherWind: WindResponse
+)
 
 @Serializable
 data class WeatherItemResponse(

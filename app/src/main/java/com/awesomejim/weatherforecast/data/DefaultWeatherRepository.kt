@@ -44,10 +44,11 @@ class DefaultWeatherRepository @Inject constructor(
                 when (remoteData) {
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
-                        Log.e("DefaultWeatherRepository","weatherData :: ${weatherData.locationName}")
+                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
                         locationItemDao.insertLocation(weatherData.toLocationEntity())
                         emit(RetrialResult.Success(weatherData))
                     }
+
                     is RetrialResult.Error -> {
                         emit(RetrialResult.Error(remoteData.errorType))
                     }
@@ -77,10 +78,51 @@ class DefaultWeatherRepository @Inject constructor(
     ): Flow<RetrialResult<LocationItemData>> = flow {
         if (networkHelper.isNetworkConnected()) {
             try {
-                remoteDataSource.fetchWeatherDataWithLocationQuery(
+                val remoteData = remoteDataSource.fetchWeatherDataWithLocationQuery(
                     locationQuery = locationQuery,
                     units = units
                 )
+                when (remoteData) {
+                    is RetrialResult.Success -> {
+                        val weatherData = remoteData.data
+                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
+                        emit(RetrialResult.Success(weatherData))
+                    }
+
+                    is RetrialResult.Error -> {
+                        emit(RetrialResult.Error(remoteData.errorType))
+                    }
+                }
+            } catch (throwable: Throwable) {
+                val errorType = mapThrowableToErrorType(throwable)
+                emit(RetrialResult.Error(errorType))
+            }
+        } else {
+            emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
+        }
+    }
+
+    override suspend fun fetchWeatherForecastWithCoordinates(
+        defaultLocation: DefaultLocation,
+        units: String
+    ): Flow<RetrialResult<Map<Int, List<LocationItemData>>>> = flow {
+        if (networkHelper.isNetworkConnected()) {
+            try {
+                val remoteData = remoteDataSource.fetchWeatherForecastWithCoordinates(
+                    defaultLocation = defaultLocation,
+                    units = units
+                )
+                when (remoteData) {
+                    is RetrialResult.Success -> {
+                        val weatherData = remoteData.data
+                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.size}")
+                        emit(RetrialResult.Success(weatherData))
+                    }
+
+                    is RetrialResult.Error -> {
+                        emit(RetrialResult.Error(remoteData.errorType))
+                    }
+                }
             } catch (throwable: Throwable) {
                 val errorType = mapThrowableToErrorType(throwable)
                 emit(RetrialResult.Error(errorType))

@@ -4,9 +4,11 @@ import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.ApiService
+import com.awesomejim.weatherforecast.di.network.ForecastResponse
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.di.network.mapResponseCodeToThrowable
 import com.awesomejim.weatherforecast.di.network.toCoreModel
+import com.awesomejim.weatherforecast.di.network.toLocationItemDataList
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -65,4 +67,30 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
                 )
                 throw e
             }
+
+    override suspend fun fetchWeatherForecastWithCoordinates(
+        defaultLocation: DefaultLocation,
+        units: String
+    ): RetrialResult<Map<Int, List<LocationItemData>>> =
+        try {
+            val response = apiService.fetchWeatherForecast(
+                appid = BuildConfig.OPEN_WEATHER_APP_ID,
+                units = units,
+                latitude = defaultLocation.latitude,
+                longitude = defaultLocation.longitude
+            )
+            if (response.isSuccessful && response.body() != null) {
+                val weatherData = response.body()!!.toLocationItemDataList()
+                RetrialResult.Success(data = weatherData)
+            } else {
+                val throwable = mapResponseCodeToThrowable(response.code())
+                throw throwable
+            }
+        } catch (e: Exception) {
+            Timber.e(
+                "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
+                e.message
+            )
+            throw e
+        }
 }

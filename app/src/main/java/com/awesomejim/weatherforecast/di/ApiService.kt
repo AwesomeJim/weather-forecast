@@ -2,6 +2,7 @@ package com.awesomejim.weatherforecast.di
 
 
 
+import com.awesomejim.weatherforecast.di.network.ForecastResponse
 import com.awesomejim.weatherforecast.di.network.NetworkUtils.APP_ID_PARAM
 import com.awesomejim.weatherforecast.di.network.NetworkUtils.LAT_PARAM
 import com.awesomejim.weatherforecast.di.network.NetworkUtils.LON_PARAM
@@ -38,6 +39,6 @@ interface ApiService {
         @Query(UNITS_PARAM) units: String,
         @Query(LAT_PARAM) latitude: Double,
         @Query(LON_PARAM) longitude: Double
-    ): Response<String>
+    ): Response<ForecastResponse>
 
 }

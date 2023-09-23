@@ -44,6 +44,45 @@ fun WeatherItemResponse.toCoreModel(): LocationItemData =
         locationDataLastUpdate = Date()
     )
 
+fun ForecastResponse.toLocationItemDataList(): Map<Int, List<LocationItemData>> {
+    val responseList = mutableListOf<LocationItemData>()
+    foreCastList.forEach { list ->
+        with(list) {
+            val response = LocationItemData(
+                locationName = "${foreCastCity.locationName} - ${foreCastCity.locationCountry}",
+                locationId = foreCastCity.locationId,
+                locationTimeZoneShift = foreCastCity.locationNameTimeZoneShift,
+                locationDataTime = forecastedTime,
+                locationLongitude = foreCastCity.locationCoordinates.longitude,
+                locationLatitude = foreCastCity.locationCoordinates.latitude,
+                locationWeatherInfo = WeatherStatusInfo(
+                    weatherConditionId = weatherConditionResponse[0].id,
+                    weatherCondition = weatherConditionResponse[0].main,
+                    weatherConditionDescription = weatherConditionResponse[0].description,
+                    weatherConditionIcon = weatherConditionResponse[0].icon,
+                    weatherTemp = currentWeatherMain.weatherTemp,
+                    weatherTempMin = currentWeatherMain.weatherTempMin,
+                    weatherTempMax = currentWeatherMain.weatherTempMax,
+                    weatherTempFeelsLike = currentWeatherMain.weatherTempFeelsLike,
+                    weatherPressure = currentWeatherMain.weatherPressure,
+                    weatherHumidity = currentWeatherMain.weatherHumidity,
+                    weatherWindSpeed = currentWeatherWind.speed,
+                    weatherWindDegrees = currentWeatherWind.degree,
+                    weatherVisibility = currentWeatherVisibility,
+                ),
+                locationWeatherDay = getWeatherDay(forecastedTime),
+                locationDataLastUpdate = Date()
+            )
+            responseList.add(response)
+        }
+    }
+    /**
+     * open weather forecast returns response for 5 days with data every 3 hours (5*8)
+     * I had to have way to group forecast of the  day by using the the calender instance day of the month then grouping the list
+     * with a distinct day of the, thus we should have 5 groups with 8 entries for a single day we will have only one
+     */
+    return responseList.groupBy { it.locationWeatherDay }.toSortedMap()
+}
 
 fun mapResponseCodeToThrowable(code: Int): Throwable = when (code) {
     HttpURLConnection.HTTP_UNAUTHORIZED -> UnauthorizedException("Unauthorized access : $code")
