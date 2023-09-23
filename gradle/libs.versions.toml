@@ -11,7 +11,7 @@ kotlin-serialization = "1.6.10"
 min-sdk = "23"
 target-sdk = "34"
 compile-sdk = "34"
-jvm-target = "11"
+jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
