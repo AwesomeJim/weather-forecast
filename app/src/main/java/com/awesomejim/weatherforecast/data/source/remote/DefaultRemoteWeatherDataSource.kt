@@ -4,7 +4,6 @@ import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.ApiService
-import com.awesomejim.weatherforecast.di.network.ForecastResponse
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.di.network.mapResponseCodeToThrowable
 import com.awesomejim.weatherforecast.di.network.toCoreModel
@@ -30,8 +29,7 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
                 val weatherData = response.body()!!.toCoreModel()
                 RetrialResult.Success(data = weatherData)
             } else {
-                val throwable = mapResponseCodeToThrowable(response.code())
-                throw throwable
+                throw mapResponseCodeToThrowable(response.code())
             }
         } catch (e: Exception) {
             Timber.e(

@@ -54,6 +54,7 @@ android {
 
     kotlinOptions {
         jvmTarget = libs.versions.jvm.target.get()
+        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 
     buildFeatures {
@@ -63,14 +64,24 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+
     }
 
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += listOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md")
         }
     }
-
+    testOptions {
+        packaging {
+            jniLibs {
+                useLegacyPackaging = true
+            }
+        }
+    }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {
@@ -134,16 +145,24 @@ dependencies {
     androidTestImplementation(libs.test.androidx.test.espresso.core)
     androidTestImplementation(libs.test.androidx.test.espresso.contrib)
 
-    //    local unit test
+    //-----------local unit test-----------
     testImplementation(libs.test.truth)
-//    instrumentation test
+    testImplementation(libs.test.junit4)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mock.android)
+    testImplementation(libs.mock.agent)
+    testImplementation(libs.test.truth)
+    testImplementation(libs.test.coroutines.test)
+    testImplementation(libs.turbine)
 
+    //-----------instrumentation test-----------
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
     androidTestImplementation(libs.test.testingcore)
     androidTestImplementation(libs.test.coroutines.test)
     androidTestImplementation(libs.test.truth)
-    testImplementation(libs.turbine)
-
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.mock.android)
+    androidTestImplementation(libs.mock.agent)
 
 }

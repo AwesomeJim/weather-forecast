@@ -10,8 +10,7 @@ interface WeatherRepository {
 
     suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
-        units: String,
-        locationId: Long?
+        units: String
     ) : Flow<RetrialResult<LocationItemData>>
 
 

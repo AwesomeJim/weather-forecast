@@ -83,9 +83,8 @@ class LocalDataSourceTest {
         locationItemDao.deleteLocation(locationItemDataList[1].toLocationEntity())
 
         //our db should have only 2 items
-//        val list = locationItemDao.loadAllLocation().toList()
-//        assertThat(list.size).isEqualTo(2)
-
+        val list = locationItemDao.loadAllLocation().first()
+        assertThat(list?.size).isEqualTo(2)
         // deleted item should not exits in the db
         val actual = locationItemDao.getLocationById(locationItemDataList[1].locationId)?.toLocationItem()
         assertThat(actual).isNull()

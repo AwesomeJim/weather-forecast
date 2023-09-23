@@ -19,8 +19,7 @@ import javax.inject.Inject
 
 class DefaultWeatherRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val networkHelper: NetworkHelper,
-    private val locationItemDao: LocationItemDao
+    private val networkHelper: NetworkHelper
 ) : WeatherRepository {
     /**
      * Fetch weather data with coordinates
@@ -32,8 +31,7 @@ class DefaultWeatherRepository @Inject constructor(
      */
     override suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
-        units: String,
-        locationId: Long?
+        units: String
     ): Flow<RetrialResult<LocationItemData>> = flow {
         if (networkHelper.isNetworkConnected()) {
             try {
@@ -45,7 +43,6 @@ class DefaultWeatherRepository @Inject constructor(
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
                         Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
-                        locationItemDao.insertLocation(weatherData.toLocationEntity())
                         emit(RetrialResult.Success(weatherData))
                     }
 
@@ -54,21 +51,13 @@ class DefaultWeatherRepository @Inject constructor(
                     }
                 }
             } catch (throwable: Throwable) {
+                Timber.e("DefaultWeatherRepository throwable :: ${throwable.message}")
                 val errorType = mapThrowableToErrorType(throwable)
                 emit(RetrialResult.Error(errorType))
             }
         } else {
-            // there is no internet access let's check and show last saved location if it exits otherwise show No internet error
-            if (locationId != null) {
-                val savedData = locationItemDao.getLocationById(locationId)
-                if (savedData != null) {
-                    emit(RetrialResult.Success(savedData.toLocationItem()))
-                } else {
-                    emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
-                }
-            } else {
-                emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
-            }
+            emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
+
         }
     }
 
@@ -131,6 +120,5 @@ class DefaultWeatherRepository @Inject constructor(
             emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
         }
     }
-
 
 }
