@@ -2,7 +2,7 @@ package com.awesomejim.weatherforecast.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
+
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.network.RetrialResult
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val defaultWeatherRepository: DefaultWeatherRepository
+  //  private val defaultWeatherRepository: DefaultWeatherRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainViewState())
@@ -39,11 +39,11 @@ class MainViewModel @Inject constructor(
                  viewModelScope.launch {
                      Timber.e("fetchWeatherDataWithCoordinates :: ${defaultLocation.latitude}")
 
-                    val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-                         defaultLocation = defaultLocation, units = "metric"
-                     )
-                     Timber.e( "fetchWeatherDataWithCoordinates result:: $result")
-                     processResult(result)
+//                    val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
+//                         defaultLocation = defaultLocation, units = "metric"
+//                     )
+                     //Timber.e( "fetchWeatherDataWithCoordinates result:: $result")
+                    // processResult(result)
                  }
                // setState { copy(defaultLocation = defaultLocation) }
             }

@@ -17,27 +17,28 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
         defaultLocation: DefaultLocation,
         units: String
     ): RetrialResult<LocationItemData> =
-            try {
-                val response = apiService.fetchWeatherDataWithCoordinates(
-                    appid = BuildConfig.OPEN_WEATHER_APP_ID,
-                    units = units,
-                    latitude = defaultLocation.latitude,
-                    longitude = defaultLocation.longitude
-                )
-                if (response.isSuccessful && response.body() != null) {
-                    val weatherData = response.body()!!.toCoreModel()
-                    RetrialResult.Success(data = weatherData)
-                } else {
-                    val throwable = mapResponseCodeToThrowable(response.code())
-                    throw throwable
-                }
-            } catch (e: Exception) {
-                Timber.e(
-                    "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
-                    e.message
-                )
-                throw e
+        try {
+            val response = apiService.fetchWeatherDataWithCoordinates(
+                appid = BuildConfig.OPEN_WEATHER_APP_ID,
+                units = units,
+                latitude = defaultLocation.latitude,
+                longitude = defaultLocation.longitude
+            )
+            if (response.isSuccessful && response.body() != null) {
+                val weatherData = response.body()!!.toCoreModel()
+                RetrialResult.Success(data = weatherData)
+            } else {
+                val throwable = mapResponseCodeToThrowable(response.code())
+                throw throwable
             }
+        } catch (e: Exception) {
+            Timber.e(
+                "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
+                e.message
+            )
+            throw e
+        }
+
 
 
     override suspend fun fetchWeatherDataWithLocationQuery(

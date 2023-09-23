@@ -3,18 +3,20 @@ package com.awesomejim.weatherforecast.data
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.network.RetrialResult
+import kotlinx.coroutines.flow.Flow
 
 
 interface WeatherRepository {
 
     suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
-        units: String
-    ) : RetrialResult<LocationItemData>
+        units: String,
+        locationId: Long?
+    ) : Flow<RetrialResult<LocationItemData>>
 
 
     suspend fun fetchWeatherDataWithLocationQuery(
         locationQuery: String,
         units: String
-    ): RetrialResult<LocationItemData>
+    ): Flow<RetrialResult<LocationItemData>>
 }
