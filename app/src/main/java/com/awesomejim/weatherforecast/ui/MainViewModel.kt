@@ -1,8 +1,9 @@
 package com.awesomejim.weatherforecast.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
+import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.network.RetrialResult
@@ -11,19 +12,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-  //  private val defaultWeatherRepository: DefaultWeatherRepository
+    private val defaultWeatherRepository: DefaultWeatherRepository
 ) : ViewModel() {
+
+    private lateinit var defaultLocation:DefaultLocation
 
     private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
     fun processIntent(mainViewUiState: MainViewUiState) {
+        Timber.tag("MainViewModel").e("processIntent called ${mainViewUiState.toString()}")
         when (mainViewUiState) {
             is MainViewUiState.GrantPermission -> {
                 setState { copy(isPermissionGranted = mainViewUiState.isGranted) }
@@ -36,16 +41,10 @@ class MainViewModel @Inject constructor(
                     longitude = mainViewUiState.longitude,
                     latitude = mainViewUiState.latitude
                 )
-                 viewModelScope.launch {
-                     Timber.e("fetchWeatherDataWithCoordinates :: ${defaultLocation.latitude}")
+                this.defaultLocation = defaultLocation
+                Timber.tag("MainViewModel").e("defaultLocation ${defaultLocation.latitude}")
+                setState { copy(defaultLocation = defaultLocation) }
 
-//                    val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-//                         defaultLocation = defaultLocation, units = "metric"
-//                     )
-                     //Timber.e( "fetchWeatherDataWithCoordinates result:: $result")
-                    // processResult(result)
-                 }
-               // setState { copy(defaultLocation = defaultLocation) }
             }
         }
     }
@@ -61,12 +60,32 @@ class MainViewModel @Inject constructor(
         when (result) {
             is RetrialResult.Success -> {
                 val weatherData = result.data
-                Timber.i("weatherData :: ${weatherData.locationName}")
+                Timber.e( "weatherData result:: ${result.data}")
+                Timber.i("locationName :: ${weatherData.locationName}")
             }
 
             is RetrialResult.Error -> {
                 Timber.e("Error :: ${result.errorType.toResourceId()}")
             }
+        }
+    }
+
+    fun testAPiCall(){
+        if (this::defaultLocation.isInitialized) {
+            viewModelScope.launch {
+                Timber.tag("MainViewModel")
+                    .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
+
+                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
+                    defaultLocation = defaultLocation, units = "metric", 6333993
+                )
+                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+                result.filterNotNull().collect {
+                    processResult(it)
+                }
+            }
+        }else {
+            Timber.tag("MainViewModel").e("No Location Details")
         }
     }
 

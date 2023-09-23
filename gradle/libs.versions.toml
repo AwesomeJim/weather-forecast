@@ -67,6 +67,7 @@ junit = "1.1.5"
 truth = "1.1.5"
 testingcore = "2.2.0"
 coroutines = "1.7.1"
+turbine = "1.0.0"
 
 [libraries]
 # --------androidx--------
@@ -143,6 +144,7 @@ test-androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-c
 test-androidx-test-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "androidx-test-espresso" }
 test-testingcore = { module = "androidx.arch.core:core-testing", version.ref = "testingcore" }
 test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 
 [plugins]

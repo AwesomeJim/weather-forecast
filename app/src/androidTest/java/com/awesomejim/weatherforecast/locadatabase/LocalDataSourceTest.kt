@@ -4,15 +4,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.source.local.db.LocationDatabase
+import com.awesomejim.weatherforecast.data.source.mapper.toLocationEntity
+import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
+import com.awesomejim.weatherforecast.fake.FakeLocalDataSource
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import timber.log.Timber
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -44,18 +47,70 @@ class LocalDataSourceTest {
 
 
     @Test
-    fun insertUser() = runBlocking {
-//        val journal = JournalEntry(
-//            id = 1,
-//            title = "Testing",
-//            body = "Testing with Hilt",
-//            updatedOn = Date()
-//        )
-//        jounalDao.insertJournal(journal)
-//        // When the repository emits a value
-//        val actual = jounalDao.loadAllJournals().first() // Returns the first item in the flow
-//
-//        assertThat(journal).isIn(actual)
-        Timber.e("")
+    fun insert_Insert_Location_Is_Successful_And_Available_InFlow() = runBlocking {
+        val locationItemData = FakeLocalDataSource.locationList.first()
+        locationItemDao.insertLocation(locationItemData.toLocationEntity())
+       // When the repository emits a value
+        val actual = locationItemDao.getLocationById(locationItemData.locationId)?.toLocationItem() // Returns the first item in the flow
+
+        assertThat(locationItemData).isEqualTo(actual)
+    }
+
+    @Test
+    fun insert_loading_all_location_items_is_Successful_And_Available_InFlow() = runBlocking {
+        val locationItemDataList = FakeLocalDataSource.locationList
+        //Insert the 3 fake items into the list
+        locationItemDataList.forEach { item ->
+            locationItemDao.insertLocation(item.toLocationEntity())
+        }
+        // When the repository emits a value
+        val actual = locationItemDao.loadAllLocation().first()?.map {
+            it.toLocationItem()
+        }
+        assertThat(locationItemDataList.first()).isIn(actual)
+        assertThat(locationItemDataList).containsAnyIn(actual)
+    }
+
+
+    @Test
+    fun assert_DeletedItem_ShouldNot_be_present_inFlow() = runBlocking {
+        val locationItemDataList = FakeLocalDataSource.locationList
+        //Insert the 3 fake items into the list
+        locationItemDataList.forEach { item ->
+            locationItemDao.insertLocation(item.toLocationEntity())
+        }
+        // we delete the 2nd item from db
+        locationItemDao.deleteLocation(locationItemDataList[1].toLocationEntity())
+
+        //our db should have only 2 items
+//        val list = locationItemDao.loadAllLocation().toList()
+//        assertThat(list.size).isEqualTo(2)
+
+        // deleted item should not exits in the db
+        val actual = locationItemDao.getLocationById(locationItemDataList[1].locationId)?.toLocationItem()
+        assertThat(actual).isNull()
+    }
+
+    @Test
+    fun assert_getLocationById_of_non_existing_item_Should_Not_not_return_item_inFlow() = runBlocking {
+        // try to load a dummy location using a dummy id
+        val actual = locationItemDao.getLocationById(637733)?.toLocationItem()
+        assertThat(actual).isNull()
+    }
+
+
+    @Test
+    fun assert_clear_All_Items_Should_Not_not_return_items_inFlow() = runBlocking {
+        val locationItemDataList = FakeLocalDataSource.locationList
+        //Insert the 3 fake items into the list
+        locationItemDataList.forEach { item ->
+            locationItemDao.insertLocation(item.toLocationEntity())
+        }
+        // delete all items
+        locationItemDao.clearAll()
+
+        // deleted item should not exits in the db
+        val actual = locationItemDao.getLocationById(locationItemDataList[1].locationId)?.toLocationItem()
+        assertThat(actual).isNull()
     }
 }

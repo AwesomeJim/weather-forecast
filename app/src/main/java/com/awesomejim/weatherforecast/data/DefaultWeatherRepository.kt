@@ -1,5 +1,6 @@
 package com.awesomejim.weatherforecast.data
 
+import android.util.Log
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
@@ -43,7 +44,7 @@ class DefaultWeatherRepository @Inject constructor(
                 when (remoteData) {
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
-                        Timber.e("weatherData :: ${weatherData.locationName}")
+                        Log.e("DefaultWeatherRepository","weatherData :: ${weatherData.locationName}")
                         locationItemDao.insertLocation(weatherData.toLocationEntity())
                         emit(RetrialResult.Success(weatherData))
                     }

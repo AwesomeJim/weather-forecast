@@ -14,7 +14,7 @@ fun createLocationRequest(
     onLocationRequestSuccessful: () -> Unit
 ) {
     val locationRequest = LocationRequest.Builder(30_000L)
-        .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
+        .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
         .build()
 
     val locationSettingsRequest = LocationSettingsRequest.Builder()

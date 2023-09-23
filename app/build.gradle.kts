@@ -8,7 +8,6 @@ plugins {
     id(libs.plugins.com.google.devtools.ksp.get().pluginId)
     alias(libs.plugins.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
-    //alias(libs.plugins.org.jetbrains.kotlin.kapt)
 }
 
 val versionMajor = 1
@@ -144,6 +143,7 @@ dependencies {
     androidTestImplementation(libs.test.testingcore)
     androidTestImplementation(libs.test.coroutines.test)
     androidTestImplementation(libs.test.truth)
+    testImplementation(libs.turbine)
 
 
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,8 +25,12 @@ import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -44,6 +49,10 @@ class MainActivity : ComponentActivity() {
             mainViewModel.processIntent(MainViewUiState.GrantPermission(isGranted = isGranted))
         }
 
+    // Get location updates.
+    val locationRequest = com.google.android.gms.location.LocationRequest.Builder(30_000L)
+        .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
+        .build()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,22 +97,31 @@ class MainActivity : ComponentActivity() {
         when {
             state.isLocationSettingEnabled && state.isPermissionGranted -> {
                 // Get the current location of the device.
-                fusedLocationProviderClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        location?.run {
-                            mainViewModel.processIntent(
-                                MainViewUiState.ReceiveLocation(
-                                    longitude = location.longitude,
-                                    latitude = location.latitude
-                                )
-                            )
-                        }
-                    }
-                    .addOnFailureListener { exeption ->
-                        // The location is not available
-                        // Handle the exception
-                    }
-               // WeatherAppScreensConfig(navController = rememberNavController())
+                fusedLocationProviderClient.requestLocationUpdates(
+                    locationRequest, locationCallback,
+                    Looper.myLooper()
+                )
+//                    .addOnSuccessListener { location: Location? ->
+//                        location?.run {
+//                            Timber.tag("MainViewModel").e("addOnSuccessListener called")
+//                            mainViewModel.processIntent(
+//                                MainViewUiState.ReceiveLocation(
+//                                    longitude = location.longitude,
+//                                    latitude = location.latitude
+//                                )
+//                            )
+//                        }
+//                    }
+//                    .addOnFailureListener { exeption ->
+//                        // The location is not available
+//                        // Handle the exception
+//                        Timber.tag("MainViewModel").e("addOnFailureListener exeption ${exeption.message}")
+//                    }
+//                    .addOnCanceledListener {
+//                        Timber.tag("MainViewModel").e("addOnCanceledListener ")
+//                    }
+                // WeatherAppScreensConfig(navController = rememberNavController())
+                mainViewModel.testAPiCall()
             }
 
             state.isLocationSettingEnabled && !state.isPermissionGranted -> {
@@ -115,6 +133,23 @@ class MainActivity : ComponentActivity() {
             }
 
             else -> LoadingProgressScreens()
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            Timber.tag("MainViewModel").e("onLocationResult called")
+            locationResult.lastLocation?.let { location: Location ->
+                location.run {
+                    // The location is available.
+                    // Do something with the location.
+                    Timber.tag("MainViewModel").e("addOnSuccessListener called")
+                    mainViewModel.processIntent(
+                        MainViewUiState.ReceiveLocation(
+                            longitude = location.longitude,
+                            latitude = location.latitude))
+                }
+            }
         }
     }
 }
@@ -134,3 +169,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
+
