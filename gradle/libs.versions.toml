@@ -60,8 +60,13 @@ roomRuntime = "2.5.2"
 #--------Others ----------
 materialVersion = "1.9.0"
 lottie = "6.0.1"
-junit = "4.13.2"
 timber = "5.0.1"
+
+junit4 = "4.13.2"
+junit = "1.1.5"
+truth = "1.1.5"
+testingcore = "2.2.0"
+coroutines = "1.7.1"
 
 [libraries]
 # --------androidx--------
@@ -124,17 +129,21 @@ playservices-location = { group = "com.google.android.gms", name = "play-service
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 
 # --------Testing--------------
-androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
-androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
-androidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-ext-junit" }
-androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext-junit" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-android" }
-junit = { module = "junit:junit", version.ref = "junit" }
-androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTestingVersion" }
-androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigationComposeVersion" }
-androidx-test-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "androidx-test-espresso" }
-androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
-androidx-test-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "androidx-test-espresso" }
+test-androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+test-androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+atest-ndroidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-ext-junit" }
+test-androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext-junit" }
+test-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-android" }
+test-junit4 = { module = "junit:junit", version.ref = "junit4" }
+test-truth = { module = "com.google.truth:truth", version.ref = "truth" }
+test-androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTestingVersion" }
+test-androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigationComposeVersion" }
+test-androidx-test-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "androidx-test-espresso" }
+test-androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
+test-androidx-test-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "androidx-test-espresso" }
+test-testingcore = { module = "androidx.arch.core:core-testing", version.ref = "testingcore" }
+test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

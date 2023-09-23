@@ -26,7 +26,7 @@ android {
         targetSdk = libs.versions.target.sdk.get().toInt()
         versionCode = 1
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.awesomejim.weatherforecast.HiltTestRunner"
     }
 
     buildTypes {
@@ -130,10 +130,20 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    testImplementation(libs.test.junit4)
+    androidTestImplementation(libs.test.androidx.junit)
+    androidTestImplementation(libs.test.androidx.test.espresso.core)
+    androidTestImplementation(libs.test.androidx.test.espresso.contrib)
 
+    //    local unit test
+    testImplementation(libs.test.truth)
+//    instrumentation test
+
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.test.testingcore)
+    androidTestImplementation(libs.test.coroutines.test)
+    androidTestImplementation(libs.test.truth)
 
 
 }

@@ -21,6 +21,14 @@ class DefaultWeatherRepository @Inject constructor(
     private val networkHelper: NetworkHelper,
     private val locationItemDao: LocationItemDao
 ) : WeatherRepository {
+    /**
+     * Fetch weather data with coordinates
+     *
+     * @param defaultLocation location coordinates
+     * @param units - prefered units
+     * @param locationId Location Id Retrived from a previous success call
+     * @return
+     */
     override suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
         units: String,
@@ -48,6 +56,7 @@ class DefaultWeatherRepository @Inject constructor(
                 emit(RetrialResult.Error(errorType))
             }
         } else {
+            // there is no internet access let's check and show last saved location if it exits otherwise show No internet error
             if (locationId != null) {
                 val savedData = locationItemDao.getLocationById(locationId)
                 if (savedData != null) {
