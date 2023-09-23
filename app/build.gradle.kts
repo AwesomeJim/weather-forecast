@@ -33,6 +33,7 @@ android {
             isMinifyEnabled = false
             isDebuggable = true
             isShrinkResources = false
+            resValue("string", "app_version", "v${defaultConfig.versionName}")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
@@ -41,9 +42,25 @@ android {
         release {
             isMinifyEnabled = false
             isDebuggable = true
+            resValue("string", "app_version", "v${defaultConfig.versionName}")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
+        }
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        create("dev") {
+            dimension = "version"
+            versionNameSuffix = "- dev"
+            //resValue("string", "app_name", "Weather Forecast")
+            applicationId = "com.awesome.weatherforecast.dev"
+        }
+        create("prod") {
+            dimension = "version"
+           // resValue("string", "app_name", "Weather Forecast")
+            applicationId = "com.awesome.weatherforecast.prod"
         }
     }
 
@@ -165,4 +182,19 @@ dependencies {
     androidTestImplementation(libs.mock.android)
     androidTestImplementation(libs.mock.agent)
 
+}
+
+tasks.create("addCurrentDate") {
+    android.applicationVariants.all {
+        val outputFileName = "Weather Forecast.${versionName}.apk"
+        outputs.all {
+            val output =
+                this as? com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            output?.outputFileName = outputFileName
+        }
+    }
+}
+
+gradle.taskGraph.whenReady {
+    tasks["addCurrentDate"]
 }
