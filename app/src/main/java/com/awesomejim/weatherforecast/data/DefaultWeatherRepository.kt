@@ -1,7 +1,7 @@
 package com.awesomejim.weatherforecast.data
 
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.model.WeatherItemDataModel
+import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.source.remote.RemoteDataSource
 import com.awesomejim.weatherforecast.di.network.ErrorType
 import com.awesomejim.weatherforecast.di.network.NetworkHelper
@@ -16,7 +16,7 @@ class DefaultWeatherRepository @Inject constructor(
     override suspend fun fetchWeatherDataWithCoordinates(
         defaultLocation: DefaultLocation,
         units: String
-    ): RetrialResult<WeatherItemDataModel> =
+    ): RetrialResult<LocationItemData> =
         if (networkHelper.isNetworkConnected()) {
             try {
                 remoteDataSource.fetchWeatherDataWithCoordinates(
@@ -34,7 +34,7 @@ class DefaultWeatherRepository @Inject constructor(
     override suspend fun fetchWeatherDataWithLocationQuery(
         locationQuery: String,
         units: String
-    ): RetrialResult<WeatherItemDataModel> =
+    ): RetrialResult<LocationItemData> =
     if (networkHelper.isNetworkConnected()) {
         try {
             remoteDataSource.fetchWeatherDataWithLocationQuery(

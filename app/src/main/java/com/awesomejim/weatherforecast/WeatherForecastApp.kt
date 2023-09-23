@@ -2,7 +2,7 @@ package com.awesomejim.weatherforecast
 
 import android.app.Application
 import android.content.Context
-import com.airbnb.lottie.BuildConfig
+
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

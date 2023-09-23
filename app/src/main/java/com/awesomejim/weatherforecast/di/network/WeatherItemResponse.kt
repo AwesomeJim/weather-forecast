@@ -10,6 +10,7 @@ data class WeatherItemResponse(
     @SerialName("id") val locationId: Long,
     @SerialName("timezone") val locationNameTimeZoneShift: Long,
     @SerialName("dt") val forecastedTime: Long,
+    @SerialName("visibility") val currentWeatherVisibility: Double,
     @SerialName("sys") val countryDetails: CountryDetailsResponse,
     @SerialName("main") val currentWeatherMain: CurrentWeatherResponse,
     @SerialName("weather") val weatherConditionResponse: List<WeatherInfoResponse>,
@@ -25,10 +26,10 @@ data class CountryDetailsResponse(
 
 @Serializable
 data class CurrentWeatherResponse(
-    @SerialName("temp") val weatherTemp: Double,
-    @SerialName("feels_like") val weatherTempFeelsLike: Double,
-    @SerialName("temp_min") val weatherTempMin: Double,
-    @SerialName("temp_max") val weatherTempMax: Double,
+    @SerialName("temp") val weatherTemp: Float,
+    @SerialName("feels_like") val weatherTempFeelsLike: Float,
+    @SerialName("temp_min") val weatherTempMin: Float,
+    @SerialName("temp_max") val weatherTempMax: Float,
     @SerialName("pressure") val weatherPressure: Double,
     @SerialName("humidity") val weatherHumidity: Double
 )
@@ -51,10 +52,4 @@ data class WeatherInfoResponse(
     val main: String,
     val description: String,
     val icon: String
-)
-
-@Serializable
-data class TemperatureResponse(
-    @SerialName("min") val min: Float,
-    @SerialName("max") val max: Float,
 )

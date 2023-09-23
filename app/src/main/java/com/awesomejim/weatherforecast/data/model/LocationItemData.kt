@@ -1,0 +1,32 @@
+package com.awesomejim.weatherforecast.data.model
+
+import java.util.Date
+
+
+data class LocationItemData(
+    val locationName: String,
+    val locationId: Long,
+    val locationTimeZoneShift: Long,
+    var locationDataTime: Long,
+    val locationLongitude: Double,
+    val locationLatitude: Double,
+    val locationWeatherInfo: WeatherStatusInfo,
+    val locationWeatherDay: Int,
+    val locationDataLastUpdate: Date
+)
+
+data class WeatherStatusInfo(
+    val weatherConditionId: Int,
+    val weatherCondition: String,
+    val weatherConditionDescription: String,
+    val weatherConditionIcon: String,
+    val weatherTemp: Float,
+    val weatherTempMin: Float,
+    val weatherTempMax: Float,
+    val weatherTempFeelsLike: Float,
+    val weatherPressure: Double,
+    val weatherHumidity: Double,
+    val weatherWindSpeed: Double,
+    val weatherWindDegrees: Double,
+    val weatherVisibility: Double
+)

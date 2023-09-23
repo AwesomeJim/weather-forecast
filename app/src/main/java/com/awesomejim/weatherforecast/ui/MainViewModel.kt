@@ -1,11 +1,10 @@
 package com.awesomejim.weatherforecast.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.model.WeatherItemDataModel
+import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +42,7 @@ class MainViewModel @Inject constructor(
                     val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
                          defaultLocation = defaultLocation, units = "metric"
                      )
-                     Log.e("TAG", "fetchWeatherDataWithCoordinates result:: ${result.toString()}")
+                     Timber.e( "fetchWeatherDataWithCoordinates result:: $result")
                      processResult(result)
                  }
                // setState { copy(defaultLocation = defaultLocation) }
@@ -58,7 +57,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    private fun processResult(result: RetrialResult<WeatherItemDataModel>) {
+    private fun processResult(result: RetrialResult<LocationItemData>) {
         when (result) {
             is RetrialResult.Success -> {
                 val weatherData = result.data
