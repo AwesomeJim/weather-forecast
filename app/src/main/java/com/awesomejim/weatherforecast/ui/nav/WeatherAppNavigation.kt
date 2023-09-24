@@ -9,18 +9,18 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.ui.MainViewModel
 import com.awesomejim.weatherforecast.ui.screens.favorite.FavoriteScreen
 import com.awesomejim.weatherforecast.ui.screens.home.HomeScreen
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
@@ -51,10 +51,13 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screen_
  */
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
+fun NavigationGraph(
+    navController: NavHostController,
+    mainViewModel: MainViewModel
+) {
     NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
         composable(BottomNavItem.Home.screen_route) {
-            HomeScreen()
+            HomeScreen(mainViewModel)
         }
         composable(BottomNavItem.MyLocations.screen_route) {
             FavoriteScreen()
@@ -77,10 +80,11 @@ fun NavigationGraph(navController: NavHostController) {
 @Composable
 fun AppBottomNavigationItem(
     navController: NavController,
-    items: List<BottomNavItem>) {
+    items: List<BottomNavItem>
+) {
 
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.teal_200),
+        backgroundColor = MaterialTheme.colorScheme.background,
         contentColor = Color.Black
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()

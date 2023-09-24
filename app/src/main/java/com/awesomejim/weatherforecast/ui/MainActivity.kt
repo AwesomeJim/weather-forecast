@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
         }
 
     // Get location updates.
-    val locationRequest = com.google.android.gms.location.LocationRequest.Builder(30_000L)
+    private val locationRequest = com.google.android.gms.location.LocationRequest.Builder(30_000L)
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
         .build()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -125,7 +125,8 @@ class MainActivity : ComponentActivity() {
 //                    }
                 // WeatherAppScreensConfig(navController = rememberNavController())
                 mainViewModel.testAPiCall()
-                MainScreenView()
+                MainScreenView(mainViewModel)
+
             }
 
             state.isLocationSettingEnabled && !state.isPermissionGranted -> {

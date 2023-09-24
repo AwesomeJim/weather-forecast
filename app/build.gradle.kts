@@ -141,6 +141,7 @@ dependencies {
 
     //------------Timber logging----------
     implementation(libs.timber)
+    implementation (libs.androidx.hilt.navigation.compose)
 
     //-----------ROOM--------------------
     implementation(libs.androidx.room.runtime)

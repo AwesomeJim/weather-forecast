@@ -1,14 +1,17 @@
 package com.awesomejim.weatherforecast.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
+import com.awesomejim.weatherforecast.ui.MainViewModel
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
 import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreenView() {
+fun MainScreenView(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
 
     val bottomNavigationItems = listOf(
@@ -23,6 +26,6 @@ fun MainScreenView() {
         },
     ) {
 
-        NavigationGraph(navController = navController)
+        NavigationGraph(navController = navController, mainViewModel)
     }
 }

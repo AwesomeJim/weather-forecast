@@ -21,8 +21,10 @@ fun LoadingProgressScreens() {
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.weight(1.0f))
         AnimatedPreloader(modifier = Modifier
-            .size(200.dp)
+            .size(100.dp)
             .align(Alignment.CenterHorizontally))
+        SubtitleSmall(text = "Loading.....",
+            modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.weight(1.0f))
     }
 }

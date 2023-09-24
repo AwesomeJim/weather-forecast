@@ -1,7 +1,5 @@
 package com.awesomejim.weatherforecast.di.network
 
-import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.WeatherForecastApp
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.utilities.ClientException
@@ -129,9 +127,7 @@ private fun getUnitSymbols(unit: String) = when (unit) {
  *
  * @return Wind String in the following form: "2 km/h SW"
  */
-fun getFormattedWind(windSpeed: Double, degrees: Double): String {
-    val windFormat = R.string.format_wind_kmh
-
+fun getFormattedWind(degrees: Double): String {
     var direction = "Unknown"
     when {
         degrees >= 337.5 || degrees < 22.5 -> {
@@ -166,9 +162,6 @@ fun getFormattedWind(windSpeed: Double, degrees: Double): String {
             direction = "NW"
         }
     }
-    return String.format(
-        WeatherForecastApp.applicationContext().getString(windFormat),
-        windSpeed,
-        direction
-    )
+    return direction
+
 }

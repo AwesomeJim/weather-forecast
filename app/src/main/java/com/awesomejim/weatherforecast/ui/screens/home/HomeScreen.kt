@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
+import com.awesomejim.weatherforecast.di.network.getFormattedWind
+import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
+import com.awesomejim.weatherforecast.ui.MainViewModel
+import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
 import com.awesomejim.weatherforecast.ui.components.TemperatureHeadline
@@ -116,10 +121,18 @@ fun OtherConditionsSection(
     weatherDetails: WeatherStatusInfo,
     modifier: Modifier = Modifier
 ) {
-    val humidity = weatherDetails.weatherHumidity.toString()
-    val visibility = weatherDetails.weatherVisibility.toString()
-    val wind = weatherDetails.weatherWindDegrees.toString()
-    val pressure = weatherDetails.weatherPressure.toString()
+    val humidity = stringResource(id = R.string.format_humidity ,weatherDetails.weatherHumidity.toFloat())
+    val visibility = "${weatherDetails.weatherVisibility/1000} km"
+    /****************************
+     * Wind speed and direction *
+     ****************************/
+    /* Read wind speed (in MPH) and direction (in compass degrees) from the cursor  */
+    val windSpeed = weatherDetails.weatherWindSpeed
+
+    val windDirection: String = getFormattedWind(weatherDetails.weatherWindDegrees)
+    val windString =  stringResource(id = R.string.format_wind_kmh, weatherDetails.weatherWindSpeed.toFloat(), windDirection)
+
+    val pressure =  stringResource(id = R.string.format_pressure, weatherDetails.weatherPressure.toFloat())
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()
@@ -132,11 +145,10 @@ fun OtherConditionsSection(
             )
             Spacer(modifier = Modifier.width(8.dp))
             ConditionsSection(
-                conditionText = wind,
+                conditionText = windString,
                 conditionLabel = R.string.wind_label,
                 drawable = R.drawable.ic_wind
             )
-
         }
         Spacer(modifier = Modifier
             .width(8.dp)
@@ -181,6 +193,20 @@ fun WeatherDetailsSection(
     }
 }
 
+@Composable
+fun HomeContentScreen(currentWeather:LocationItemData){
+    Column {
+        WeatherDetailsSection(
+            weatherDetails = currentWeather,
+            imageResource = R.drawable.sea_sunnypng
+        )
+        OtherConditionsSection(
+            weatherDetails = currentWeather.locationWeatherInfo,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
 @Preview(
     name = "Conditions Section Preview",
     showBackground = true, backgroundColor = 0xFFF0EAE2,
@@ -213,6 +239,24 @@ fun OtherConditionsSectionPreview() {
         )
     }
 }
+@Composable
+fun HomeScreen(mainViewModel: MainViewModel) {
+    val currentWeatherUiState =  mainViewModel
+        .currentWeatherUiState
+        .collectAsState().value
+    when(currentWeatherUiState){
+        is CurrentWeatherUiState.Loading ->{
+            LoadingProgressScreens()
+        }
+        is CurrentWeatherUiState.Error -> {
+
+        }
+        is CurrentWeatherUiState.Success -> {
+            HomeContentScreen(currentWeatherUiState.currentWeather)
+        }
+    }
+}
+
 
 @Preview(
     name = "Weather Details Section Preview",
@@ -230,20 +274,6 @@ fun WeatherDetailsSectionPreview() {
     }
 }
 
-@Composable
-fun HomeScreen() {
-    Column {
-        val locationItemData = SampleData.locationItemData
-        WeatherDetailsSection(
-            weatherDetails = locationItemData,
-            imageResource = R.drawable.sea_sunnypng
-        )
-        OtherConditionsSection(
-            weatherDetails = locationItemData.locationWeatherInfo,
-            modifier = Modifier.padding(8.dp)
-        )
-    }
-}
 
 
 
@@ -253,8 +283,9 @@ fun HomeScreen() {
     showSystemUi = false
 )
 @Composable
-fun HomeScreenPreview() {
+fun HomeContentScreenPreview() {
     WeatherForecastTheme {
-        HomeScreen()
+        val locationItemData = SampleData.locationItemData
+        HomeContentScreen(locationItemData)
     }
 }

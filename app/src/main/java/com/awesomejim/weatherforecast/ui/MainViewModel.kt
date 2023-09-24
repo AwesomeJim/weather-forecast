@@ -1,6 +1,6 @@
 package com.awesomejim.weatherforecast.ui
 
-import android.util.Log
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
@@ -10,9 +10,11 @@ import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,10 +24,37 @@ class MainViewModel @Inject constructor(
     private val defaultWeatherRepository: DefaultWeatherRepository
 ) : ViewModel() {
 
-    private lateinit var defaultLocation:DefaultLocation
+    private lateinit var defaultLocation: DefaultLocation
 
     private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
+
+
+    private val _currentWeatherUiState = MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
+
+    val currentWeatherUiState: StateFlow<CurrentWeatherUiState> = _currentWeatherUiState.asStateFlow()
+
+
+    /** The mutable State that stores the status of the most recent request */
+     fun fetchCurrentWeatherData() {
+        Timber.tag("MainViewModel").e("fetchCurrentWeatherData called")
+        viewModelScope.launch {
+            defaultWeatherRepository.fetchWeatherDataWithCoordinates(
+                defaultLocation = defaultLocation, units = "metric"
+            ).map {
+                processCurrentWeatherResult(it)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = CurrentWeatherUiState.Loading
+            ).collect{
+                Timber.tag("MainViewModel").e("fetchCurrentWeatherData called ${it.toString()}")
+                _currentWeatherUiState.emit(it)
+            }
+
+        }
+    }
+
 
     fun processIntent(mainViewUiState: MainViewUiState) {
         Timber.tag("MainViewModel").e("processIntent called ${mainViewUiState.toString()}")
@@ -33,9 +62,11 @@ class MainViewModel @Inject constructor(
             is MainViewUiState.GrantPermission -> {
                 setState { copy(isPermissionGranted = mainViewUiState.isGranted) }
             }
+
             is MainViewUiState.CheckLocationSettings -> {
                 setState { copy(isLocationSettingEnabled = mainViewUiState.isEnabled) }
             }
+
             is MainViewUiState.ReceiveLocation -> {
                 val defaultLocation = DefaultLocation(
                     longitude = mainViewUiState.longitude,
@@ -44,7 +75,6 @@ class MainViewModel @Inject constructor(
                 this.defaultLocation = defaultLocation
                 Timber.tag("MainViewModel").e("defaultLocation ${defaultLocation.latitude}")
                 setState { copy(defaultLocation = defaultLocation) }
-
             }
         }
     }
@@ -56,16 +86,18 @@ class MainViewModel @Inject constructor(
     }
 
 
-    private fun processResult(result: RetrialResult<LocationItemData>) {
-        when (result) {
+    private fun processCurrentWeatherResult(result: RetrialResult<LocationItemData>): CurrentWeatherUiState {
+        return when (result) {
             is RetrialResult.Success -> {
                 val weatherData = result.data
-                Timber.e( "weatherData result:: ${result.data}")
+                Timber.e("weatherData result:: ${result.data}")
                 Timber.i("locationName :: ${weatherData.locationName}")
+                CurrentWeatherUiState.Success(result.data)
             }
 
             is RetrialResult.Error -> {
                 Timber.e("Error :: ${result.errorType.toResourceId()}")
+                CurrentWeatherUiState.Error(result.errorType.toResourceId())
             }
         }
     }
@@ -74,7 +106,7 @@ class MainViewModel @Inject constructor(
         when (result) {
             is RetrialResult.Success -> {
                 val weatherData = result.data
-                Timber.e( "weatherData result:: ${result.data}")
+                Timber.e("weatherData result:: ${result.data}")
                 Timber.i("Size :: ${weatherData.size}")
             }
 
@@ -84,26 +116,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun testAPiCall(){
+    fun testAPiCall() {
         if (this::defaultLocation.isInitialized) {
-            viewModelScope.launch {
-                Timber.tag("MainViewModel")
-                    .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
-
+            fetchCurrentWeatherData()
+//            viewModelScope.launch {
+//                Timber.tag("MainViewModel")
+//                    .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
+//
+////                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
+////                    defaultLocation = defaultLocation, units = "metric", 6333993
+////                )
+////                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+//
 //                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-//                    defaultLocation = defaultLocation, units = "metric", 6333993
+//                    defaultLocation = defaultLocation, units = "metric"
 //                )
-//                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
-
-                val result = defaultWeatherRepository.fetchWeatherForecastWithCoordinates(
-                    defaultLocation = defaultLocation, units = "metric"
-                )
-                Timber.e("fetchWeatherDataWithCoordinates result:: ${result.toString()}")
-                result.filterNotNull().collect {
-                    processForecastResult(it)
-                }
-            }
-        }else {
+//                Timber.e("fetchWeatherDataWithCoordinates result:: ${result.toString()}")
+//            }
+        } else {
             Timber.tag("MainViewModel").e("No Location Details")
         }
     }
@@ -128,4 +158,11 @@ sealed class MainViewUiState {
 
     data class ReceiveLocation(val latitude: Double, val longitude: Double) : MainViewUiState()
 
+}
+
+
+sealed interface CurrentWeatherUiState {
+    data class Success(val currentWeather: LocationItemData) : CurrentWeatherUiState
+    data class Error(val errorMessageId: Int) : CurrentWeatherUiState
+    object Loading : CurrentWeatherUiState
 }
