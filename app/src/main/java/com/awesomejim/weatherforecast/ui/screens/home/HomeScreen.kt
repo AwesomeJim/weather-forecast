@@ -2,6 +2,7 @@ package com.awesomejim.weatherforecast.ui.screens.home
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +42,7 @@ import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
 import com.awesomejim.weatherforecast.ui.components.TemperatureHeadline
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
+import com.awesomejim.weatherforecast.utilities.WeatherUtils
 
 
 @Composable
@@ -116,13 +121,16 @@ fun ConditionsSection(
     }
 }
 
+
 @Composable
 fun OtherConditionsSection(
     weatherDetails: WeatherStatusInfo,
     modifier: Modifier = Modifier
 ) {
-    val humidity = stringResource(id = R.string.format_humidity ,weatherDetails.weatherHumidity.toFloat())
-    val visibility = "${weatherDetails.weatherVisibility/1000} km"
+    val humidity =
+        stringResource(id = R.string.format_humidity, weatherDetails.weatherHumidity.toFloat())
+    val visibility = "${weatherDetails.weatherVisibility / 1000} km"
+
     /****************************
      * Wind speed and direction *
      ****************************/
@@ -130,9 +138,14 @@ fun OtherConditionsSection(
     val windSpeed = weatherDetails.weatherWindSpeed
 
     val windDirection: String = getFormattedWind(weatherDetails.weatherWindDegrees)
-    val windString =  stringResource(id = R.string.format_wind_kmh, weatherDetails.weatherWindSpeed.toFloat(), windDirection)
+    val windString = stringResource(
+        id = R.string.format_wind_kmh,
+        weatherDetails.weatherWindSpeed.toFloat(),
+        windDirection
+    )
 
-    val pressure =  stringResource(id = R.string.format_pressure, weatherDetails.weatherPressure.toFloat())
+    val pressure =
+        stringResource(id = R.string.format_pressure, weatherDetails.weatherPressure.toFloat())
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()
@@ -150,9 +163,11 @@ fun OtherConditionsSection(
                 drawable = R.drawable.ic_wind
             )
         }
-        Spacer(modifier = Modifier
-            .width(8.dp)
-            .height(8.dp))
+        Spacer(
+            modifier = Modifier
+                .width(8.dp)
+                .height(8.dp)
+        )
         Row {
             ConditionsSection(
                 conditionText = visibility,
@@ -194,7 +209,9 @@ fun WeatherDetailsSection(
 }
 
 @Composable
-fun HomeContentScreen(currentWeather:LocationItemData){
+fun HomeContentScreen(
+    currentWeather: LocationItemData,
+) {
     Column {
         WeatherDetailsSection(
             weatherDetails = currentWeather,
@@ -204,8 +221,105 @@ fun HomeContentScreen(currentWeather:LocationItemData){
             weatherDetails = currentWeather.locationWeatherInfo,
             modifier = Modifier.padding(8.dp)
         )
+        ForecastList(SampleData.foreCastList)
     }
 }
+
+
+@Composable
+fun ForecastItem(
+    conditionText: String,
+    forecastDate: String,
+    tempHigh: String,
+    tempLow: String,
+    @DrawableRes drawable: Int,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.secondary,
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = modifier.padding(horizontal = 0.dp, vertical = 0.dp)
+            ) {
+                Text(
+                    text = forecastDate,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    modifier = modifier.padding(horizontal = 0.dp, vertical = 0.dp)
+                )
+                Text(
+                    text = conditionText,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+            }
+            //Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Image(
+                painter = painterResource(drawable),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(48.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier.padding(horizontal = 16.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = tempHigh,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = tempLow,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ForecastList(forecastItem: List<LocationItemData>) {
+    Subtitle(text = stringResource(id = R.string.home_weekly_forecast_title))
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(forecastItem)
+        { item ->
+            val weatherTempMax = stringResource(
+                id = R.string.format_temperature,
+                item.locationWeatherInfo.weatherTempMax
+            )
+            val weatherTempMin = stringResource(
+                id = R.string.format_temperature,
+                item.locationWeatherInfo.weatherTempMin
+            )
+            ForecastItem(
+                conditionText = item.locationWeatherInfo.weatherConditionDescription,
+                forecastDate = item.locationWeatherDay.toString(),
+                tempHigh = weatherTempMax,
+                tempLow = weatherTempMin,
+                drawable = WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
+                modifier = Modifier.animateItemPlacement()
+            )
+        }
+    }
+}
+
 
 @Preview(
     name = "Conditions Section Preview",
@@ -239,18 +353,21 @@ fun OtherConditionsSectionPreview() {
         )
     }
 }
+
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
-    val currentWeatherUiState =  mainViewModel
+    val currentWeatherUiState = mainViewModel
         .currentWeatherUiState
         .collectAsState().value
-    when(currentWeatherUiState){
-        is CurrentWeatherUiState.Loading ->{
+    when (currentWeatherUiState) {
+        is CurrentWeatherUiState.Loading -> {
             LoadingProgressScreens()
         }
+
         is CurrentWeatherUiState.Error -> {
 
         }
+
         is CurrentWeatherUiState.Success -> {
             HomeContentScreen(currentWeatherUiState.currentWeather)
         }
@@ -275,7 +392,24 @@ fun WeatherDetailsSectionPreview() {
 }
 
 
-
+@Preview(
+    name = "Forecast Item Preview",
+    showBackground = true, backgroundColor = 0xFFF0EAE2,
+    showSystemUi = false
+)
+@Composable
+fun ForecastItemPreview() {
+    WeatherForecastTheme {
+        ForecastItem(
+            conditionText = "Partly Sunny",
+            forecastDate = "Tuesday, 24 Sep 2023",
+            tempHigh = "29*",
+            tempLow = "12*",
+            drawable = R.drawable.art_clear,
+            modifier = Modifier.padding(2.dp)
+        )
+    }
+}
 
 @Preview(
     name = "Home Screen Preview",
