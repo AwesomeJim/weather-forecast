@@ -22,6 +22,7 @@ import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
+import com.awesomejim.weatherforecast.ui.screens.MainScreenView
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -54,6 +55,8 @@ class MainActivity : ComponentActivity() {
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
         .build()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -122,6 +125,7 @@ class MainActivity : ComponentActivity() {
 //                    }
                 // WeatherAppScreensConfig(navController = rememberNavController())
                 mainViewModel.testAPiCall()
+                MainScreenView()
             }
 
             state.isLocationSettingEnabled && !state.isPermissionGranted -> {
