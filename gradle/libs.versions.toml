@@ -4,6 +4,7 @@ android-gradle-plugin = "8.1.1"
 kotlin-android = "1.8.22"
 hilt-plugin = "2.48"
 ksp = "1.8.22-1.0.11"
+lottieCompose = "5.0.3"
 mapsplatform-secrets = "2.0.1"
 kotlin-serialization = "1.6.10"
 
@@ -113,6 +114,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 
 # --------Retrofit & Networking--------------
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization-converter" }

@@ -1,7 +1,6 @@
 package com.awesomejim.weatherforecast.ui.theme
 
 
-
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -11,9 +10,8 @@ import androidx.compose.ui.unit.sp
 import com.awesomejim.weatherforecast.R
 
 
-
 val Roboto = FontFamily(
-    Font(R.font.roboto_regular,FontWeight.Normal),
+    Font(R.font.roboto_regular, FontWeight.Normal),
     Font(R.font.roboto_bold, FontWeight.Bold),
     Font(R.font.roboto_light, FontWeight.Light),
     Font(R.font.roboto_medium, FontWeight.Medium)
@@ -42,10 +40,10 @@ val Typography = Typography(
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
-    )
-    , displayLarge = TextStyle(
+    ),
+    displayLarge = TextStyle(
         fontFamily = Roboto,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 36.sp
     ),
     displayMedium = TextStyle(

@@ -109,7 +109,7 @@ private fun getWeatherDay(utcInMillis: Long): Int {
 }
 
 
-private fun formatTemperatureValue(temperature: Double, unit: String): String =
+ fun formatTemperatureValue(temperature: Float, unit: String): String =
     "${temperature.roundToInt()}${getUnitSymbols(unit = unit)}"
 
 private fun getUnitSymbols(unit: String) = when (unit) {

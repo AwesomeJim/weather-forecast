@@ -1,6 +1,15 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">WeatherForecast</string>
 
+    <!--Home Screen-->
+    <string name="home_content_description_setting_icon">Setting Icon</string>
+    <string name="home_title_currently">Currently</string>
+    <string name="home_feels_like_description">Feels like %1$s</string>
+    <string name="home_today_forecast_title">Today\'s Forecast</string>
+    <string name="home_weekly_forecast_title">Weekly Forecast</string>
+    <string name="home_min_temp">Min %1$s</string>
+    <string name="home_max_temp">Max %1$s</string>
+
     <string name="settings_confirm">Confirm</string>
     <!--    Permissions-->
     <string name="location_rationale_title">Permission Request</string>
@@ -17,6 +26,7 @@
     <string name="error_generic">Something is happening that\'s disturbing the force :(</string>
     <string name="error_connection">Check your internet connection and try again</string>
 
+    <string name="visibility_label">Visibility</string>
 
     <string name="wind_label">Wind</string>
     <!-- Wind in kph -->
@@ -57,6 +67,12 @@
     <!-- Temperature format -->
     <string name="format_temperature">
         <xliff:g id="temp">%1.0f</xliff:g>\u00B0
+    </string>
+
+    <!-- Temperature format -->
+    <string name="format_high_low_temperature">
+        <xliff:g id="high">High: %1.0f</xliff:g>\u00B0
+        <xliff:g id="low">Low: %1.0f</xliff:g>\u00B0
     </string>
 
     <string name="internetErr">"No internet, Please check your internet connection"</string>

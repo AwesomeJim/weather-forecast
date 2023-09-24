@@ -137,6 +137,7 @@ dependencies {
     implementation(libs.coil.compose)
     //------------Lottie Amazing Animations ----------
     implementation(libs.lottie)
+    implementation(libs.lottie.compose)
 
     //------------Timber logging----------
     implementation(libs.timber)
