@@ -34,9 +34,15 @@ class MainViewModel @Inject constructor(
         _currentWeatherUiState.asStateFlow()
 
 
+    private val _forecastListState =
+        MutableStateFlow<List<LocationItemData>>(emptyList())
+
+    val forecastListState: StateFlow<List<LocationItemData>> =
+        _forecastListState.asStateFlow()
+
+
     /** The mutable State that stores the status of the most recent request */
-    fun fetchCurrentWeatherData() {
-        Timber.tag("MainViewModel").e("fetchCurrentWeatherData called")
+    private fun fetchCurrentWeatherData() {
         viewModelScope.launch {
             val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = defaultLocation, units = "metric"
@@ -46,7 +52,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun fetchForecastCurrentWeatherData() {
+
+    /**
+     * Fetch 5 days forecast weather data for the current location
+     *
+     */
+    private fun fetchForecastCurrentWeatherData() {
         viewModelScope.launch {
             Timber.tag("MainViewModel")
                 .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
@@ -54,7 +65,22 @@ class MainViewModel @Inject constructor(
                 defaultLocation = defaultLocation, units = "metric",
             )
             Timber.e("fetchWeatherDataWithCoordinates result:: $result")
-            processForecastResult(result)
+            when (result) {
+                is RetrialResult.Success -> {
+                    val weatherData = result.data
+                    Timber.e("weatherData result:: ${result.data}")
+                    Timber.i("Size :: ${weatherData.size}")
+                    val responseList = mutableListOf<LocationItemData>()
+                    weatherData.forEach { (num, list) ->
+                        responseList.add(list[0])
+                    }
+                    _forecastListState.emit(responseList)
+                }
+
+                is RetrialResult.Error -> {
+                    Timber.e("Error :: ${result.errorType.toResourceId()}")
+                }
+            }
         }
     }
 
@@ -105,23 +131,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun processForecastResult(result: RetrialResult<Map<Int, List<LocationItemData>>>) {
-        when (result) {
-            is RetrialResult.Success -> {
-                val weatherData = result.data
-                Timber.e("weatherData result:: ${result.data}")
-                Timber.i("Size :: ${weatherData.size}")
-            }
-
-            is RetrialResult.Error -> {
-                Timber.e("Error :: ${result.errorType.toResourceId()}")
-            }
-        }
-    }
 
     fun testAPiCall() {
         if (this::defaultLocation.isInitialized) {
             fetchCurrentWeatherData()
+            fetchForecastCurrentWeatherData()
         } else {
             Timber.tag("MainViewModel").e("No Location Details")
         }

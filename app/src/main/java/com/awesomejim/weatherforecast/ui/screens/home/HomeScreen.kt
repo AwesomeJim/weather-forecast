@@ -227,7 +227,11 @@ fun HomeContentScreen(
             modifier = Modifier.padding(8.dp)
         )
         forecastItem?.let { forecast ->
-            ForecastList(forecastItem = forecast)
+            if (forecast.isNotEmpty()) {
+                ForecastList(forecastItem = forecast)
+            }else {
+               LoadingProgressScreens()
+            }
         }
     }
 }
@@ -359,7 +363,9 @@ fun HomeScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
     val currentWeatherUiState = mainViewModel
         .currentWeatherUiState
         .collectAsStateWithLifecycle().value
-
+    val forecastListState = mainViewModel
+        .forecastListState
+        .collectAsStateWithLifecycle().value
     when (currentWeatherUiState) {
         is CurrentWeatherUiState.Loading -> {
             LoadingProgressScreens()
@@ -371,7 +377,7 @@ fun HomeScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
 
         is CurrentWeatherUiState.Success -> {
             HomeContentScreen(currentWeatherUiState.currentWeather,
-                SampleData.foreCastList,
+                forecastListState,
                 modifier)
         }
     }
