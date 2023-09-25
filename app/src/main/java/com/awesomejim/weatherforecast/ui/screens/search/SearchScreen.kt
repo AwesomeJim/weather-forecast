@@ -77,17 +77,21 @@ fun SearchScreen(
                 WeatherUtils.
                 getLargeArtResourceIdForWeatherCondition(data.locationWeatherInfo.weatherConditionId)
             weatherIcon.intValue = drawable
-            openAlertDialog.value = true
+            openAlertDialog.value = searchUiState.isSearchComplete
         }
     }
+
+
     if (openAlertDialog.value) {
         locationItemData.value?.let { data ->
             DialogSearchSuccess(
                 onDismissRequest = {
+                    searchViewModel.updateSearchStatus()
                     openAlertDialog.value = false
                 },
                 onConfirmation = {
                     openAlertDialog.value = false
+                    searchViewModel.updateSearchStatus()
                 },
                 conditionIcon = weatherIcon.intValue,
                 locationItemData = data

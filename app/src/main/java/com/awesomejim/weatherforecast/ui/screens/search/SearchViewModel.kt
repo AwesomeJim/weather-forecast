@@ -60,6 +60,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun updateSearchStatus() {
+        _uiState.update { currentState ->
+            currentState.copy(isSearchComplete = false)
+        }
+    }
+
 
     /**
      * Fetch 5 days forecast weather data for the current location
@@ -69,27 +75,28 @@ class SearchViewModel @Inject constructor(
         Timber.e("fetchWeatherDataWithCoordinates result:: $searchKeyWord")
         viewModelScope.launch {
             if (searchKeyWord.isNotEmpty() && !isLoadingData) {
+                isLoadingData = true
                 val result = defaultWeatherRepository.fetchWeatherDataWithLocationQuery(
                     searchKeyWord,
                     preferredUnits
                 )
-                isLoadingData = true
+                isLoadingData = false
                 Timber.e("fetchWeatherDataWithCoordinates result:: $result")
                 when (result) {
                     is RetrialResult.Success -> {
                         val weatherData = result.data
                         Timber.e("weatherData result:: ${result.data}")
                         _searchWeatherUiState.emit(CurrentWeatherUiState.Success(weatherData))
+                        _uiState.update { currentState ->
+                            currentState.copy(isSearchComplete = true)
+                        }
                     }
-
                     is RetrialResult.Error -> {
                         CurrentWeatherUiState.Error(result.errorType.toResourceId())
                         Timber.e("Error :: ${result.errorType.toResourceId()}")
                     }
                 }
-                _uiState.update { currentState ->
-                    currentState.copy(isSearchComplete = true)
-                }
+
             }
         }
     }
