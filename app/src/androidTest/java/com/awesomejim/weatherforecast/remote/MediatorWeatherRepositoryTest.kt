@@ -2,15 +2,11 @@ package com.awesomejim.weatherforecast.remote
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
-import app.cash.turbine.test
-import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
-import com.awesomejim.weatherforecast.data.WeatherRepository
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.source.local.MediatorRepository
 import com.awesomejim.weatherforecast.data.source.local.MediatorWeatherRepository
 import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.source.local.db.LocationDatabase
-import com.awesomejim.weatherforecast.data.source.mapper.toLocationEntity
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.data.source.remote.DefaultRemoteWeatherDataSource
 import com.awesomejim.weatherforecast.data.source.remote.RemoteDataSource
@@ -18,7 +14,6 @@ import com.awesomejim.weatherforecast.di.ApiService
 import com.awesomejim.weatherforecast.di.network.NetworkHelper
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.di.network.WeatherItemResponse
-import com.awesomejim.weatherforecast.fake.FakeLocalDataSource
 import com.awesomejim.weatherforecast.fake.FakeResponseData
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -72,7 +67,7 @@ class MediatorWeatherRepositoryTest {
 
 
     @Test
-    fun assert_That_when_we_fetch_location_weather_data_successfully_then_a_successfully_mapped_result_is_emitted()=
+    fun assert_That_when_we_fetch_location_weather_data_successfully_then_a_successfully_mapped_result_is_emitted() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(returnValue = true)
             coEvery {
@@ -90,25 +85,26 @@ class MediatorWeatherRepositoryTest {
 
             val expectedResult = FakeResponseData.fakeSuccessMappedWeatherResponse
 
-          weatherRepository.fetchWeatherDataWithCoordinates(
+            val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
                     longitude = -122.084,
-                    latitude =  37.4234
+                    latitude = 37.4234
                 ),
                 units = "metric",
                 locationId = 1695383
-            ).test {
-                val actualResults = expectMostRecentItem()
-                Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
-                Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
-                    .isEqualTo(expectedResult.locationId)
-                val locationItemData = FakeResponseData.fakeSuccessMappedWeatherResponse
+            )
+            // val actualResults = expectMostRecentItem()
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
+                .isEqualTo(expectedResult.locationId)
+            val locationItemData = FakeResponseData.fakeSuccessMappedWeatherResponse
 
-                // When the repository emits a value
-                val actual = locationItemDao.getLocationById(locationItemData.locationId)?.toLocationItem() // Returns the first item in the flow
-                Truth.assertThat(locationItemData.locationId).isEqualTo(actual?.locationId)
-                cancel()
-            }
+            // When the repository emits a value
+            val actual = locationItemDao.getLocationById(locationItemData.locationId)
+                ?.toLocationItem() // Returns the first item in the flow
+            Truth.assertThat(locationItemData.locationId).isEqualTo(actual?.locationId)
+
+
         }
 
     private fun createWeatherRepository(

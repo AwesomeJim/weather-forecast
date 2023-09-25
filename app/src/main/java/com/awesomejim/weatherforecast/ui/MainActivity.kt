@@ -14,9 +14,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.ui.common.CheckForPermissions
 import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
@@ -76,8 +76,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val state = mainViewModel.state.collectAsState().value
-                    Greeting("Android")
+                    val state = mainViewModel.state.collectAsStateWithLifecycle().value
                     CheckForPermissions(
                         onPermissionGranted = {
                             mainViewModel.processIntent(MainViewUiState.GrantPermission(isGranted = true))

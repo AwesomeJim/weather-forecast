@@ -10,8 +10,6 @@ import com.awesomejim.weatherforecast.di.network.ErrorType
 import com.awesomejim.weatherforecast.di.network.NetworkHelper
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.di.network.mapThrowableToErrorType
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,8 +30,8 @@ class MediatorWeatherRepository @Inject constructor(
         defaultLocation: DefaultLocation,
         units: String,
         locationId: Long?
-    ): Flow<RetrialResult<LocationItemData>> = flow {
-        if (networkHelper.isNetworkConnected()) {
+    ): RetrialResult<LocationItemData> {
+        return if (networkHelper.isNetworkConnected()) {
             try {
                 val remoteData = remoteDataSource.fetchWeatherDataWithCoordinates(
                     defaultLocation = defaultLocation,
@@ -44,28 +42,27 @@ class MediatorWeatherRepository @Inject constructor(
                         val weatherData = remoteData.data
                         Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
                         locationItemDao.insertLocation(weatherData.toLocationEntity())
-                        emit(RetrialResult.Success(weatherData))
+                        RetrialResult.Success(weatherData)
                     }
-
                     is RetrialResult.Error -> {
-                        emit(RetrialResult.Error(remoteData.errorType))
+                        RetrialResult.Error(remoteData.errorType)
                     }
                 }
             } catch (throwable: Throwable) {
                 val errorType = mapThrowableToErrorType(throwable)
-                emit(RetrialResult.Error(errorType))
+                RetrialResult.Error(errorType)
             }
         } else {
             // there is no internet access let's check and show last saved location if it exits otherwise show No internet error
             if (locationId != null) {
                 val savedData = locationItemDao.getLocationById(locationId)
                 if (savedData != null) {
-                    emit(RetrialResult.Success(savedData.toLocationItem()))
+                    RetrialResult.Success(savedData.toLocationItem())
                 } else {
-                    emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
+                    RetrialResult.Error(ErrorType.IO_CONNECTION)
                 }
             } else {
-                emit(RetrialResult.Error(ErrorType.IO_CONNECTION))
+                RetrialResult.Error(ErrorType.IO_CONNECTION)
             }
         }
     }

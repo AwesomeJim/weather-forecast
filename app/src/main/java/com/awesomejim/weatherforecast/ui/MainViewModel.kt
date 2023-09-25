@@ -10,11 +10,8 @@ import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,18 +38,10 @@ class MainViewModel @Inject constructor(
     fun fetchCurrentWeatherData() {
         Timber.tag("MainViewModel").e("fetchCurrentWeatherData called")
         viewModelScope.launch {
-            defaultWeatherRepository.fetchWeatherDataWithCoordinates(
+            val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = defaultLocation, units = "metric"
-            ).map {
-                processCurrentWeatherResult(it)
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = CurrentWeatherUiState.Loading
-            ).collect {
-                Timber.tag("MainViewModel").e("fetchCurrentWeatherData called ${it.toString()}")
-                _currentWeatherUiState.emit(it)
-            }
+            )
+            _currentWeatherUiState.emit(processCurrentWeatherResult(result))
 
         }
     }
@@ -65,6 +54,7 @@ class MainViewModel @Inject constructor(
                 defaultLocation = defaultLocation, units = "metric",
             )
             Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+            processForecastResult(result)
         }
     }
 
