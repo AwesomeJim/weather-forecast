@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
@@ -57,7 +58,8 @@ fun NavigationGraph(
 ) {
     NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
         composable(BottomNavItem.Home.screen_route) {
-            HomeScreen(mainViewModel)
+            HomeScreen(
+                mainViewModel, modifier = Modifier)
         }
         composable(BottomNavItem.MyLocations.screen_route) {
             FavoriteScreen()

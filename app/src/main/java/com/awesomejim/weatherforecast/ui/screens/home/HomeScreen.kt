@@ -17,25 +17,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Surface
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.di.network.getFormattedWind
 import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.MainViewModel
+import com.awesomejim.weatherforecast.ui.common.getDate
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
@@ -211,8 +214,10 @@ fun WeatherDetailsSection(
 @Composable
 fun HomeContentScreen(
     currentWeather: LocationItemData,
+    forecastItem: List<LocationItemData>?,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier) {
         WeatherDetailsSection(
             weatherDetails = currentWeather,
             imageResource = R.drawable.sea_sunnypng
@@ -221,7 +226,9 @@ fun HomeContentScreen(
             weatherDetails = currentWeather.locationWeatherInfo,
             modifier = Modifier.padding(8.dp)
         )
-        ForecastList(SampleData.foreCastList)
+        forecastItem?.let { forecast ->
+            ForecastList(forecastItem = forecast)
+        }
     }
 }
 
@@ -235,35 +242,30 @@ fun ForecastItem(
     @DrawableRes drawable: Int,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.secondary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    Card(
+        shape = MaterialTheme.shapes.small,
+        modifier = modifier.padding(vertical = 4.dp, horizontal = 4.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
-                modifier = modifier.padding(horizontal = 0.dp, vertical = 0.dp)
+                modifier = modifier.padding(horizontal = 8.dp, vertical = 0.dp)
             ) {
                 Text(
                     text = forecastDate,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    modifier = modifier.padding(horizontal = 0.dp, vertical = 0.dp)
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
                     text = conditionText,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                    color = MaterialTheme.colorScheme.onSecondary
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
-            //Spacer(modifier = Modifier.width(16.dp))
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(drawable),
@@ -277,16 +279,12 @@ fun ForecastItem(
             ) {
                 Text(
                     text = tempHigh,
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    color = MaterialTheme.colorScheme.onSecondary
+                    style = MaterialTheme.typography.labelLarge
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = tempLow,
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    color = MaterialTheme.colorScheme.onSecondary
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
         }
@@ -296,8 +294,9 @@ fun ForecastItem(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ForecastList(forecastItem: List<LocationItemData>) {
+    Divider(color = Color.Black, thickness = 1.dp)
     Subtitle(text = stringResource(id = R.string.home_weekly_forecast_title))
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
+    LazyColumn(modifier = Modifier.padding(8.dp)) {
         items(forecastItem)
         { item ->
             val weatherTempMax = stringResource(
@@ -308,9 +307,10 @@ fun ForecastList(forecastItem: List<LocationItemData>) {
                 id = R.string.format_temperature,
                 item.locationWeatherInfo.weatherTempMin
             )
+            val dateString = getDate(item.locationDataTime, "EEEE, dd-MMM")
             ForecastItem(
                 conditionText = item.locationWeatherInfo.weatherConditionDescription,
-                forecastDate = item.locationWeatherDay.toString(),
+                forecastDate = dateString,
                 tempHigh = weatherTempMax,
                 tempLow = weatherTempMin,
                 drawable = WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
@@ -355,10 +355,11 @@ fun OtherConditionsSectionPreview() {
 }
 
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel) {
+fun HomeScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
     val currentWeatherUiState = mainViewModel
         .currentWeatherUiState
-        .collectAsState().value
+        .collectAsStateWithLifecycle().value
+
     when (currentWeatherUiState) {
         is CurrentWeatherUiState.Loading -> {
             LoadingProgressScreens()
@@ -369,7 +370,9 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         }
 
         is CurrentWeatherUiState.Success -> {
-            HomeContentScreen(currentWeatherUiState.currentWeather)
+            HomeContentScreen(currentWeatherUiState.currentWeather,
+                SampleData.foreCastList,
+                modifier)
         }
     }
 }
@@ -406,7 +409,7 @@ fun ForecastItemPreview() {
             tempHigh = "29*",
             tempLow = "12*",
             drawable = R.drawable.art_clear,
-            modifier = Modifier.padding(2.dp)
+            modifier = Modifier.padding(0.dp)
         )
     }
 }
@@ -420,6 +423,6 @@ fun ForecastItemPreview() {
 fun HomeContentScreenPreview() {
     WeatherForecastTheme {
         val locationItemData = SampleData.locationItemData
-        HomeContentScreen(locationItemData)
+        HomeContentScreen(locationItemData, SampleData.foreCastList)
     }
 }

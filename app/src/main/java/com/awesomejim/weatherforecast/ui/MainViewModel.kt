@@ -30,13 +30,15 @@ class MainViewModel @Inject constructor(
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
 
-    private val _currentWeatherUiState = MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
+    private val _currentWeatherUiState =
+        MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
 
-    val currentWeatherUiState: StateFlow<CurrentWeatherUiState> = _currentWeatherUiState.asStateFlow()
+    val currentWeatherUiState: StateFlow<CurrentWeatherUiState> =
+        _currentWeatherUiState.asStateFlow()
 
 
     /** The mutable State that stores the status of the most recent request */
-     fun fetchCurrentWeatherData() {
+    fun fetchCurrentWeatherData() {
         Timber.tag("MainViewModel").e("fetchCurrentWeatherData called")
         viewModelScope.launch {
             defaultWeatherRepository.fetchWeatherDataWithCoordinates(
@@ -47,11 +49,22 @@ class MainViewModel @Inject constructor(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = CurrentWeatherUiState.Loading
-            ).collect{
+            ).collect {
                 Timber.tag("MainViewModel").e("fetchCurrentWeatherData called ${it.toString()}")
                 _currentWeatherUiState.emit(it)
             }
 
+        }
+    }
+
+    fun fetchForecastCurrentWeatherData() {
+        viewModelScope.launch {
+            Timber.tag("MainViewModel")
+                .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
+            val result = defaultWeatherRepository.fetchWeatherForecastWithCoordinates(
+                defaultLocation = defaultLocation, units = "metric",
+            )
+            Timber.e("fetchWeatherDataWithCoordinates result:: $result")
         }
     }
 
@@ -119,20 +132,6 @@ class MainViewModel @Inject constructor(
     fun testAPiCall() {
         if (this::defaultLocation.isInitialized) {
             fetchCurrentWeatherData()
-//            viewModelScope.launch {
-//                Timber.tag("MainViewModel")
-//                    .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
-//
-////                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-////                    defaultLocation = defaultLocation, units = "metric", 6333993
-////                )
-////                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
-//
-//                val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-//                    defaultLocation = defaultLocation, units = "metric"
-//                )
-//                Timber.e("fetchWeatherDataWithCoordinates result:: ${result.toString()}")
-//            }
         } else {
             Timber.tag("MainViewModel").e("No Location Details")
         }

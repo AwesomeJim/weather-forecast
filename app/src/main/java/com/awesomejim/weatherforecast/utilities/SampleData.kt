@@ -37,7 +37,7 @@ object SampleData {
             locationName = "Mountain View - US",
             locationId = 1695383,
             locationTimeZoneShift = -25200,
-            locationDataTime = 1695455230,
+            locationDataTime = 1695643200,
             locationLongitude = -122.084,
             locationLatitude = 37.4234,
             locationWeatherInfo = WeatherStatusInfo(
@@ -62,7 +62,7 @@ object SampleData {
             locationName = "Kenya- US",
             locationId = 16925383,
             locationTimeZoneShift = -252200,
-            locationDataTime = 16952455230,
+            locationDataTime = 1695578400,
             locationLongitude = -122.084,
             locationLatitude = 37.4234,
             locationWeatherInfo = WeatherStatusInfo(
@@ -87,7 +87,7 @@ object SampleData {
             locationName = "Fern Herring",
             locationId = 7088,
             locationTimeZoneShift = 7333,
-            locationDataTime = 3441,
+            locationDataTime = 1695837600,
             locationLongitude = 132.133,
             locationLatitude = 134.135,
             locationWeatherInfo = WeatherStatusInfo(

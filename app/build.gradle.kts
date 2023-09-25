@@ -125,6 +125,9 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
 
     //-----------Google Play Services------------------
     implementation(libs.playservices.location)
