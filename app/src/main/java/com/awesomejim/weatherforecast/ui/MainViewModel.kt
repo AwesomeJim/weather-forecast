@@ -3,7 +3,8 @@ package com.awesomejim.weatherforecast.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
+import com.awesomejim.weatherforecast.data.SettingsRepository
+import com.awesomejim.weatherforecast.data.WeatherRepository
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.di.network.RetrialResult
@@ -12,16 +13,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val defaultWeatherRepository: DefaultWeatherRepository
+    private val defaultWeatherRepository: WeatherRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private lateinit var defaultLocation: DefaultLocation
+    private lateinit var currentLocation: DefaultLocation
+    private lateinit var preferredUnits: String
 
     private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
@@ -40,12 +44,25 @@ class MainViewModel @Inject constructor(
     val forecastListState: StateFlow<List<LocationItemData>> =
         _forecastListState.asStateFlow()
 
+    init {
+        viewModelScope.launch { 
+            combine(
+                settingsRepository.getUnits(),
+                settingsRepository.getDefaultLocation()
+            ){ pUnits, defaultLocation-> 
+                Pair(pUnits, defaultLocation)
+            }.collect{ (pUnits, defaultLocation) ->
+                preferredUnits = pUnits
+                currentLocation = defaultLocation
+            }
+        }
+    }
 
     /** The mutable State that stores the status of the most recent request */
     private fun fetchCurrentWeatherData() {
         viewModelScope.launch {
             val result = defaultWeatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = defaultLocation, units = "metric"
+                defaultLocation = currentLocation, units = preferredUnits
             )
             _currentWeatherUiState.emit(processCurrentWeatherResult(result))
 
@@ -60,9 +77,9 @@ class MainViewModel @Inject constructor(
     private fun fetchForecastCurrentWeatherData() {
         viewModelScope.launch {
             Timber.tag("MainViewModel")
-                .e("fetchWeatherDataWithCoordinates :: %s", defaultLocation.latitude)
+                .e("fetchWeatherDataWithCoordinates :: %s", currentLocation.latitude)
             val result = defaultWeatherRepository.fetchWeatherForecastWithCoordinates(
-                defaultLocation = defaultLocation, units = "metric",
+                defaultLocation = currentLocation, units = preferredUnits,
             )
             Timber.e("fetchWeatherDataWithCoordinates result:: $result")
             when (result) {
@@ -101,7 +118,7 @@ class MainViewModel @Inject constructor(
                     longitude = mainViewUiState.longitude,
                     latitude = mainViewUiState.latitude
                 )
-                this.defaultLocation = defaultLocation
+                this.currentLocation = defaultLocation
                 Timber.tag("MainViewModel").e("defaultLocation ${defaultLocation.latitude}")
                 setState { copy(defaultLocation = defaultLocation) }
             }
@@ -133,7 +150,7 @@ class MainViewModel @Inject constructor(
 
 
     fun testAPiCall() {
-        if (this::defaultLocation.isInitialized) {
+        if (this::currentLocation.isInitialized) {
             fetchCurrentWeatherData()
             fetchForecastCurrentWeatherData()
         } else {

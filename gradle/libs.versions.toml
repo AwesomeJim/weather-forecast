@@ -31,6 +31,7 @@ androidx-test-ext-junit = "1.1.5"
 androidx-test-ext-truth = "1.5.0"
 hiltNavigationCompose="1.0.0"
 lifecycleVersion="2.6.2"
+androidx-datastore = "1.0.0"
 rules="1.5.0"
 runner="1.5.2"
 
@@ -86,6 +87,7 @@ androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-lived
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-ktx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleVersion" }
 androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycleVersion" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" }
 
 # --------compose--------
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
@@ -177,6 +179,7 @@ androidx = [
     "androidx-lifecycle-extensions" ,
     "androidx-lifecycle-livedata-ktx" ,
     "androidx-lifecycle-viewmodel-ktx" ,
+    "androidx-datastore"
 ]
 
 compose = [

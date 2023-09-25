@@ -1,9 +1,9 @@
 package com.awesomejim.weatherforecast.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,5 +52,25 @@ fun Headline(text: String, modifier: Modifier = Modifier, color: Color = Color.U
         modifier = modifier,
         style = MaterialTheme.typography.displayLarge,
         color = color
+    )
+}
+
+@Composable
+fun VersionInfoText(versionInfo: String, modifier: Modifier) {
+    Text(
+        text = versionInfo,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )
+}
+
+@Composable
+fun BodyText(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
+  Text(
+        text = text,
+        style = MaterialTheme.typography.bodyMedium,
+        color = color,
+        modifier = modifier
     )
 }

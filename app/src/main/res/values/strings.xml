@@ -77,4 +77,13 @@
 
     <string name="internetErr">"No internet, Please check your internet connection"</string>
     <string name="unexpected_error">There was an error completing your request. Please try again later</string>
+
+    <!-- Settings Screen-->
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_content_description_icon">Setting Icon</string>
+    <string name="settings_unit_label">Preferred Units</string>
+    <string name="settings_content_description_unit_icon">Units Icon</string>
+
+    <string name="saved_screen_title">My Saved Locations</string>
+    <string name="search_screen_title">Search</string>
 </resources>

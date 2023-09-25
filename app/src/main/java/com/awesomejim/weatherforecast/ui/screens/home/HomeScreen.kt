@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -49,7 +48,7 @@ import com.awesomejim.weatherforecast.utilities.WeatherUtils
 
 
 @Composable
-private fun CurrentWeatherWidget(currentWeather: LocationItemData) {
+private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Modifier) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -207,7 +206,7 @@ fun WeatherDetailsSection(
             contentDescription = null,
             contentScale = ContentScale.FillBounds
         )
-        CurrentWeatherWidget(weatherDetails)
+        CurrentWeatherWidget(weatherDetails, modifier = modifier)
     }
 }
 
@@ -229,8 +228,8 @@ fun HomeContentScreen(
         forecastItem?.let { forecast ->
             if (forecast.isNotEmpty()) {
                 ForecastList(forecastItem = forecast)
-            }else {
-               LoadingProgressScreens()
+            } else {
+                LoadingProgressScreens()
             }
         }
     }
@@ -246,7 +245,7 @@ fun ForecastItem(
     @DrawableRes drawable: Int,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    ElevatedCard(
         shape = MaterialTheme.shapes.small,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 4.dp)
     ) {
@@ -255,7 +254,7 @@ fun ForecastItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
+                .height(50.dp).padding(vertical = 4.dp, horizontal = 4.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
@@ -376,9 +375,11 @@ fun HomeScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
         }
 
         is CurrentWeatherUiState.Success -> {
-            HomeContentScreen(currentWeatherUiState.currentWeather,
+            HomeContentScreen(
+                currentWeatherUiState.currentWeather,
                 forecastListState,
-                modifier)
+                modifier
+            )
         }
     }
 }

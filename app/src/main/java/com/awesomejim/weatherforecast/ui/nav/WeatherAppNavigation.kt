@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -25,6 +27,8 @@ import com.awesomejim.weatherforecast.ui.screens.favorite.FavoriteScreen
 import com.awesomejim.weatherforecast.ui.screens.home.HomeScreen
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreen
+import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreenUiState
+import com.awesomejim.weatherforecast.ui.screens.settings.SettingsViewModel
 
 
 /**
@@ -58,7 +62,8 @@ fun NavigationGraph(
     NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
         composable(BottomNavItem.Home.screen_route) {
             HomeScreen(
-                mainViewModel, modifier = Modifier)
+                mainViewModel, modifier = Modifier
+            )
         }
         composable(BottomNavItem.MyLocations.screen_route) {
             FavoriteScreen()
@@ -67,7 +72,20 @@ fun NavigationGraph(
             SearchScreen()
         }
         composable(BottomNavItem.Settings.screen_route) {
-            SettingsScreen()
+            val settingsViewModel = hiltViewModel<SettingsViewModel>()
+            val settingsState = settingsViewModel
+                .state.collectAsStateWithLifecycle()
+                .value
+            settingsViewModel.processSettingsScreenUiState(SettingsScreenUiState.LoadSettingScreenData)
+            SettingsScreen(
+                settingsState,
+                onUnitChanged = { selectedUnit ->
+                    settingsViewModel.processSettingsScreenUiState(
+                        SettingsScreenUiState.ChangeUnits(
+                            selectedUnit
+                        )
+                    )
+                })
         }
     }
 }
@@ -85,7 +103,7 @@ fun AppBottomNavigationItem(
 ) {
 
     BottomNavigation(
-        backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onTertiaryContainer
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -100,7 +118,7 @@ fun AppBottomNavigationItem(
                     )
                 },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.primary.copy(0.4f),
+                unselectedContentColor = MaterialTheme.colorScheme.onPrimary.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screen_route,
                 onClick = {
