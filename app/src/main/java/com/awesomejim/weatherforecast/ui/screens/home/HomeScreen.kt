@@ -264,15 +264,16 @@ fun HomeContentScreen(
                     weatherDetails = currentWeather.locationWeatherInfo,
                     modifier = Modifier.padding(8.dp)
                 )
+                Divider(color = Color.Black, thickness = 1.dp)
+                Subtitle(
+                    text = stringResource(id = R.string.home_weekly_forecast_title)
+                )
             }
             forecastItem?.let { forecast ->
                 if (forecast.isNotEmpty()) {
                     items(forecastItem)
                     { item ->
-                        Divider(color = Color.Black, thickness = 1.dp)
-                        Subtitle(
-                            text = stringResource(id = R.string.home_weekly_forecast_title)
-                        )
+
                         val weatherTempMax = stringResource(
                             id = R.string.format_temperature,
                             item.locationWeatherInfo.weatherTempMax

@@ -7,6 +7,7 @@ import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.ui.common.getDate
 import com.awesomejim.weatherforecast.utilities.ClientException
 import com.awesomejim.weatherforecast.utilities.GenericException
+import com.awesomejim.weatherforecast.utilities.SampleData.hourlyWeatherDataList
 import com.awesomejim.weatherforecast.utilities.ServerException
 import com.awesomejim.weatherforecast.utilities.UnauthorizedException
 import com.awesomejim.weatherforecast.utilities.Units
@@ -148,6 +149,54 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
 
     return result
 }
+
+fun WeatherItemResponse.toCoreModelWithMoreDetails(): LocationItemData  {
+   val locationItemData = LocationItemData(
+        locationName = "$locationName - ${countryDetails.locationCountry}",
+        locationId = locationId,
+        locationTimeZoneShift = locationNameTimeZoneShift,
+        locationDataTime = forecastedTime,
+        locationLongitude = locationCoordinates.longitude,
+        locationLatitude = locationCoordinates.latitude,
+        locationWeatherInfo = WeatherStatusInfo(
+            weatherConditionId = weatherConditionResponse[0].id,
+            weatherCondition = weatherConditionResponse[0].main,
+            weatherConditionDescription = weatherConditionResponse[0].description.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.ROOT
+                ) else it.toString()
+            },
+            weatherConditionIcon = weatherConditionResponse[0].icon,
+            weatherTemp = currentWeatherMain.weatherTemp,
+            weatherTempMin = currentWeatherMain.weatherTempMin,
+            weatherTempMax = currentWeatherMain.weatherTempMax,
+            weatherTempFeelsLike = currentWeatherMain.weatherTempFeelsLike,
+            weatherPressure = currentWeatherMain.weatherPressure,
+            weatherHumidity = currentWeatherMain.weatherHumidity,
+            weatherWindSpeed = currentWeatherWind.speed,
+            weatherWindDegrees = currentWeatherWind.degree,
+            weatherVisibility = currentWeatherVisibility,
+        ),
+        locationWeatherDay = getWeatherDay(forecastedTime),
+        locationDataLastUpdate = Date()
+    )
+    val windDirection = getFormattedWind(locationItemData.locationWeatherInfo.weatherWindDegrees)
+    val visibility = locationItemData.locationWeatherInfo.weatherVisibility / 1000
+    val forecastMoreDetails = ForecastMoreDetails(
+        windDetails = "%1\$1.0f km/h %2\$s".format(
+            locationItemData.locationWeatherInfo.weatherWindSpeed.toFloat(),
+            windDirection
+        ),
+        humidityDetails = "%1.0f %%".format(locationItemData.locationWeatherInfo.weatherHumidity.toFloat()),
+        visibilityDetails = "$visibility km",
+        pressureDetails = "%1.0f hPa".format(locationItemData.locationWeatherInfo.weatherPressure.toFloat()),
+        hourlyWeatherData = hourlyWeatherDataList
+    )
+
+    locationItemData.forecastMoreDetails = forecastMoreDetails
+    return locationItemData
+}
+
 
 fun mapResponseCodeToThrowable(code: Int): Throwable = when (code) {
     HttpURLConnection.HTTP_UNAUTHORIZED -> UnauthorizedException("Unauthorized access : $code")

@@ -113,7 +113,6 @@ fun DialogSearchSuccess(
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         // Draw a rectangle shape with rounded corners inside the dialog
-
         val weatherTempMax = stringResource(
             id = R.string.format_temperature,
             locationItemData.locationWeatherInfo.weatherTempMax

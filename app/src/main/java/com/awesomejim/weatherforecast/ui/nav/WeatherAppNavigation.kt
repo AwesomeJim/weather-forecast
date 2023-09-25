@@ -29,6 +29,7 @@ import com.awesomejim.weatherforecast.ui.screens.favorite.FavoriteScreen
 import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
 import com.awesomejim.weatherforecast.ui.screens.home.HomeContentScreen
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
+import com.awesomejim.weatherforecast.ui.screens.search.SearchViewModel
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreen
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreenUiState
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsViewModel
@@ -75,6 +76,7 @@ fun NavigationGraph(
                 is CurrentWeatherUiState.Loading -> {
                     LoadingProgressScreens()
                 }
+
                 is CurrentWeatherUiState.Error -> {
                     ErrorScreen(
                         currentWeatherUiState.errorMessageId,
@@ -96,7 +98,9 @@ fun NavigationGraph(
             FavoriteScreen()
         }
         composable(BottomNavItem.Search.screen_route) {
-            SearchScreen()
+            val searchViewModel = hiltViewModel<SearchViewModel>()
+            SearchScreen(searchViewModel = searchViewModel)
+
         }
         composable(BottomNavItem.Settings.screen_route) {
             val settingsViewModel = hiltViewModel<SettingsViewModel>()
