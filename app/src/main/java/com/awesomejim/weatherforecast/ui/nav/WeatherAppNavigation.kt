@@ -22,9 +22,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.MainViewModel
+import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.screens.favorite.FavoriteScreen
-import com.awesomejim.weatherforecast.ui.screens.home.HomeScreen
+import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
+import com.awesomejim.weatherforecast.ui.screens.home.HomeContentScreen
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreen
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreenUiState
@@ -61,9 +64,33 @@ fun NavigationGraph(
 ) {
     NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
         composable(BottomNavItem.Home.screen_route) {
-            HomeScreen(
-                mainViewModel, modifier = Modifier
-            )
+            val currentWeatherUiState = mainViewModel
+                .currentWeatherUiState
+                .collectAsStateWithLifecycle().value
+            val forecastListState = mainViewModel
+                .forecastListState
+                .collectAsStateWithLifecycle().value
+            mainViewModel.processUiState(currentWeatherUiState)
+            when (currentWeatherUiState) {
+                is CurrentWeatherUiState.Loading -> {
+                    LoadingProgressScreens()
+                }
+                is CurrentWeatherUiState.Error -> {
+                    ErrorScreen(
+                        currentWeatherUiState.errorMessageId,
+                        onTryAgainClicked = {
+                            mainViewModel.fetchWeatherData()
+                        })
+                }
+
+                is CurrentWeatherUiState.Success -> {
+                    HomeContentScreen(
+                        currentWeatherUiState.currentWeather,
+                        forecastListState,
+                        modifier = Modifier
+                    )
+                }
+            }
         }
         composable(BottomNavItem.MyLocations.screen_route) {
             FavoriteScreen()
@@ -118,7 +145,7 @@ fun AppBottomNavigationItem(
                     )
                 },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.onPrimary.copy(0.4f),
+                unselectedContentColor = MaterialTheme.colorScheme.primary.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screen_route,
                 onClick = {

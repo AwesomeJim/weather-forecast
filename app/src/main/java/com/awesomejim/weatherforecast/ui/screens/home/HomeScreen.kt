@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -30,14 +32,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.di.network.getFormattedWind
-import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
-import com.awesomejim.weatherforecast.ui.MainViewModel
 import com.awesomejim.weatherforecast.ui.common.getDate
+import com.awesomejim.weatherforecast.ui.components.ErrorTextWithAction
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
@@ -216,20 +216,38 @@ fun HomeContentScreen(
     forecastItem: List<LocationItemData>?,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        WeatherDetailsSection(
-            weatherDetails = currentWeather,
-            imageResource = R.drawable.sea_sunnypng
-        )
-        OtherConditionsSection(
-            weatherDetails = currentWeather.locationWeatherInfo,
-            modifier = Modifier.padding(8.dp)
-        )
-        forecastItem?.let { forecast ->
-            if (forecast.isNotEmpty()) {
-                ForecastList(forecastItem = forecast)
-            } else {
-                LoadingProgressScreens()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.home_title_currently),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                },
+                backgroundColor = MaterialTheme.colorScheme.primary
+            )
+        }
+    ) { contentPadding ->
+        Column(
+            modifier = modifier
+                .padding(paddingValues = contentPadding)
+        ) {
+            WeatherDetailsSection(
+                weatherDetails = currentWeather,
+                imageResource = R.drawable.sea_sunnypng
+            )
+            OtherConditionsSection(
+                weatherDetails = currentWeather.locationWeatherInfo,
+                modifier = Modifier.padding(8.dp)
+            )
+            forecastItem?.let { forecast ->
+                if (forecast.isNotEmpty()) {
+                    ForecastList(forecastItem = forecast)
+                } else {
+                    LoadingProgressScreens()
+                }
             }
         }
     }
@@ -254,7 +272,8 @@ fun ForecastItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp).padding(vertical = 4.dp, horizontal = 4.dp)
+                .height(50.dp)
+                .padding(vertical = 4.dp, horizontal = 4.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
@@ -358,32 +377,21 @@ fun OtherConditionsSectionPreview() {
 }
 
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
-    val currentWeatherUiState = mainViewModel
-        .currentWeatherUiState
-        .collectAsStateWithLifecycle().value
-    val forecastListState = mainViewModel
-        .forecastListState
-        .collectAsStateWithLifecycle().value
-    when (currentWeatherUiState) {
-        is CurrentWeatherUiState.Loading -> {
-            LoadingProgressScreens()
+fun ErrorScreen(errorMsgId: Int, onTryAgainClicked: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.weight(0.5f))
+        ErrorTextWithAction(
+            errorMessageId = errorMsgId,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            onTryAgainClicked()
         }
-
-        is CurrentWeatherUiState.Error -> {
-
-        }
-
-        is CurrentWeatherUiState.Success -> {
-            HomeContentScreen(
-                currentWeatherUiState.currentWeather,
-                forecastListState,
-                modifier
-            )
-        }
+        Spacer(modifier = Modifier.Companion.weight(0.5f))
     }
 }
-
 
 @Preview(
     name = "Weather Details Section Preview",

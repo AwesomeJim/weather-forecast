@@ -26,6 +26,7 @@ class MainViewModel @Inject constructor(
 
     private lateinit var currentLocation: DefaultLocation
     private lateinit var preferredUnits: String
+    private var isLoadingData = false
 
     private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
@@ -45,13 +46,13 @@ class MainViewModel @Inject constructor(
         _forecastListState.asStateFlow()
 
     init {
-        viewModelScope.launch { 
+        viewModelScope.launch {
             combine(
                 settingsRepository.getUnits(),
                 settingsRepository.getDefaultLocation()
-            ){ pUnits, defaultLocation-> 
+            ) { pUnits, defaultLocation ->
                 Pair(pUnits, defaultLocation)
-            }.collect{ (pUnits, defaultLocation) ->
+            }.collect { (pUnits, defaultLocation) ->
                 preferredUnits = pUnits
                 currentLocation = defaultLocation
             }
@@ -65,7 +66,6 @@ class MainViewModel @Inject constructor(
                 defaultLocation = currentLocation, units = preferredUnits
             )
             _currentWeatherUiState.emit(processCurrentWeatherResult(result))
-
         }
     }
 
@@ -120,6 +120,9 @@ class MainViewModel @Inject constructor(
                 )
                 this.currentLocation = defaultLocation
                 Timber.tag("MainViewModel").e("defaultLocation ${defaultLocation.latitude}")
+                viewModelScope.launch {
+                    settingsRepository.setDefaultLocation(defaultLocation)
+                }
                 setState { copy(defaultLocation = defaultLocation) }
             }
         }
@@ -133,6 +136,7 @@ class MainViewModel @Inject constructor(
 
 
     private fun processCurrentWeatherResult(result: RetrialResult<LocationItemData>): CurrentWeatherUiState {
+        isLoadingData = false
         return when (result) {
             is RetrialResult.Success -> {
                 val weatherData = result.data
@@ -148,11 +152,31 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun processUiState(currentWeatherUiState: CurrentWeatherUiState) {
+        when (currentWeatherUiState) {
+            is CurrentWeatherUiState.Error -> {
 
-    fun testAPiCall() {
+            }
+
+            CurrentWeatherUiState.Loading -> {
+                Timber.tag("MainViewModel").e("fetchWeatherData::- $currentWeatherUiState")
+                fetchWeatherData()
+                isLoadingData = true
+            }
+
+            is CurrentWeatherUiState.Success -> {
+
+            }
+        }
+    }
+
+    fun fetchWeatherData() {
+        Timber.tag("MainViewModel").e("fetchWeatherData::-")
         if (this::currentLocation.isInitialized) {
-            fetchCurrentWeatherData()
-            fetchForecastCurrentWeatherData()
+            if (!isLoadingData) {
+                fetchCurrentWeatherData()
+                fetchForecastCurrentWeatherData()
+            }
         } else {
             Timber.tag("MainViewModel").e("No Location Details")
         }

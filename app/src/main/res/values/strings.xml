@@ -1,9 +1,9 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
-    <string name="app_name">WeatherForecast</string>
+    <string name="app_name">Weather Forecast</string>
 
     <!--Home Screen-->
     <string name="home_content_description_setting_icon">Setting Icon</string>
-    <string name="home_title_currently">Currently</string>
+    <string name="home_title_currently">Current Location</string>
     <string name="home_feels_like_description">Feels like %1$s</string>
     <string name="home_today_forecast_title">Today\'s Forecast</string>
     <string name="home_weekly_forecast_title">Next Days Forecast</string>
@@ -86,4 +86,9 @@
 
     <string name="saved_screen_title">My Saved Locations</string>
     <string name="search_screen_title">Search</string>
+
+    <string name="home_error_occurred">An issue occurred</string>
+    <string name="home_error_try_again">Try Again</string>
+
+    <string name="placeholder_search">Search</string>
 </resources>

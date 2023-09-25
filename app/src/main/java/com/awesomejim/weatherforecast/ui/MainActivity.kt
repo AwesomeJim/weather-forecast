@@ -123,7 +123,6 @@ class MainActivity : ComponentActivity() {
 //                        Timber.tag("MainViewModel").e("addOnCanceledListener ")
 //                    }
                 // WeatherAppScreensConfig(navController = rememberNavController())
-                mainViewModel.testAPiCall()
                 MainScreenView(mainViewModel)
 
             }
