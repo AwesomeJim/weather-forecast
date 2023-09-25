@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -60,7 +61,7 @@ import com.awesomejim.weatherforecast.utilities.WeatherUtils
 @Composable
 private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -104,7 +105,9 @@ fun ConditionsSection(
     ElevatedCard {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(180.dp)
+            modifier = Modifier
+                .width(180.dp)
+                .height(60.dp)
         ) {
             Text(
                 text = conditionText,
@@ -156,7 +159,6 @@ fun OtherConditionsSection(
      * Wind speed and direction *
      ****************************/
     /* Read wind speed (in MPH) and direction (in compass degrees) from the cursor  */
-    val windSpeed = weatherDetails.weatherWindSpeed
 
     val windDirection: String = getFormattedWind(weatherDetails.weatherWindDegrees)
     val windString = stringResource(
@@ -229,6 +231,7 @@ fun WeatherDetailsSection(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContentScreen(
     currentWeather: LocationItemData,
@@ -249,23 +252,50 @@ fun HomeContentScreen(
             )
         }
     ) { contentPadding ->
-        Column(
-            modifier = modifier
-                .padding(paddingValues = contentPadding)
-        ) {
-            WeatherDetailsSection(
-                weatherDetails = currentWeather,
-                imageResource = R.drawable.sea_sunnypng
-            )
-            OtherConditionsSection(
-                weatherDetails = currentWeather.locationWeatherInfo,
-                modifier = Modifier.padding(8.dp)
-            )
+        LazyColumn(modifier = modifier
+            .padding(contentPadding)
+            .fillMaxHeight()) {
+            item {
+                WeatherDetailsSection(
+                    weatherDetails = currentWeather,
+                    imageResource = R.drawable.sea_sunnypng
+                )
+                OtherConditionsSection(
+                    weatherDetails = currentWeather.locationWeatherInfo,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
             forecastItem?.let { forecast ->
                 if (forecast.isNotEmpty()) {
-                    ForecastList(forecastItem = forecast)
-                } else {
-                    LoadingProgressScreens()
+                    items(forecastItem)
+                    { item ->
+                        Divider(color = Color.Black, thickness = 1.dp)
+                        Subtitle(
+                            text = stringResource(id = R.string.home_weekly_forecast_title)
+                        )
+                        val weatherTempMax = stringResource(
+                            id = R.string.format_temperature,
+                            item.locationWeatherInfo.weatherTempMax
+                        )
+                        val weatherTempMin = stringResource(
+                            id = R.string.format_temperature,
+                            item.locationWeatherInfo.weatherTempMin
+                        )
+                        val dateString = getDate(item.locationDataTime, "EEEE, dd-MMM")
+                        ForecastItem(
+                            conditionText = item.locationWeatherInfo.weatherConditionDescription,
+                            forecastDate = dateString,
+                            tempHigh = weatherTempMax,
+                            tempLow = weatherTempMin,
+                            drawable = WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
+                            forecastMoreDetails = item.forecastMoreDetails,
+                            modifier = Modifier.animateItemPlacement()
+                        )
+                    }
+                }else {
+                    item{
+                        LoadingProgressScreens()
+                    }
                 }
             }
         }
@@ -279,7 +309,7 @@ fun ForecastItem(
     forecastDate: String,
     tempHigh: String,
     tempLow: String,
-    forecastMoreDetails : ForecastMoreDetails?,
+    forecastMoreDetails: ForecastMoreDetails?,
     @DrawableRes drawable: Int,
     modifier: Modifier = Modifier
 ) {
@@ -361,133 +391,102 @@ private fun ExpandItemButton(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun ForecastList(forecastItem: List<LocationItemData>) {
-    Divider(color = Color.Black, thickness = 1.dp)
-    Subtitle(text = stringResource(id = R.string.home_weekly_forecast_title))
-    LazyColumn(modifier = Modifier.padding(8.dp)) {
-        items(forecastItem)
-        { item ->
-            val weatherTempMax = stringResource(
-                id = R.string.format_temperature,
-                item.locationWeatherInfo.weatherTempMax
-            )
-            val weatherTempMin = stringResource(
-                id = R.string.format_temperature,
-                item.locationWeatherInfo.weatherTempMin
-            )
-            val dateString = getDate(item.locationDataTime, "EEEE, dd-MMM")
-            ForecastItem(
-                conditionText = item.locationWeatherInfo.weatherConditionDescription,
-                forecastDate = dateString,
-                tempHigh = weatherTempMax,
-                tempLow = weatherTempMin,
-                drawable = WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
-                forecastMoreDetails = item.forecastMoreDetails,
-                modifier = Modifier.animateItemPlacement()
+
+    @Preview(
+        name = "Conditions Section Preview",
+        showBackground = true, backgroundColor = 0xFFF0EAE2,
+        showSystemUi = false
+    )
+    @Composable
+    fun ConditionsSectionPreview() {
+        WeatherForecastTheme {
+            ConditionsSection(
+                conditionText = "1km/h SE",
+                conditionLabel = R.string.wind_label,
+                drawable = R.drawable.ic_wind
             )
         }
     }
-}
 
-
-@Preview(
-    name = "Conditions Section Preview",
-    showBackground = true, backgroundColor = 0xFFF0EAE2,
-    showSystemUi = false
-)
-@Composable
-fun ConditionsSectionPreview() {
-    WeatherForecastTheme {
-        ConditionsSection(
-            conditionText = "1km/h SE",
-            conditionLabel = R.string.wind_label,
-            drawable = R.drawable.ic_wind,
-            modifier = Modifier.padding(8.dp)
-        )
+    @Preview(
+        name = "Other Conditions Section Preview",
+        showBackground = true, backgroundColor = 0xFFF0EAE2,
+        showSystemUi = false
+    )
+    @Composable
+    fun OtherConditionsSectionPreview() {
+        WeatherForecastTheme {
+            val locationItemData = SampleData.locationItemData
+            OtherConditionsSection(
+                weatherDetails = locationItemData.locationWeatherInfo,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
-}
 
-@Preview(
-    name = "Other Conditions Section Preview",
-    showBackground = true, backgroundColor = 0xFFF0EAE2,
-    showSystemUi = false
-)
-@Composable
-fun OtherConditionsSectionPreview() {
-    WeatherForecastTheme {
-        val locationItemData = SampleData.locationItemData
-        OtherConditionsSection(
-            weatherDetails = locationItemData.locationWeatherInfo,
-            modifier = Modifier.padding(8.dp)
-        )
-    }
-}
-
-@Composable
-fun ErrorScreen(errorMsgId: Int, onTryAgainClicked: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Spacer(modifier = Modifier.weight(0.5f))
-        ErrorTextWithAction(
-            errorMessageId = errorMsgId,
-            modifier = Modifier.padding(16.dp)
+    @Composable
+    fun ErrorScreen(errorMsgId: Int, onTryAgainClicked: () -> Unit) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            onTryAgainClicked()
+            Spacer(modifier = Modifier.weight(0.5f))
+            ErrorTextWithAction(
+                errorMessageId = errorMsgId,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                onTryAgainClicked()
+            }
+            Spacer(modifier = Modifier.Companion.weight(0.5f))
         }
-        Spacer(modifier = Modifier.Companion.weight(0.5f))
     }
-}
 
-@Preview(
-    name = "Weather Details Section Preview",
-    showBackground = true,
-    showSystemUi = false
-)
-@Composable
-fun WeatherDetailsSectionPreview() {
-    WeatherForecastTheme {
-        val locationItemData = SampleData.locationItemData
-        WeatherDetailsSection(
-            weatherDetails = locationItemData,
-            imageResource = R.drawable.sea_sunnypng
-        )
+    @Preview(
+        name = "Weather Details Section Preview",
+        showBackground = true,
+        showSystemUi = false
+    )
+    @Composable
+    fun WeatherDetailsSectionPreview() {
+        WeatherForecastTheme {
+            val locationItemData = SampleData.locationItemData
+            WeatherDetailsSection(
+                weatherDetails = locationItemData,
+                imageResource = R.drawable.sea_sunnypng
+            )
+        }
     }
-}
 
 
-@Preview(
-    name = "Forecast Item Preview",
-    showBackground = true, backgroundColor = 0xFFF0EAE2,
-    showSystemUi = false
-)
-@Composable
-fun ForecastItemPreview() {
-    WeatherForecastTheme {
-        ForecastItem(
-            conditionText = "Partly Sunny",
-            forecastDate = "Tuesday, 24 Sep 2023",
-            tempHigh = "29*",
-            tempLow = "12*",
-            drawable = R.drawable.art_clear,
-            forecastMoreDetails = SampleData.forecastMoreDetails,
-            modifier = Modifier.padding(0.dp)
-        )
+    @Preview(
+        name = "Forecast Item Preview",
+        showBackground = true, backgroundColor = 0xFFF0EAE2,
+        showSystemUi = false
+    )
+    @Composable
+    fun ForecastItemPreview() {
+        WeatherForecastTheme {
+            ForecastItem(
+                conditionText = "Partly Sunny",
+                forecastDate = "Tuesday, 24 Sep 2023",
+                tempHigh = "29*",
+                tempLow = "12*",
+                drawable = R.drawable.art_clear,
+                forecastMoreDetails = SampleData.forecastMoreDetails,
+                modifier = Modifier.padding(0.dp)
+            )
+        }
     }
-}
 
-@Preview(
-    name = "Home Screen Preview",
-    showBackground = true,
-    showSystemUi = false
-)
-@Composable
-fun HomeContentScreenPreview() {
-    WeatherForecastTheme {
-        val locationItemData = SampleData.locationItemData
-        HomeContentScreen(locationItemData, SampleData.foreCastList)
+    @Preview(
+        name = "Home Screen Preview",
+        showBackground = true,
+        showSystemUi = false
+    )
+    @Composable
+    fun HomeContentScreenPreview() {
+        WeatherForecastTheme {
+            val locationItemData = SampleData.locationItemData
+            HomeContentScreen(locationItemData, SampleData.foreCastList)
+        }
     }
-}

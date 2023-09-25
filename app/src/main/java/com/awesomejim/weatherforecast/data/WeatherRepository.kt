@@ -23,5 +23,5 @@ interface WeatherRepository {
     suspend fun fetchWeatherForecastWithCoordinates(
         defaultLocation: DefaultLocation,
         units: String
-    ): RetrialResult<Map<Int, List<LocationItemData>>>
+    ): RetrialResult<List<LocationItemData>>
 }

@@ -1,16 +1,21 @@
 package com.awesomejim.weatherforecast.di.network
 
+import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
+import com.awesomejim.weatherforecast.data.model.HourlyWeatherData
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
+import com.awesomejim.weatherforecast.ui.common.getDate
 import com.awesomejim.weatherforecast.utilities.ClientException
 import com.awesomejim.weatherforecast.utilities.GenericException
 import com.awesomejim.weatherforecast.utilities.ServerException
 import com.awesomejim.weatherforecast.utilities.UnauthorizedException
 import com.awesomejim.weatherforecast.utilities.Units
+import com.awesomejim.weatherforecast.utilities.WeatherUtils
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.roundToInt
 
@@ -26,7 +31,11 @@ fun WeatherItemResponse.toCoreModel(): LocationItemData =
         locationWeatherInfo = WeatherStatusInfo(
             weatherConditionId = weatherConditionResponse[0].id,
             weatherCondition = weatherConditionResponse[0].main,
-            weatherConditionDescription = weatherConditionResponse[0].description,
+            weatherConditionDescription = weatherConditionResponse[0].description.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.ROOT
+                ) else it.toString()
+            },
             weatherConditionIcon = weatherConditionResponse[0].icon,
             weatherTemp = currentWeatherMain.weatherTemp,
             weatherTempMin = currentWeatherMain.weatherTempMin,
@@ -42,7 +51,23 @@ fun WeatherItemResponse.toCoreModel(): LocationItemData =
         locationDataLastUpdate = Date()
     )
 
-fun ForecastResponse.toLocationItemDataList(): Map<Int, List<LocationItemData>> {
+/*
+data class ForecastMoreDetails(
+    val windDetails: String,
+    val humidityDetails: String,
+    val visibilityDetails: String,
+    val pressureDetails: String,
+    val hourlyWeatherData: List<HourlyWeatherData>
+)
+
+data class HourlyWeatherData(
+    val temperature: String,
+    @DrawableRes val drawableIcon: Int,
+    val hourTime: String
+)
+
+ */
+fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemData> {
     val responseList = mutableListOf<LocationItemData>()
     foreCastList.forEach { list ->
         with(list) {
@@ -56,7 +81,11 @@ fun ForecastResponse.toLocationItemDataList(): Map<Int, List<LocationItemData>> 
                 locationWeatherInfo = WeatherStatusInfo(
                     weatherConditionId = weatherConditionResponse[0].id,
                     weatherCondition = weatherConditionResponse[0].main,
-                    weatherConditionDescription = weatherConditionResponse[0].description,
+                    weatherConditionDescription = weatherConditionResponse[0].description.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.ROOT
+                        ) else it.toString()
+                    },
                     weatherConditionIcon = weatherConditionResponse[0].icon,
                     weatherTemp = currentWeatherMain.weatherTemp,
                     weatherTempMin = currentWeatherMain.weatherTempMin,
@@ -79,7 +108,45 @@ fun ForecastResponse.toLocationItemDataList(): Map<Int, List<LocationItemData>> 
      * I had to have way to group forecast of the  day by using the the calender instance day of the month then grouping the list
      * with a distinct day of the, thus we should have 5 groups with 8 entries for a single day we will have only one
      */
-    return responseList.groupBy { it.locationWeatherDay }.toSortedMap()
+    val todayDate = getTodayDay()
+    val groupedMap = responseList.groupBy { it.locationWeatherDay }.toSortedMap()
+    val result = mutableListOf<LocationItemData>()
+    groupedMap.forEach { (num, list) ->
+        if (num != todayDate) {// we skip the first item which equals today
+            val hourlyWeatherDataList = mutableListOf<HourlyWeatherData>()
+            for (item in list) {
+                val temperature =
+                    formatTemperatureValue(item.locationWeatherInfo.weatherTemp, units)
+                val drawableIcon =
+                    WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId)
+                val hourTime = getDate(item.locationDataTime, "HH:SS")
+                val hourlyData = HourlyWeatherData(
+                    temperature = temperature,
+                    drawableIcon = drawableIcon,
+                    hourTime = hourTime
+                )
+                hourlyWeatherDataList.add(hourlyData)
+            }
+            val fList = list[0]
+            val windDirection = getFormattedWind(fList.locationWeatherInfo.weatherWindDegrees)
+            val visibility = fList.locationWeatherInfo.weatherVisibility / 1000
+            val forecastMoreDetails = ForecastMoreDetails(
+                windDetails = "%1\$1.0f km/h %2\$s".format(
+                    fList.locationWeatherInfo.weatherWindSpeed.toFloat(),
+                    windDirection
+                ),
+                humidityDetails = "%1.0f %%".format(fList.locationWeatherInfo.weatherHumidity.toFloat()),
+                visibilityDetails = "$visibility km",
+                pressureDetails = "%1.0f hPa".format(fList.locationWeatherInfo.weatherPressure.toFloat()),
+                hourlyWeatherData = hourlyWeatherDataList
+            )
+
+            fList.forecastMoreDetails = forecastMoreDetails
+            result.add(fList)
+        }
+    }
+
+    return result
 }
 
 fun mapResponseCodeToThrowable(code: Int): Throwable = when (code) {
@@ -106,8 +173,13 @@ private fun getWeatherDay(utcInMillis: Long): Int {
     return calendar[Calendar.DAY_OF_MONTH]
 }
 
+private fun getTodayDay(): Int {
+    val calendar = Calendar.getInstance(TimeZone.getDefault())
+    return calendar[Calendar.DAY_OF_MONTH]
+}
 
- fun formatTemperatureValue(temperature: Float, unit: String): String =
+
+fun formatTemperatureValue(temperature: Float, unit: String): String =
     "${temperature.roundToInt()}${getUnitSymbols(unit = unit)}"
 
 private fun getUnitSymbols(unit: String) = when (unit) {
@@ -121,7 +193,6 @@ private fun getUnitSymbols(unit: String) = when (unit) {
  * This method uses the wind direction in degrees to determine compass direction as a
  * String. (eg NW) The method will return the wind String in the following form: "2 km/h SW"
  *
- * @param windSpeed Wind speed in kilometers / hour
  * @param degrees   Degrees as measured on a compass, NOT temperature degrees!
  * See https://www.mathsisfun.com/geometry/degrees.html
  *
@@ -158,7 +229,7 @@ fun getFormattedWind(degrees: Double): String {
             direction = "W"
         }
 
-        degrees >= 292.5 && degrees < 337.5 -> {
+        degrees >= 292.5 -> {
             direction = "NW"
         }
     }

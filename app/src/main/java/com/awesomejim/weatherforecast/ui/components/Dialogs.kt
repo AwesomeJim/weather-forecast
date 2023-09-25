@@ -62,7 +62,7 @@ fun <T> SettingOptionsDialog(
     Dialog(onDismissRequest = { onDismiss() }) {
         LazyColumn(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.surface)
+                .background(color = MaterialTheme.colors.onSecondary)
                 .padding(16.dp)
         ) {
             items(items) { item ->

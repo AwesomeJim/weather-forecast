@@ -2,6 +2,7 @@ package com.awesomejim.weatherforecast.ui.screens.settings
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -106,7 +107,7 @@ fun SettingOptionRow(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onOptionClicked() }
-            .padding(16.dp)
+            .padding(16.dp).background(MaterialTheme.colorScheme.surface)
     ) {
         Image(
             painter = painterResource(id = optionIcon),

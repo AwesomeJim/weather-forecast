@@ -87,7 +87,7 @@ class DefaultWeatherRepository @Inject constructor(
     override suspend fun fetchWeatherForecastWithCoordinates(
         defaultLocation: DefaultLocation,
         units: String
-    ): RetrialResult<Map<Int, List<LocationItemData>>> {
+    ): RetrialResult<List<LocationItemData>> {
         return if (networkHelper.isNetworkConnected()) {
             try {
                 val remoteData = remoteDataSource.fetchWeatherForecastWithCoordinates(

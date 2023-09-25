@@ -87,11 +87,7 @@ class MainViewModel @Inject constructor(
                     val weatherData = result.data
                     Timber.e("weatherData result:: ${result.data}")
                     Timber.i("Size :: ${weatherData.size}")
-                    val responseList = mutableListOf<LocationItemData>()
-                    weatherData.forEach { (num, list) ->
-                        responseList.add(list[0])
-                    }
-                    _forecastListState.emit(responseList)
+                    _forecastListState.emit(weatherData)
                 }
 
                 is RetrialResult.Error -> {
