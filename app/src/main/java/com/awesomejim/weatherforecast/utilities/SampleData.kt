@@ -1,5 +1,8 @@
 package com.awesomejim.weatherforecast.utilities
 
+import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
+import com.awesomejim.weatherforecast.data.model.HourlyWeatherData
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import java.util.Date
@@ -108,5 +111,62 @@ object SampleData {
             locationWeatherDay = 4223,
             locationDataLastUpdate = Date()
         )
+    )
+
+    val hourlyWeatherDataList = listOf(
+        HourlyWeatherData(
+            temperature = "23\u00B0",
+            drawableIcon = R.drawable.art_light_rain,
+            hourTime = "16:00"
+
+        ),
+        HourlyWeatherData(
+            temperature = "23\u00B0",
+            drawableIcon = R.drawable.art_storm,
+            hourTime = "17:00"
+
+        )
+        ,HourlyWeatherData(
+            temperature = "15\u00B0",
+            drawableIcon = R.drawable.art_snow,
+            hourTime = "18:00"
+
+        ),HourlyWeatherData(
+            temperature = "14\u00B0",
+            drawableIcon = R.drawable.art_clouds,
+            hourTime = "19:00"
+
+        ),
+        HourlyWeatherData(
+            temperature = "23\u00B0",
+            drawableIcon = R.drawable.art_light_rain,
+            hourTime = "16:00"
+
+        ),
+        HourlyWeatherData(
+            temperature = "23\u00B0",
+            drawableIcon = R.drawable.art_storm,
+            hourTime = "17:00"
+
+        )
+        ,HourlyWeatherData(
+            temperature = "15\u00B0",
+            drawableIcon = R.drawable.art_snow,
+            hourTime = "18:00"
+
+        ),HourlyWeatherData(
+            temperature = "14\u00B0",
+            drawableIcon = R.drawable.art_clouds,
+            hourTime = "19:00"
+
+        )
+    )
+
+    val forecastMoreDetails = ForecastMoreDetails(
+        windDetails = "dolore",
+        humidityDetails = "malorum",
+        visibilityDetails = "libero",
+        pressureDetails = "eloquentiam",
+        hourlyWeatherData = hourlyWeatherDataList
     )
 }

@@ -21,9 +21,18 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.di.network.getFormattedWind
@@ -101,25 +111,34 @@ fun ConditionsSection(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp)
             )
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)
-            ) {
-                Image(
-                    painter = painterResource(drawable),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(12.dp)
-                )
-                Text(
-                    text = stringResource(conditionLabel),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-
-                )
-            }
+            ConditionsLabelSection(modifier, drawable, conditionLabel)
         }
+    }
+}
+
+@Composable
+fun ConditionsLabelSection(
+    modifier: Modifier,
+    @DrawableRes drawable: Int,
+    @StringRes conditionLabel: Int
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)
+    ) {
+        Image(
+            painter = painterResource(drawable),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.size(12.dp)
+        )
+        Text(
+            text = stringResource(conditionLabel),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(horizontal = 16.dp)
+
+        )
     }
 }
 
@@ -260,9 +279,11 @@ fun ForecastItem(
     forecastDate: String,
     tempHigh: String,
     tempLow: String,
+    forecastMoreDetails : ForecastMoreDetails?,
     @DrawableRes drawable: Int,
     modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
     ElevatedCard(
         shape = MaterialTheme.shapes.small,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 4.dp)
@@ -309,7 +330,34 @@ fun ForecastItem(
                     style = MaterialTheme.typography.labelSmall
                 )
             }
+            ExpandItemButton(
+                expanded = expanded,
+                onClick = { expanded = !expanded }
+            )
         }
+        if (expanded) {
+            forecastMoreDetails?.let {
+                ForecastMoreDetailsSection(forecastMoreDetails)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExpandItemButton(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = stringResource(R.string.expand_button_content_description),
+            tint = MaterialTheme.colorScheme.secondary
+        )
     }
 }
 
@@ -336,6 +384,7 @@ fun ForecastList(forecastItem: List<LocationItemData>) {
                 tempHigh = weatherTempMax,
                 tempLow = weatherTempMin,
                 drawable = WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
+                forecastMoreDetails = item.forecastMoreDetails,
                 modifier = Modifier.animateItemPlacement()
             )
         }
@@ -424,6 +473,7 @@ fun ForecastItemPreview() {
             tempHigh = "29*",
             tempLow = "12*",
             drawable = R.drawable.art_clear,
+            forecastMoreDetails = SampleData.forecastMoreDetails,
             modifier = Modifier.padding(0.dp)
         )
     }
