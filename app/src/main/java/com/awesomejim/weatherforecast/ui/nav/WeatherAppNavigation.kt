@@ -5,7 +5,6 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -22,12 +21,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
-import com.awesomejim.weatherforecast.ui.MainViewModel
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
-import com.awesomejim.weatherforecast.ui.screens.favorite.FavoriteScreen
 import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
 import com.awesomejim.weatherforecast.ui.screens.home.HomeContentScreen
+import com.awesomejim.weatherforecast.ui.screens.main.CurrentWeatherUiState
+import com.awesomejim.weatherforecast.ui.screens.main.MainViewModel
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
 import com.awesomejim.weatherforecast.ui.screens.search.SearchViewModel
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreen
@@ -40,13 +38,13 @@ import com.awesomejim.weatherforecast.ui.screens.settings.SettingsViewModel
  *
  * @property title - Screen Title
  * @property icon - Screen vector icon
- * @property screen_route - Navigation route
+ * @property screenRoute - Navigation route
  * @constructor Create empty Bottom nav item
  */
-sealed class BottomNavItem(var title: String, var icon: ImageVector, var screen_route: String) {
+sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenRoute: String) {
 
     object Home : BottomNavItem("My Location", Icons.Filled.PinDrop, "home")
-    object MyLocations : BottomNavItem("My List", Icons.Filled.Favorite, "my_locations")
+    //object MyLocations : BottomNavItem("My List", Icons.Filled.Favorite, "my_locations")
     object Search : BottomNavItem("Search", Icons.Filled.Search, "search")
     object Settings : BottomNavItem("Settings", Icons.Filled.Settings, "settings")
 }
@@ -63,8 +61,8 @@ fun NavigationGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel
 ) {
-    NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
-        composable(BottomNavItem.Home.screen_route) {
+    NavHost(navController, startDestination = BottomNavItem.Home.screenRoute) {
+        composable(BottomNavItem.Home.screenRoute) {
             val currentWeatherUiState = mainViewModel
                 .currentWeatherUiState
                 .collectAsStateWithLifecycle().value
@@ -94,15 +92,12 @@ fun NavigationGraph(
                 }
             }
         }
-        composable(BottomNavItem.MyLocations.screen_route) {
-            FavoriteScreen()
-        }
-        composable(BottomNavItem.Search.screen_route) {
+        composable(BottomNavItem.Search.screenRoute) {
             val searchViewModel = hiltViewModel<SearchViewModel>()
             SearchScreen(searchViewModel = searchViewModel)
 
         }
-        composable(BottomNavItem.Settings.screen_route) {
+        composable(BottomNavItem.Settings.screenRoute) {
             val settingsViewModel = hiltViewModel<SettingsViewModel>()
             val settingsState = settingsViewModel
                 .state.collectAsStateWithLifecycle()
@@ -151,11 +146,11 @@ fun AppBottomNavigationItem(
                 selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = MaterialTheme.colorScheme.primary.copy(0.4f),
                 alwaysShowLabel = true,
-                selected = currentRoute == item.screen_route,
+                selected = currentRoute == item.screenRoute,
                 onClick = {
-                    navController.navigate(item.screen_route) {
-                        navController.graph.startDestinationRoute?.let { screen_route ->
-                            popUpTo(screen_route) {
+                    navController.navigate(item.screenRoute) {
+                        navController.graph.startDestinationRoute?.let { screenRoute ->
+                            popUpTo(screenRoute) {
                                 saveState = true
                             }
                         }

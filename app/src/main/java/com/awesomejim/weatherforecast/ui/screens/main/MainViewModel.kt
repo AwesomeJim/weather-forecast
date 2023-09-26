@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.ui
+package com.awesomejim.weatherforecast.ui.screens.main
 
 
 import androidx.lifecycle.ViewModel

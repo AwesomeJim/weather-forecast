@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.ui
+package com.awesomejim.weatherforecast.ui.screens.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -22,11 +22,11 @@ import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
-import com.awesomejim.weatherforecast.ui.screens.MainScreenView
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
         }
 
     // Get location updates.
-    private val locationRequest = com.google.android.gms.location.LocationRequest.Builder(30_000L)
+    private val locationRequest = LocationRequest.Builder(30_000L)
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
         .build()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -150,7 +150,9 @@ class MainActivity : ComponentActivity() {
                     mainViewModel.processIntent(
                         MainViewUiState.ReceiveLocation(
                             longitude = location.longitude,
-                            latitude = location.latitude))
+                            latitude = location.latitude
+                        )
+                    )
                 }
             }
         }

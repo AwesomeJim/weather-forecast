@@ -1,10 +1,9 @@
-package com.awesomejim.weatherforecast.ui.screens
+package com.awesomejim.weatherforecast.ui.screens.main
 
 import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.awesomejim.weatherforecast.ui.MainViewModel
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
 import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
@@ -16,7 +15,6 @@ fun MainScreenView(mainViewModel: MainViewModel) {
 
     val bottomNavigationItems = listOf(
         BottomNavItem.Home,
-        BottomNavItem.MyLocations,
         BottomNavItem.Search,
         BottomNavItem.Settings
     )

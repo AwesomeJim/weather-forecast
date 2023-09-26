@@ -13,11 +13,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.ui.Greeting
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 
 @Composable
-fun GenlnfoScreens(@StringRes message: Int) {
+fun GeneralInfoScreens(@StringRes message: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,12 +35,12 @@ fun GenlnfoScreens(@StringRes message: Int) {
 
 @Composable
 fun RequiresPermissionsScreen() {
-    GenlnfoScreens(message = R.string.location_no_permission_screen_description)
+    GeneralInfoScreens(message = R.string.location_no_permission_screen_description)
 }
 
 @Composable
 fun EnableLocationSettingScreen() {
-    GenlnfoScreens(message = R.string.location_settings_not_enabled)
+    GeneralInfoScreens(message = R.string.location_settings_not_enabled)
 }
 
 

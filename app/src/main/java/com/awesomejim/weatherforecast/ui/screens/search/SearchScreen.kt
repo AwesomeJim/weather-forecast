@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -21,11 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,67 +32,50 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.components.DialogSearchSuccess
-import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.WeatherUtils
-import timber.log.Timber
 
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel
 ) {
-    val currentWeatherUiState = searchViewModel
-        .searchWeatherUiState
-        .collectAsStateWithLifecycle().value
-
+//    val currentWeatherUiState = searchViewModel
+//        .searchWeatherUiState
+//        .collectAsStateWithLifecycle().value
+    //
     val searchUiState = searchViewModel
         .searchUiState
         .collectAsStateWithLifecycle().value
-    val openAlertDialog = remember { mutableStateOf(false) }
-    val locationItemData = remember { mutableStateOf<LocationItemData?>(null) }
-    val weatherIcon = remember { mutableIntStateOf(R.drawable.art_clear) }
-    when (currentWeatherUiState) {
-        is CurrentWeatherUiState.Loading -> {
-            Timber.tag("keyboardActions").e("$currentWeatherUiState")
-        }
-
-        is CurrentWeatherUiState.Error -> {
-            ErrorScreen(
-                currentWeatherUiState.errorMessageId,
-                onTryAgainClicked = {
-
-                })
-        }
-
-        is CurrentWeatherUiState.Success -> {
-            Timber.tag("keyboardActions").e("$currentWeatherUiState")
-            val data = currentWeatherUiState.currentWeather
-            locationItemData.value = data
-            val drawable =
-                WeatherUtils.
-                getLargeArtResourceIdForWeatherCondition(data.locationWeatherInfo.weatherConditionId)
-            weatherIcon.intValue = drawable
-            openAlertDialog.value = searchUiState.isSearchComplete
-        }
-    }
-
-
-    if (openAlertDialog.value) {
-        locationItemData.value?.let { data ->
+    //
+    if (searchUiState.isSearchingSuccessful) {
+        searchUiState.searchResultWeatherData?.let { searchResults ->
+            val weatherIcon =
+                WeatherUtils.getLargeArtResourceIdForWeatherCondition(searchResults.locationWeatherInfo.weatherConditionId)
             DialogSearchSuccess(
                 onDismissRequest = {
                     searchViewModel.updateSearchStatus()
-                    openAlertDialog.value = false
                 },
                 onConfirmation = {
-                    openAlertDialog.value = false
                     searchViewModel.updateSearchStatus()
                 },
-                conditionIcon = weatherIcon.intValue,
-                locationItemData = data
+                conditionIcon = weatherIcon,
+                locationItemData = searchResults
+            )
+        }
+    }
+
+    if (searchUiState.isSearchError) {
+        searchUiState.searchErrorMessage?.let { errorMessageId ->
+            AlertDialogError(
+                onDismissRequest = {
+                    searchViewModel.updateSearchStatus()
+                },
+                onConfirmation = {
+                    searchViewModel.updateSearchStatus()
+                },
+                dialogTitle = "Request Failed",
+                dialogText = stringResource(id = errorMessageId)
             )
         }
     }
@@ -116,15 +97,24 @@ fun SearchScreen(
             modifier = Modifier
                 .padding(paddingValues = contentPadding)
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .wrapContentSize(Alignment.Center)
+                .background(MaterialTheme.colorScheme.background)
+            //.wrapContentSize(Alignment.Center)
         ) {
             Spacer(Modifier.height(16.dp))
             SearchBar(
-                onSearchTermChanged = { searchViewModel.updateUserSearchKeyWord(it) },
-                onKeyboardDone = { searchViewModel.fetchForecastCurrentWeatherData() },
-                modifier = Modifier.padding(horizontal = 16.dp),
-                searchTerm = searchUiState.searchKeyWord
+                searchTerm = searchUiState.searchKeyWord,
+                isSearchWordValid = searchUiState.isSearchWordValid,
+                onSearchTermChanged = {
+                    searchViewModel.updateUserSearchKeyWord(it)
+                },
+                onKeyboardDone = {
+                    if (searchUiState.isSearchWordValid) {
+                        searchViewModel.fetchForecastCurrentWeatherData()
+                    }
+                },
+                isSearching = searchUiState.isSearching,
+                modifier = Modifier.padding(horizontal = 16.dp)
+
             )
         }
 
@@ -134,38 +124,56 @@ fun SearchScreen(
 @Composable
 fun SearchBar(
     searchTerm: String,
+    isSearchWordValid: Boolean,
+    isSearching:Boolean,
     onSearchTermChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    TextField(
-        value = searchTerm,
-        onValueChange = onSearchTermChanged,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null
-            )
-        },
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = MaterialTheme.colorScheme.surface
-        ),
-        placeholder = {
-            Text(stringResource(R.string.placeholder_search))
-        },
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 56.dp),
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onKeyboardDone()
-            }
+    ) {
+        TextField(
+            value = searchTerm,
+            onValueChange = onSearchTermChanged,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null
+                )
+            },
+            isError = searchTerm.isNotEmpty() && !isSearchWordValid,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colorScheme.surface
+            ),
+            placeholder = {
+                Text(stringResource(R.string.placeholder_search))
+            },
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onKeyboardDone()
+                }
+            )
         )
+        if (searchTerm.isNotEmpty() && !isSearchWordValid) {
+            Text(text = "Please enter valid text", color = MaterialTheme.colorScheme.error)
+        }
+        if (isSearching) {
+            CircularProgressIndicator(
+                modifier = Modifier.width(34.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                trackColor = MaterialTheme.colorScheme.primary,
+            )
+        }
+    }
 
-    )
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -174,6 +182,8 @@ fun SearchBarPreview() {
     WeatherForecastTheme {
         SearchBar(
             searchTerm = "",
+            isSearchWordValid = true,
+            isSearching = true,
             onSearchTermChanged = {},
             onKeyboardDone = {},
             modifier = Modifier.padding(8.dp)

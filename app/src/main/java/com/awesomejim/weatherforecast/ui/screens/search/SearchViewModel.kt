@@ -1,5 +1,6 @@
 package com.awesomejim.weatherforecast.ui.screens.search
 
+import android.text.TextUtils
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.SettingsRepository
 import com.awesomejim.weatherforecast.data.WeatherRepository
 import com.awesomejim.weatherforecast.di.network.RetrialResult
-import com.awesomejim.weatherforecast.ui.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,15 +36,14 @@ class SearchViewModel @Inject constructor(
     // Backing property to avoid state updates from other classes
     val searchUiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
-    var searchKeyWord by mutableStateOf("")
-        private set
+    private var searchKeyWord by mutableStateOf("")
 
 
-    private val _searchWeatherUiState =
-        MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
-
-    val searchWeatherUiState: StateFlow<CurrentWeatherUiState> =
-        _searchWeatherUiState.asStateFlow()
+//    private val _searchWeatherUiState =
+//        MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
+//
+//    val searchWeatherUiState: StateFlow<CurrentWeatherUiState> =
+//        _searchWeatherUiState.asStateFlow()
 
     init {
         _uiState.value = SearchUiState(searchKeyWord = "")
@@ -54,15 +54,30 @@ class SearchViewModel @Inject constructor(
 
 
     fun updateUserSearchKeyWord(keyWord: String) {
-        searchKeyWord = keyWord
+        searchKeyWord = keyWord.trim()
+        val isValidCityName = isValidName(keyWord)
         _uiState.update { currentState ->
-            currentState.copy(searchKeyWord = keyWord)
+            currentState.copy(
+                searchKeyWord = keyWord,
+                isSearchWordValid = isValidCityName
+            )
         }
     }
 
+    /*
+     Reset to default
+     */
     fun updateSearchStatus() {
         _uiState.update { currentState ->
-            currentState.copy(isSearchComplete = false)
+            currentState.copy(
+                searchKeyWord = "",
+                isSearching = false,
+                isSearchingSuccessful = false,
+                isSearchWordValid = true,
+                searchResultWeatherData = null,
+                isSearchError = false,
+                searchErrorMessage = null
+            )
         }
     }
 
@@ -71,34 +86,57 @@ class SearchViewModel @Inject constructor(
      * Fetch 5 days forecast weather data for the current location
      *
      */
-     fun fetchForecastCurrentWeatherData() {
+    fun fetchForecastCurrentWeatherData() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isSearching = true
+            )
+        }
         Timber.e("fetchWeatherDataWithCoordinates result:: $searchKeyWord")
         viewModelScope.launch {
-            if (searchKeyWord.isNotEmpty() && !isLoadingData) {
-                isLoadingData = true
-                val result = defaultWeatherRepository.fetchWeatherDataWithLocationQuery(
-                    searchKeyWord,
-                    preferredUnits
-                )
-                isLoadingData = false
-                Timber.e("fetchWeatherDataWithCoordinates result:: $result")
-                when (result) {
-                    is RetrialResult.Success -> {
-                        val weatherData = result.data
-                        Timber.e("weatherData result:: ${result.data}")
-                        _searchWeatherUiState.emit(CurrentWeatherUiState.Success(weatherData))
-                        _uiState.update { currentState ->
-                            currentState.copy(isSearchComplete = true)
-                        }
+            isLoadingData = true
+            val result = defaultWeatherRepository.fetchWeatherDataWithLocationQuery(
+                searchKeyWord,
+                preferredUnits
+            )
+            Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+            when (result) {
+                is RetrialResult.Success -> {
+                    val weatherData = result.data
+                    Timber.e("weatherData result:: ${result.data}")
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isSearching = false,
+                            isSearchingSuccessful = true,
+                            searchResultWeatherData = weatherData,
+                            isSearchError = false,
+                            searchErrorMessage = null
+                        )
                     }
-                    is RetrialResult.Error -> {
-                        CurrentWeatherUiState.Error(result.errorType.toResourceId())
-                        Timber.e("Error :: ${result.errorType.toResourceId()}")
+                }
+
+                is RetrialResult.Error -> {
+                    Timber.e("Error :: ${result.errorType.toResourceId()}")
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isSearching = false,
+                            isSearchingSuccessful = false,
+                            searchResultWeatherData = null,
+                            isSearchError = true,
+                            searchErrorMessage = result.errorType.toResourceId()
+                        )
                     }
                 }
 
             }
         }
+    }
+
+    private fun isValidName(cityName: String): Boolean {
+        return !((TextUtils.isEmpty(cityName) || cityName.length < 3)) && Pattern.matches(
+            "^[A-Za-z0-9]+\\w$",
+            cityName
+        )
     }
 
 }
