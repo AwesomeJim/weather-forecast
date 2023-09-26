@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.SettingsRepository
 import com.awesomejim.weatherforecast.data.WeatherRepository
+import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.source.local.LocalDataSource
+import com.awesomejim.weatherforecast.data.source.local.MediatorRepository
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val defaultWeatherRepository: WeatherRepository,
     private val settingsRepository: SettingsRepository,
+    private val mediatorRepository: MediatorRepository,
     private val localDataSource: LocalDataSource
 ) : ViewModel() {
 
@@ -58,6 +61,9 @@ class SearchViewModel @Inject constructor(
             initialValue = SavedLocationListUiState()
         )
 
+    /**
+     * set the initial search UI State
+     */
     init {
         _uiState.value = SearchUiState(searchKeyWord = "")
         viewModelScope.launch {
@@ -66,12 +72,63 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    fun saveLocation(locationItemData: LocationItemData){
+    /**
+     * Save location to the Local Database
+     *
+     * @param locationItemData location to be saved
+     */
+    fun saveLocation(locationItemData: LocationItemData) {
         viewModelScope.launch {
             localDataSource.insertLocation(locationItemData)
         }
     }
 
+    /**
+     * Removes an location from the db.
+     * @param locationItemData The location Item to be removed.
+     */
+    fun deleteLocationItem(locationItemData: LocationItemData) {
+        viewModelScope.launch {
+            localDataSource.deleteLocation(locationItemData)
+        }
+    }
+
+
+    /**
+     * Refresh saved location by fetching update data
+     *
+     * @param locationItemData
+     */
+    fun refreshWeatherData(locationItemData: LocationItemData) {
+        viewModelScope.launch {
+            val location = DefaultLocation(
+                longitude = locationItemData.locationLongitude,
+                latitude = locationItemData.locationLatitude
+            )
+            val result = mediatorRepository.fetchWeatherDataWithCoordinates(
+                location,
+                preferredUnits,
+                locationId = locationItemData.locationId
+            )
+            Timber.e("fetchWeatherDataWithCoordinates result:: $result")
+            when (result) {
+                is RetrialResult.Success -> {
+                    Timber.e("weatherData result:: ${result.data}")
+                }
+
+                is RetrialResult.Error -> {
+                    Timber.e("Error :: ${result.errorType.toResourceId()}")
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Update user typed search keyword
+     *
+     * @param keyWord
+     */
     fun updateUserSearchKeyWord(keyWord: String) {
         searchKeyWord = keyWord.trim()
         val isValidCityName = isValidName(keyWord)
@@ -83,8 +140,8 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    /*
-     Reset to default
+    /**
+    Reset to default
      */
     fun updateSearchStatus() {
         _uiState.update { currentState ->
@@ -151,6 +208,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Validate cityName as they user is typing
+     *
+     * @param cityName
+     * @return
+     */
     private fun isValidName(cityName: String): Boolean {
         return !((TextUtils.isEmpty(cityName) || cityName.length < 3)) && Pattern.matches(
             "^[A-Za-z0-9]+\\w$",

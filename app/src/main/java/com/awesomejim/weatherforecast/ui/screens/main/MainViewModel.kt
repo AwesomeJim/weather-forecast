@@ -170,6 +170,7 @@ class MainViewModel @Inject constructor(
         Timber.tag("MainViewModel").e("fetchWeatherData::-")
         if (this::currentLocation.isInitialized) {
             if (!isLoadingData) {
+                _currentWeatherUiState.value = CurrentWeatherUiState.Loading
                 fetchCurrentWeatherData()
                 fetchForecastCurrentWeatherData()
             }

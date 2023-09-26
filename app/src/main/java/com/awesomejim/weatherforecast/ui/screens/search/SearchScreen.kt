@@ -1,7 +1,10 @@
 package com.awesomejim.weatherforecast.ui.screens.search
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -34,15 +37,22 @@ import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -51,8 +61,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.ui.common.getDate
+import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.DialogSearchSuccess
+import com.awesomejim.weatherforecast.ui.components.DismissBackground
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
 import com.awesomejim.weatherforecast.ui.components.TemperatureHeadline
@@ -61,8 +72,9 @@ import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
 import com.awesomejim.weatherforecast.utilities.WeatherUtils
+import kotlinx.coroutines.delay
+import timber.log.Timber
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel
@@ -145,18 +157,87 @@ fun SearchScreen(
                 )
             }
             if (savedLocationListUiState.itemList.isNotEmpty()) {
-                items(savedLocationListUiState.itemList) { item ->
+                itemsIndexed(
+                    items = savedLocationListUiState.itemList,
+                    // Provide a unique key based on the item  content, for our case we use locationId
+                    key = { _, item -> item.locationId }
+                ) { _, location ->
                     val drawable =
-                        WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId)
-                    SavedLocationItem(
+                        WeatherUtils.getLargeArtResourceIdForWeatherCondition(location.locationWeatherInfo.weatherConditionId)
+                    EditableLocationItem(
+                        locationItemData = location,
                         conditionIcon = drawable,
-                        locationItemData = item,
-                        modifier = Modifier.animateItemPlacement()
-                    )
+                        onRefresh = { locationItemData ->
+                            Timber.e("dismissValue onRemove ${locationItemData.locationId}")
+                            searchViewModel.refreshWeatherData(locationItemData)
+                        },
+                        onRemove = { locationItemData ->
+                            Timber.e("dismissValue onRemove ${locationItemData.locationId}")
+                            searchViewModel.deleteLocationItem(locationItemData)
+                        })
                 }
             }
         }
 
+    }
+}
+
+/**
+ * Composable representing an email item with swipe-to-dismiss functionality.
+ *
+ * @param locationItemData The location message to display.
+ * @param onRemove Callback invoked when the location item is dismissed.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditableLocationItem(
+    locationItemData: LocationItemData,
+    @DrawableRes conditionIcon: Int,
+    onRefresh: (LocationItemData) -> Unit,
+    onRemove: (LocationItemData) -> Unit
+) {
+    val context = LocalContext.current
+    var show by remember { mutableStateOf(true) }
+   // var dismissValue by remember { mutableStateOf<DismissValue>(DismissValue.Default) }
+    val currentItem by rememberUpdatedState(locationItemData)
+    val dismissState = rememberDismissState(
+        confirmValueChange = {
+           // dismissValue = it
+            if (it == DismissValue.DismissedToStart) {
+                onRefresh(currentItem)
+            }
+            if (it == DismissValue.DismissedToEnd) {
+                show = false
+                true
+            } else false
+        },
+        positionalThreshold = {
+            150.dp.toPx()
+        }
+    )
+    AnimatedVisibility(
+        show, exit = fadeOut(spring())
+    ) {
+        SwipeToDismiss(
+            state = dismissState,
+            modifier = Modifier,
+            background = {
+                DismissBackground(dismissState)
+            },
+            dismissContent = {
+                SavedLocationItem(
+                    conditionIcon = conditionIcon,
+                    locationItemData = locationItemData
+                )
+            }
+        )
+    }
+    LaunchedEffect(show) {
+        if (!show) {
+            delay(800)
+            onRemove(currentItem)
+            Toast.makeText(context, "Location removed", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
@@ -231,7 +312,7 @@ fun SavedLocationItem(
         locationItemData.locationWeatherInfo.weatherTempMax,
         locationItemData.locationWeatherInfo.weatherTempMin
     )
-    val lastUpdatedOn = getDate(locationItemData.locationDataTime, "EEEE, dd-MMM HH:SS")
+    val lastUpdatedOn = getUpdatedOnDate(locationItemData.locationDataLastUpdate)
     Card(
         modifier = Modifier
             .fillMaxWidth()
