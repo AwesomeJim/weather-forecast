@@ -127,7 +127,7 @@ fun DialogSearchSuccess(
                 .height(375.dp)
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -136,7 +136,7 @@ fun DialogSearchSuccess(
             ) {
                 Subtitle(
                     text = locationItemData.locationName,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 Row(
                     modifier = Modifier
@@ -217,7 +217,7 @@ fun SearchBarPreview() {
             onDismissRequest = {},
             onConfirmation = {},
             conditionIcon = R.drawable.art_light_clouds,
-            locationItemData = SampleData.locationItemData
+            locationItemData = SampleData.sampleLocationItemData
         )
 
     }

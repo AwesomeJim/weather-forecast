@@ -65,7 +65,7 @@ object SampleData {
         pressureDetails = "eloquentiam",
         hourlyWeatherData = hourlyWeatherDataList
     )
-    val locationItemData = LocationItemData(
+    val sampleLocationItemData = LocationItemData(
         locationName = "Terra Clarke",
         locationId = 2101,
         locationTimeZoneShift = 3546,

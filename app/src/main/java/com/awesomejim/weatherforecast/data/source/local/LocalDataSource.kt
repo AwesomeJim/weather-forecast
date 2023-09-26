@@ -16,14 +16,15 @@ class LocalDataSource @Inject constructor(private val locationItemDao: LocationI
         return@withContext locationItemDao.getLocationById(id)?.toLocationItem()
     }
 
-    suspend fun loadAllLocation(): Flow<List<LocationItemData>?> = withContext(Dispatchers.IO) {
-        return@withContext locationItemDao.loadAllLocation()
+    fun loadAllLocation(): Flow<List<LocationItemData>?> {
+        return locationItemDao.loadAllLocation()
             .map {
                 it?.map { item ->
                     item.toLocationItem()
                 }
             }
     }
+
 
     suspend fun updateLocation(locationEntry: LocationItemData) = withContext(Dispatchers.IO) {
         locationItemDao.updateLocation(locationEntry.toLocationEntity())

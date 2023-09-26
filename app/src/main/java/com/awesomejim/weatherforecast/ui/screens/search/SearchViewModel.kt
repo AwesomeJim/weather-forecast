@@ -8,13 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.SettingsRepository
 import com.awesomejim.weatherforecast.data.WeatherRepository
+import com.awesomejim.weatherforecast.data.model.LocationItemData
+import com.awesomejim.weatherforecast.data.source.local.LocalDataSource
 import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,7 +29,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val defaultWeatherRepository: WeatherRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val localDataSource: LocalDataSource
 ) : ViewModel() {
 
     private lateinit var preferredUnits: String
@@ -39,11 +45,18 @@ class SearchViewModel @Inject constructor(
     private var searchKeyWord by mutableStateOf("")
 
 
-//    private val _searchWeatherUiState =
-//        MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
-//
-//    val searchWeatherUiState: StateFlow<CurrentWeatherUiState> =
-//        _searchWeatherUiState.asStateFlow()
+    val savedLocationListUiState: StateFlow<SavedLocationListUiState> =
+        localDataSource.loadAllLocation().map { list ->
+            if (list != null) {
+                SavedLocationListUiState(list)
+            } else {
+                SavedLocationListUiState()
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+            initialValue = SavedLocationListUiState()
+        )
 
     init {
         _uiState.value = SearchUiState(searchKeyWord = "")
@@ -52,6 +65,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+
+    fun saveLocation(locationItemData: LocationItemData){
+        viewModelScope.launch {
+            localDataSource.insertLocation(locationItemData)
+        }
+    }
 
     fun updateUserSearchKeyWord(keyWord: String) {
         searchKeyWord = keyWord.trim()
@@ -139,4 +158,13 @@ class SearchViewModel @Inject constructor(
         )
     }
 
+    companion object {
+        private const val TIMEOUT_MILLIS = 5_000L
+    }
+
 }
+
+/**
+ * Saved data Ui State for HomeScreen
+ */
+data class SavedLocationListUiState(val itemList: List<LocationItemData> = listOf())

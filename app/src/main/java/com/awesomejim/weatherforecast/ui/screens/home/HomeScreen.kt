@@ -417,7 +417,7 @@ fun ExpandItemButton(
     @Composable
     fun OtherConditionsSectionPreview() {
         WeatherForecastTheme {
-            val locationItemData = SampleData.locationItemData
+            val locationItemData = SampleData.sampleLocationItemData
             OtherConditionsSection(
                 weatherDetails = locationItemData.locationWeatherInfo,
                 modifier = Modifier.padding(8.dp)
@@ -450,7 +450,7 @@ fun ExpandItemButton(
     @Composable
     fun WeatherDetailsSectionPreview() {
         WeatherForecastTheme {
-            val locationItemData = SampleData.locationItemData
+            val locationItemData = SampleData.sampleLocationItemData
             WeatherDetailsSection(
                 weatherDetails = locationItemData,
                 imageResource = R.drawable.sea_sunnypng
@@ -487,7 +487,7 @@ fun ExpandItemButton(
     @Composable
     fun HomeContentScreenPreview() {
         WeatherForecastTheme {
-            val locationItemData = SampleData.locationItemData
+            val locationItemData = SampleData.sampleLocationItemData
             HomeContentScreen(locationItemData, SampleData.foreCastList)
         }
     }

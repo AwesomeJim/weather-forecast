@@ -1,6 +1,7 @@
 package com.awesomejim.weatherforecast.ui.screens.search
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -60,13 +62,14 @@ import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
 import com.awesomejim.weatherforecast.utilities.WeatherUtils
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel
 ) {
-//    val currentWeatherUiState = searchViewModel
-//        .searchWeatherUiState
-//        .collectAsStateWithLifecycle().value
+    val savedLocationListUiState = searchViewModel
+        .savedLocationListUiState
+        .collectAsStateWithLifecycle().value
     //
     val searchUiState = searchViewModel
         .searchUiState
@@ -81,6 +84,7 @@ fun SearchScreen(
                     searchViewModel.updateSearchStatus()
                 },
                 onConfirmation = {
+                    searchViewModel.saveLocation(searchResults)
                     searchViewModel.updateSearchStatus()
                 },
                 conditionIcon = weatherIcon,
@@ -139,6 +143,17 @@ fun SearchScreen(
                     isSearching = searchUiState.isSearching,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
+            }
+            if (savedLocationListUiState.itemList.isNotEmpty()) {
+                items(savedLocationListUiState.itemList) { item ->
+                    val drawable =
+                        WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId)
+                    SavedLocationItem(
+                        conditionIcon = drawable,
+                        locationItemData = item,
+                        modifier = Modifier.animateItemPlacement()
+                    )
+                }
             }
         }
 
@@ -216,7 +231,7 @@ fun SavedLocationItem(
         locationItemData.locationWeatherInfo.weatherTempMax,
         locationItemData.locationWeatherInfo.weatherTempMin
     )
-    val lastUpdatedOn = getDate(locationItemData.locationDataTime, "EEEE, dd-MMM")
+    val lastUpdatedOn = getDate(locationItemData.locationDataTime, "EEEE, dd-MMM HH:SS")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -296,13 +311,15 @@ fun SavedLocationItem(
                     onClick = { expanded = !expanded }
                 )
             }
-            locationItemData.forecastMoreDetails?.let { data ->
-                Divider(color = MaterialTheme.colorScheme.onTertiaryContainer, thickness = 1.dp)
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = modifier.padding(horizontal = 12.dp, vertical = 0.dp)
-                ) {
-                    ForecastMoreDetails(data)
+            if (expanded) {
+                locationItemData.forecastMoreDetails?.let { data ->
+                    Divider(color = MaterialTheme.colorScheme.onTertiaryContainer, thickness = 1.dp)
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        modifier = modifier.padding(horizontal = 12.dp, vertical = 0.dp)
+                    ) {
+                        ForecastMoreDetails(data)
+                    }
                 }
             }
         }
@@ -316,7 +333,7 @@ fun SavedLocationItemPreview() {
     WeatherForecastTheme {
         SavedLocationItem(
             conditionIcon = R.drawable.art_light_clouds,
-            locationItemData = SampleData.locationItemData
+            locationItemData = SampleData.sampleLocationItemData
         )
     }
 }

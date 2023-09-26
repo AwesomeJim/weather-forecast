@@ -8,7 +8,6 @@ import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.ui.common.getDate
 import com.awesomejim.weatherforecast.utilities.ClientException
 import com.awesomejim.weatherforecast.utilities.GenericException
-import com.awesomejim.weatherforecast.utilities.SampleData
 import com.awesomejim.weatherforecast.utilities.ServerException
 import com.awesomejim.weatherforecast.utilities.UnauthorizedException
 import com.awesomejim.weatherforecast.utilities.Units
@@ -68,7 +67,7 @@ fun WeatherItemResponse.toCoreModel(addSummary:Boolean = false): LocationItemDat
 
       locationItemData.forecastMoreDetails = forecastMoreDetails
     }
-    return SampleData.locationItemData
+    return locationItemData
 }
 
 /*
