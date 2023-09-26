@@ -375,7 +375,7 @@ fun ForecastItem(
 }
 
 @Composable
-private fun ExpandItemButton(
+fun ExpandItemButton(
     expanded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
