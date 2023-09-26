@@ -1,5 +1,6 @@
 package com.awesomejim.weatherforecast.ui.screens.search
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
@@ -30,7 +31,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
@@ -126,10 +126,10 @@ fun SearchScreen(
                     Text(
                         text = stringResource(id = R.string.saved_screen_title),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 },
-                backgroundColor = MaterialTheme.colorScheme.primary
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
             )
         }
     ) { contentPadding ->
@@ -137,7 +137,7 @@ fun SearchScreen(
             modifier = Modifier
                 .padding(contentPadding)
                 .fillMaxHeight()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.onSecondaryContainer)
         ) {
             item {
                 Spacer(Modifier.height(16.dp))
@@ -198,11 +198,11 @@ fun EditableLocationItem(
 ) {
     val context = LocalContext.current
     var show by remember { mutableStateOf(true) }
-   // var dismissValue by remember { mutableStateOf<DismissValue>(DismissValue.Default) }
+    // var dismissValue by remember { mutableStateOf<DismissValue>(DismissValue.Default) }
     val currentItem by rememberUpdatedState(locationItemData)
     val dismissState = rememberDismissState(
         confirmValueChange = {
-           // dismissValue = it
+            // dismissValue = it
             if (it == DismissValue.DismissedToStart) {
                 onRefresh(currentItem)
             }
@@ -252,7 +252,7 @@ fun SearchBar(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         TextField(
             value = searchTerm,
@@ -264,9 +264,7 @@ fun SearchBar(
                 )
             },
             isError = searchTerm.isNotEmpty() && !isSearchWordValid,
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colorScheme.surface
-            ),
+
             placeholder = {
                 Text(stringResource(R.string.placeholder_search))
             },
@@ -376,7 +374,8 @@ fun SavedLocationItem(
                         Text(
                             text = "Updated on:",
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = modifier.padding(horizontal = 16.dp, vertical = 2.dp)
+                            modifier = modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                         Text(
                             text = lastUpdatedOn,
@@ -408,6 +407,12 @@ fun SavedLocationItem(
     }
 }
 
+
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SavedLocationItemPreview() {
@@ -420,6 +425,11 @@ fun SavedLocationItemPreview() {
 }
 
 
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SearchBarPreview() {
@@ -449,9 +459,12 @@ fun AlertDialogError(
         title = {
             Text(text = dialogTitle)
         },
+        titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         text = {
             Text(text = dialogText)
         },
+        textContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
         onDismissRequest = {
             onDismissRequest()
         },
@@ -476,7 +489,13 @@ fun AlertDialogError(
     )
 }
 
+
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Composable
 fun AlertDialogPreview() {
     WeatherForecastTheme {

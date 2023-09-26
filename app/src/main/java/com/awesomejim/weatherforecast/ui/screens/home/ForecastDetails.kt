@@ -1,6 +1,8 @@
 package com.awesomejim.weatherforecast.ui.screens.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,21 +51,25 @@ fun ForecastMoreDetails(
             Text(
                 text = forecastMoreDetails.windDetails,
                 style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.humidityDetails,
                 style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.visibilityDetails,
                 style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.pressureDetails,
                 style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
         }
@@ -82,6 +88,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.temperature,
             style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
         Image(
             painter = painterResource(hourlyWeatherData.drawableIcon),
@@ -94,6 +101,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.hourTime,
             style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
     }
 }
@@ -106,7 +114,7 @@ fun HourlyDataElementRow(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(horizontal = 4.dp),
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         items(hourlyWeatherData) { item ->
             HourlyDataElement(item)
@@ -123,6 +131,7 @@ fun ForecastMoreDetailsSection(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(horizontal = 1.dp, vertical = 4.dp).fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         ForecastMoreDetails(forecastMoreDetails)
         HourlyDataElementRow(forecastMoreDetails.hourlyWeatherData)
@@ -130,6 +139,11 @@ fun ForecastMoreDetailsSection(
 
 }
 
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun HourlyDataElementPreview() {
@@ -148,6 +162,11 @@ fun HourlyDataElementPreview() {
 }
 
 
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun ForecastMoreDetailsPreview() {
@@ -165,6 +184,11 @@ fun ForecastMoreDetailsPreview() {
     }
 }
 
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun HourlyDataElementRowPreview() {
@@ -173,6 +197,12 @@ fun HourlyDataElementRowPreview() {
     }
 }
 
+
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true,
     backgroundColor = 0xFFF0EAE2,
     showSystemUi = true)

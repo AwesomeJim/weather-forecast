@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,8 +27,8 @@ fun ConfirmButton(
             onClick()
         },
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.secondary,
-            contentColor = MaterialTheme.colors.onSecondary
+            backgroundColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
         )
     ) {
         Text(text = stringResource(R.string.settings_confirm))
@@ -54,7 +54,8 @@ fun SettingOptionRadioButton(
             selected = (text == selectedOption),
             onClick = null
         )
-        BodyText(text = text, modifier = Modifier.padding(start = 8.dp))
+        BodyText(text = text, modifier = Modifier.padding(start = 8.dp),
+           color = MaterialTheme.colorScheme.onSecondaryContainer)
     }
 }
 

@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,10 +42,10 @@ fun SettingsScreen(
                     Text(
                         text = stringResource(id = R.string.settings_screen_title),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 },
-                backgroundColor = MaterialTheme.colorScheme.primary
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
             )
         }
     ) { contentPadding ->
@@ -107,11 +108,12 @@ fun SettingOptionRow(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onOptionClicked() }
-            .padding(16.dp).background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp).background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Image(
             painter = painterResource(id = optionIcon),
             contentDescription = optionIconContentDescription,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
             modifier = Modifier
                 .size(36.dp)
                 .padding(8.dp)
@@ -119,12 +121,14 @@ fun SettingOptionRow(
         Text(
             text = optionLabel,
             style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = Modifier.padding(8.dp)
         )
         Spacer(modifier = Modifier.weight(1.0f))
         Text(
             text = optionValue,
             style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = Modifier.padding(8.dp)
         )
     }

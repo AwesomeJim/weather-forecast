@@ -129,8 +129,8 @@ fun AppBottomNavigationItem(
 ) {
 
     BottomNavigation(
-        backgroundColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -143,8 +143,8 @@ fun AppBottomNavigationItem(
                         fontSize = 9.sp
                     )
                 },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.primary.copy(0.4f),
+                selectedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                unselectedContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screenRoute,
                 onClick = {
