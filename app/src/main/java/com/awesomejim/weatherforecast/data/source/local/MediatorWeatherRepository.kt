@@ -41,6 +41,10 @@ class MediatorWeatherRepository @Inject constructor(
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
                         Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
+                        // when pulling data from open weather sometimes we get different location id with the same coordinates
+                        locationId?.let{
+                            weatherData.locationId = it
+                        }
                         locationItemDao.insertLocation(weatherData.toLocationEntity())
                         RetrialResult.Success(weatherData)
                     }

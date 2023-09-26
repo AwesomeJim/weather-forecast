@@ -5,7 +5,7 @@ import java.util.Date
 
 data class LocationItemData(
     val locationName: String,
-    val locationId: Long,
+    var locationId: Long,
     val locationTimeZoneShift: Long,
     var locationDataTime: Long,
     val locationLongitude: Double,
