@@ -31,6 +31,6 @@ class PhotosViewModel @Inject constructor(
 
     fun getLocationPhotos(location: DefaultLocation): Flow<PagingData<FlickerPhotoResponse>> =
         repository
-            .getPhotos(currentLocation)
+            .getPhotos(location)
             .cachedIn(viewModelScope)
 }

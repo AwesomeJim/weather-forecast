@@ -13,6 +13,9 @@ class FlickrPagingSource(
     private val newsApiService: FlickrApiService,
     private val defaultLocation: DefaultLocation
 ) : PagingSource<Int, FlickerPhotoResponse>() {
+
+    var errorMessage:String = "An error occurred please try again later"
+
     override fun getRefreshKey(state: PagingState<Int, FlickerPhotoResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
@@ -31,18 +34,28 @@ class FlickrPagingSource(
                 lon = defaultLocation.longitude
             )
             if (response.isSuccessful && response.body() != null) {
-                Timber.tag("Photos PagingSource").e("response init: ${response.body()!!.results.photos}")
-                LoadResult.Page(
-                    data = response.body()!!.results.photos,
-                    prevKey = if (page == 1) null else page.minus(1),
-                    nextKey = if (response.body()!!.results.photos.isEmpty()) null else page.plus(1),
-                )
+                if (response.body()!!.status == "fail"){
+                     errorMessage = response.body()!!.message ?: "An error occurred please try again later"
+                    val throwable = Throwable(message = errorMessage)
+                    LoadResult.Error(throwable)
+                }else {
+                    Timber.tag("Photos PagingSource")
+                        .e("response init: ${response.body()!!.results?.photos}")
+                    val photoResponse = response.body()!!.results?.photos ?: emptyList()
+                    LoadResult.Page(
+                        data = photoResponse,
+                        prevKey = if (page == 1) null else page.minus(1),
+                        nextKey = if (photoResponse.isEmpty()) null else page.plus(1),
+                    )
+                }
             } else {
-                LoadResult.Page(
-                    data = emptyList(),
-                    prevKey = if (page == 1) null else page.minus(1),
-                    nextKey = if (response.body()!!.results.photos.isEmpty()) null else page.plus(1),
-                )
+                if (response.body() != null){
+                    if (response.body()!!.status == "fail"){
+                        errorMessage = response.body()!!.message ?: "An error occurred please try again later"
+                    }
+                }
+                val throwable = Throwable(message = errorMessage)
+                LoadResult.Error(throwable)
             }
 
         } catch (exception: IOException) {

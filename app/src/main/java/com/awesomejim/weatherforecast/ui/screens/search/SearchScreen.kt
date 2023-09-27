@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -34,11 +35,14 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
@@ -77,7 +81,8 @@ import timber.log.Timber
 
 @Composable
 fun SearchScreen(
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    onViewPhotosClick: (LocationItemData) -> Unit = {}
 ) {
     val savedLocationListUiState = searchViewModel
         .savedLocationListUiState
@@ -133,9 +138,10 @@ fun SearchScreen(
             )
         }
     ) { contentPadding ->
+      // val  dpToFloat = 64 * Resources.getSystem().displayMetrics.density
         LazyColumn(
             modifier = Modifier
-                .padding(contentPadding)
+                .padding(contentPadding).padding(bottom = 56.dp)
                 .fillMaxHeight()
                 .background(MaterialTheme.colorScheme.onSecondaryContainer)
         ) {
@@ -174,13 +180,37 @@ fun SearchScreen(
                         onRemove = { locationItemData ->
                             Timber.e("dismissValue onRemove ${locationItemData.locationId}")
                             searchViewModel.deleteLocationItem(locationItemData)
-                        })
+                        },
+                        onViewPhotosClick = {
+                            onViewPhotosClick(it)
+                        }
+                    )
+
+                }
+            }else {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(top = 100.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondaryContainer
+                        )
+                        Text(text = "Search and save some favorite location",
+                            color = MaterialTheme.colorScheme.secondaryContainer)
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }
 
     }
 }
+
 
 /**
  * Composable representing an email item with swipe-to-dismiss functionality.
@@ -194,7 +224,8 @@ fun EditableLocationItem(
     locationItemData: LocationItemData,
     @DrawableRes conditionIcon: Int,
     onRefresh: (LocationItemData) -> Unit,
-    onRemove: (LocationItemData) -> Unit
+    onRemove: (LocationItemData) -> Unit,
+    onViewPhotosClick: (LocationItemData) -> Unit
 ) {
     val context = LocalContext.current
     var show by remember { mutableStateOf(true) }
@@ -227,7 +258,10 @@ fun EditableLocationItem(
             dismissContent = {
                 SavedLocationItem(
                     conditionIcon = conditionIcon,
-                    locationItemData = locationItemData
+                    locationItemData = locationItemData,
+                    onViewPhotosClick = {
+                        onViewPhotosClick(it)
+                    }
                 )
             }
         )
@@ -298,6 +332,7 @@ fun SearchBar(
 fun SavedLocationItem(
     @DrawableRes conditionIcon: Int,
     locationItemData: LocationItemData,
+    onViewPhotosClick: (LocationItemData) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -357,6 +392,18 @@ fun SavedLocationItem(
                     Subtitle(
                         text = locationItemData.locationWeatherInfo.weatherConditionDescription,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        onViewPhotosClick(locationItemData)
+                    },
+                    modifier = modifier
+                ) {
+                    androidx.compose.material3.Icon(
+                        imageVector = Icons.Filled.ImageSearch,
+                        contentDescription = stringResource(R.string.expand_button_content_description),
+                        tint = MaterialTheme.colorScheme.secondary
                     )
                 }
 
@@ -419,7 +466,8 @@ fun SavedLocationItemPreview() {
     WeatherForecastTheme {
         SavedLocationItem(
             conditionIcon = R.drawable.art_light_clouds,
-            locationItemData = SampleData.sampleLocationItemData
+            locationItemData = SampleData.sampleLocationItemData,
+            onViewPhotosClick = {}
         )
     }
 }

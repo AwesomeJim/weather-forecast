@@ -287,7 +287,7 @@ fun HomeContentScreen(
     ) { contentPadding ->
         LazyColumn(
             modifier = modifier
-                .padding(contentPadding)
+                .padding(contentPadding).padding(bottom = 56.dp)
                 .background(bgColor)
                 .fillMaxHeight()
         ) {

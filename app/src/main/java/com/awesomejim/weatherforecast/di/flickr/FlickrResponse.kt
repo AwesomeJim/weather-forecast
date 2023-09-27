@@ -5,8 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FlickrResponse(
-    @SerialName("photos") val results: FlickerResultsResponse,
-    @SerialName("stat") val status: String
+    @SerialName("photos") val results: FlickerResultsResponse? = null,
+    @SerialName("stat") val status: String,
+    @SerialName("message") val message:String? = null
 )
 
 @Serializable
@@ -22,5 +23,5 @@ data class FlickerResultsResponse(
 data class FlickerPhotoResponse(
     @SerialName("id") val photoId: String,
     @SerialName("title") val photoTitle: String,
-    @SerialName("url_m") val photoUrl: String
+    @SerialName("url_m") val photoUrl: String? = null
 )

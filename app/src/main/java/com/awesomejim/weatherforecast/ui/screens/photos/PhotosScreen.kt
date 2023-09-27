@@ -2,6 +2,7 @@ package com.awesomejim.weatherforecast.ui.screens.photos
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,8 +13,12 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,12 +46,16 @@ import timber.log.Timber
 
 @Composable
 fun PhotosScreen(
-    photosViewModel: PhotosViewModel
+    photosViewModel: PhotosViewModel,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    locationName:String,
+    defaultLocation: DefaultLocation
 ) {
     val photosList = photosViewModel.getLocationPhotos(
         DefaultLocation(
-            longitude = 4.5,
-            latitude = 6.7
+            longitude = defaultLocation.longitude,
+            latitude = defaultLocation.latitude
         )
     ).collectAsLazyPagingItems()
 
@@ -55,12 +64,23 @@ fun PhotosScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.settings_screen_title),
+                        text = locationName,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 },
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                navigationIcon = {
+                    if (canNavigateBack) {
+                        IconButton(onClick = navigateUp) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                contentDescription = stringResource(R.string.back_button)
+                            )
+                        }
+                    }
+                }
             )
         }
     ) { contentPadding ->
@@ -74,8 +94,10 @@ fun PhotosScreen(
                     key = photosList.itemKey { it.photoId }
                 ) { index ->
                     val photo = photosList[index]
-                    photo?.let {
-                        PhotoCard(photo = it)
+                    photo?.let {validPhoto->
+                        validPhoto.photoUrl?.let { valid ->
+                            PhotoCard(photo = validPhoto)
+                        }
                     }
                 }
                 when (val state = photosList.loadState.refresh) { //FIRST LOAD
@@ -119,8 +141,8 @@ fun PhotosScreen(
                 }
             },
             modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
+                .fillMaxHeight()
+                .padding(contentPadding).padding(bottom = 64.dp)
         )
     }
 }

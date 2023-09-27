@@ -164,8 +164,8 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
             result.add(fList)
         }
     }
-
-    return result
+      // sort by date
+    return result.sortedBy { it.locationDataTime }
 }
 
 
