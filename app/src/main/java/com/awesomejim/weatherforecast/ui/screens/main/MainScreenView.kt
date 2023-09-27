@@ -16,6 +16,7 @@ fun MainScreenView(mainViewModel: MainViewModel) {
     val bottomNavigationItems = listOf(
         BottomNavItem.Home,
         BottomNavItem.Search,
+        BottomNavItem.myPhotos,
         BottomNavItem.Settings
     )
     Scaffold(

@@ -32,6 +32,7 @@ androidx-test-ext-truth = "1.5.0"
 hiltNavigationCompose="1.0.0"
 lifecycleVersion="2.6.2"
 androidx-datastore = "1.0.0"
+pagingCommon="3.2.1"
 rules="1.5.0"
 runner="1.5.2"
 
@@ -113,6 +114,11 @@ androidx-navigation-navigation-compose = { module = "androidx.navigation:navigat
 androidx-compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "composeViewModel" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCommon" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCommon" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingCommon" }
+androidx-paging-common-ktx = { group = "androidx.paging", name = "paging-common-ktx", version.ref="pagingCommon" }
 
 # --------Hilt Dependency Injection--------------
 hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-nav-compose" }

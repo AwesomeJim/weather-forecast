@@ -5,6 +5,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -26,6 +27,8 @@ import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
 import com.awesomejim.weatherforecast.ui.screens.home.HomeContentScreen
 import com.awesomejim.weatherforecast.ui.screens.main.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.screens.main.MainViewModel
+import com.awesomejim.weatherforecast.ui.screens.photos.PhotosScreen
+import com.awesomejim.weatherforecast.ui.screens.photos.PhotosViewModel
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
 import com.awesomejim.weatherforecast.ui.screens.search.SearchViewModel
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreen
@@ -44,9 +47,10 @@ import com.awesomejim.weatherforecast.ui.screens.settings.SettingsViewModel
 sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenRoute: String) {
 
     object Home : BottomNavItem("My Location", Icons.Filled.PinDrop, "home")
-    //object MyLocations : BottomNavItem("My List", Icons.Filled.Favorite, "my_locations")
     object Search : BottomNavItem("Search", Icons.Filled.Search, "search")
     object Settings : BottomNavItem("Settings", Icons.Filled.Settings, "settings")
+
+    object myPhotos : BottomNavItem("Location_Photos", Icons.Filled.Image, "location_photos")
 }
 
 
@@ -95,6 +99,11 @@ fun NavigationGraph(
         composable(BottomNavItem.Search.screenRoute) {
             val searchViewModel = hiltViewModel<SearchViewModel>()
             SearchScreen(searchViewModel = searchViewModel)
+
+        }
+        composable(BottomNavItem.myPhotos.screenRoute) {
+            val photosViewModel = hiltViewModel<PhotosViewModel>()
+            PhotosScreen(photosViewModel = photosViewModel)
 
         }
         composable(BottomNavItem.Settings.screenRoute) {
