@@ -5,6 +5,7 @@ import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.di.flickr.FlickerPhotoResponse
 import com.awesomejim.weatherforecast.di.flickr.FlickrApiService
+import com.awesomejim.weatherforecast.utilities.GenericException
 import okio.IOException
 import retrofit2.HttpException
 import timber.log.Timber
@@ -36,7 +37,7 @@ class FlickrPagingSource(
             if (response.isSuccessful && response.body() != null) {
                 if (response.body()!!.status == "fail"){
                      errorMessage = response.body()!!.message ?: "An error occurred please try again later"
-                    val throwable = Throwable(message = errorMessage)
+                    val throwable = GenericException(message = errorMessage)
                     LoadResult.Error(throwable)
                 }else {
                     Timber.tag("Photos PagingSource")
@@ -54,7 +55,7 @@ class FlickrPagingSource(
                         errorMessage = response.body()!!.message ?: "An error occurred please try again later"
                     }
                 }
-                val throwable = Throwable(message = errorMessage)
+                val throwable = GenericException(message = errorMessage)
                 LoadResult.Error(throwable)
             }
 
