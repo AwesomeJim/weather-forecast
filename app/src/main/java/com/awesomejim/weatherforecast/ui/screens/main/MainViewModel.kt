@@ -151,7 +151,7 @@ class MainViewModel @Inject constructor(
     fun processUiState(currentWeatherUiState: CurrentWeatherUiState) {
         when (currentWeatherUiState) {
             is CurrentWeatherUiState.Error -> {
-
+                isLoadingData = false
             }
 
             CurrentWeatherUiState.Loading -> {
@@ -161,7 +161,7 @@ class MainViewModel @Inject constructor(
             }
 
             is CurrentWeatherUiState.Success -> {
-
+                isLoadingData = false
             }
         }
     }
