@@ -52,7 +52,7 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
                     locationQuery = locationQuery
                 )
                 if (response.isSuccessful && response.body() != null) {
-                    val weatherData = response.body()!!.toCoreModel()
+                    val weatherData = response.body()!!.toCoreModel(addSummary = true)
                     RetrialResult.Success(data = weatherData)
                 } else {
                     val throwable = mapResponseCodeToThrowable(response.code())
@@ -69,7 +69,7 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
     override suspend fun fetchWeatherForecastWithCoordinates(
         defaultLocation: DefaultLocation,
         units: String
-    ): RetrialResult<Map<Int, List<LocationItemData>>> =
+    ): RetrialResult<List<LocationItemData>> =
         try {
             val response = apiService.fetchWeatherForecast(
                 appid = BuildConfig.OPEN_WEATHER_APP_ID,
@@ -78,7 +78,7 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
                 longitude = defaultLocation.longitude
             )
             if (response.isSuccessful && response.body() != null) {
-                val weatherData = response.body()!!.toLocationItemDataList()
+                val weatherData = response.body()!!.toLocationItemDataList(units)
                 RetrialResult.Success(data = weatherData)
             } else {
                 val throwable = mapResponseCodeToThrowable(response.code())

@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.ui
+package com.awesomejim.weatherforecast.ui.screens.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -14,9 +14,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.ui.common.CheckForPermissions
 import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
@@ -26,6 +26,7 @@ import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -50,10 +51,12 @@ class MainActivity : ComponentActivity() {
         }
 
     // Get location updates.
-    val locationRequest = com.google.android.gms.location.LocationRequest.Builder(30_000L)
+    private val locationRequest = LocationRequest.Builder(30_000L)
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
         .build()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -73,8 +76,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val state = mainViewModel.state.collectAsState().value
-                    Greeting("Android")
+                    val state = mainViewModel.state.collectAsStateWithLifecycle().value
                     CheckForPermissions(
                         onPermissionGranted = {
                             mainViewModel.processIntent(MainViewUiState.GrantPermission(isGranted = true))
@@ -121,7 +123,8 @@ class MainActivity : ComponentActivity() {
 //                        Timber.tag("MainViewModel").e("addOnCanceledListener ")
 //                    }
                 // WeatherAppScreensConfig(navController = rememberNavController())
-                mainViewModel.testAPiCall()
+                MainScreenView(mainViewModel)
+
             }
 
             state.isLocationSettingEnabled && !state.isPermissionGranted -> {
@@ -147,7 +150,9 @@ class MainActivity : ComponentActivity() {
                     mainViewModel.processIntent(
                         MainViewUiState.ReceiveLocation(
                             longitude = location.longitude,
-                            latitude = location.latitude))
+                            latitude = location.latitude
+                        )
+                    )
                 }
             }
         }

@@ -1,3 +1,5 @@
+import java.io.FileInputStream
+import java.util.*
 
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
@@ -20,6 +22,18 @@ val versionMinor = 0
 val versionPatch = 0
 
 
+// Create a variable called keystorePropertiesFile, and initialize it t
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    // Load your keystore.properties file into the keystoreProperties object.
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+
 android {
     namespace = "com.awesomejim.weatherforecast"
     compileSdk = libs.versions.compile.sdk.get().toInt()
@@ -33,11 +47,25 @@ android {
         testInstrumentationRunner = "com.awesomejim.weatherforecast.HiltTestRunner"
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            getByName("debug") {
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         debug {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             isDebuggable = true
             isShrinkResources = false
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("debug")
+            }
             resValue("string", "app_version", "v${defaultConfig.versionName}")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -45,9 +73,12 @@ android {
         }
 
         release {
-            isMinifyEnabled = false
-            isDebuggable = true
+            isMinifyEnabled = true
+            isDebuggable = false
             resValue("string", "app_version", "v${defaultConfig.versionName}")
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("debug")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro")
@@ -125,6 +156,9 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
 
     //-----------Google Play Services------------------
     implementation(libs.playservices.location)
@@ -137,15 +171,23 @@ dependencies {
     implementation(libs.coil.compose)
     //------------Lottie Amazing Animations ----------
     implementation(libs.lottie)
+    implementation(libs.lottie.compose)
 
     //------------Timber logging----------
     implementation(libs.timber)
+    implementation (libs.androidx.hilt.navigation.compose)
 
     //-----------ROOM--------------------
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+
+    //-----------PAGING------------------
+    implementation(libs.androidx.paging.common.ktx)
+    implementation(libs.androidx.paging.common)
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
 
 
     //-----------Retrofit & okhttp--------------------

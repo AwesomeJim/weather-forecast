@@ -4,6 +4,7 @@ android-gradle-plugin = "8.1.1"
 kotlin-android = "1.8.22"
 hilt-plugin = "2.48"
 ksp = "1.8.22-1.0.11"
+lottieCompose = "5.0.3"
 mapsplatform-secrets = "2.0.1"
 kotlin-serialization = "1.6.10"
 
@@ -28,6 +29,10 @@ androidx-test = "1.5.0"
 androidx-test-espresso = "3.5.1"
 androidx-test-ext-junit = "1.1.5"
 androidx-test-ext-truth = "1.5.0"
+hiltNavigationCompose="1.0.0"
+lifecycleVersion="2.6.2"
+androidx-datastore = "1.0.0"
+pagingCommon="3.2.1"
 rules="1.5.0"
 runner="1.5.2"
 
@@ -81,6 +86,9 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "androidx-lifecycle-extensions" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle-ktx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-ktx" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleVersion" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycleVersion" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" }
 
 # --------compose--------
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
@@ -105,6 +113,12 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-navigation-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 androidx-compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "composeViewModel" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCommon" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCommon" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingCommon" }
+androidx-paging-common-ktx = { group = "androidx.paging", name = "paging-common-ktx", version.ref="pagingCommon" }
 
 # --------Hilt Dependency Injection--------------
 hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-nav-compose" }
@@ -113,6 +127,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 
 # --------Retrofit & Networking--------------
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization-converter" }
@@ -170,12 +185,14 @@ androidx = [
     "androidx-lifecycle-extensions" ,
     "androidx-lifecycle-livedata-ktx" ,
     "androidx-lifecycle-viewmodel-ktx" ,
+    "androidx-datastore"
 ]
 
 compose = [
     "androidx-compose-foundation",
     "androidx-compose-foundation-layout",
     "androidx-compose-material",
+    "androidx-compose-material3",
     "androidx-compose-material-iconsExtended",
     "androidx-compose-materialWindow",
     "androidx-compose-runtime",

@@ -16,10 +16,27 @@
 default_platform(:android)
 
 platform :android do
-  desc "Run unit tests for all variants"
-  lane :test do
-    gradle(task: "test")
-  end
+    desc "This lane builds Debug Apk"
+        lane :buildDebugApk do
+             gradle(
+            task: "clean assemble",
+            flavor: "dev",
+            build_type: "Debug"
+        )
+        end
+ 	desc "This lane builds the Dev release APK and Distribute to Internal testers via Firebase"
+        lane :buildReleaseDevTestAPk do
+            gradle(
+      		task: "clean assemble",
+      		flavor: "dev",
+     		build_type: "Release"
+    	)
+    	end
+
+    desc "Run unit tests for all variants"
+         lane :test do
+        gradle(task: "test")
+      end
 
    desc "Generate Jacoco coverage reports on the DevDebug build"
     lane :testCoverage do

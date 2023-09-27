@@ -1,6 +1,5 @@
 package com.awesomejim.weatherforecast.repository
 
-import app.cash.turbine.test
 import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
 import com.awesomejim.weatherforecast.data.WeatherRepository
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
@@ -18,7 +17,6 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
@@ -35,7 +33,7 @@ class DefaultRemoteWeatherDataSourceTest {
     val mockNetworkHelper = mockk<NetworkHelper>()
 
     @Test
-    fun `when we fetch location weather data successfully, then a successfully mapped result is emitted`()=
+    fun `when we fetch location weather data successfully, then a successfully mapped result is emitted`() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(returnValue = true)
             coEvery {
@@ -53,19 +51,17 @@ class DefaultRemoteWeatherDataSourceTest {
 
             val expectedResult = fakeSuccessMappedWeatherResponse
 
-            weatherRepository.fetchWeatherDataWithCoordinates(
+            val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
                     longitude = -122.084,
-                    latitude =  37.4234
+                    latitude = 37.4234
                 ),
                 units = "metric"
-            ).test {
-                val actualResults = expectMostRecentItem()
-                Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
-                Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
-                    .isEqualTo(expectedResult.locationId)
-                cancel()
-            }
+            )
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
+                .isEqualTo(expectedResult.locationId)
+            
         }
 
     @Test
@@ -90,12 +86,13 @@ class DefaultRemoteWeatherDataSourceTest {
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
                     longitude = -122.084,
-                    latitude =  37.4234
+                    latitude = 37.4234
                 ),
                 units = "metric"
-            ).first()
+            )
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType).isEqualTo(ErrorType.SERVER)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.SERVER)
         }
 
     @Test
@@ -120,12 +117,13 @@ class DefaultRemoteWeatherDataSourceTest {
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
                     longitude = -122.084,
-                    latitude =  37.4234),
+                    latitude = 37.4234
+                ),
                 units = "metric"
-            ).first()
-
+            )
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType).isEqualTo(ErrorType.CLIENT)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.CLIENT)
         }
 
 
@@ -149,11 +147,11 @@ class DefaultRemoteWeatherDataSourceTest {
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
-                    longitude = 10.0,
-                    latitude = 12.90
+                    longitude = -122.084,
+                    latitude = 37.4234
                 ),
                 units = "metric"
-            ).first()
+            )
 
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
             Truth.assertThat((actualResults as RetrialResult.Error).errorType)
@@ -181,11 +179,11 @@ class DefaultRemoteWeatherDataSourceTest {
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
-                    longitude = 10.0,
-                    latitude = 12.90
+                    longitude = -122.084,
+                    latitude = 37.4234
                 ),
                 units = "metric"
-            ).first()
+            )
 
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
             Truth.assertThat((actualResults as RetrialResult.Error).errorType)
@@ -209,11 +207,11 @@ class DefaultRemoteWeatherDataSourceTest {
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
-                    longitude = 10.0,
-                    latitude = 12.90
+                    longitude = -122.084,
+                    latitude = 37.4234
                 ),
                 units = "metric"
-            ).first()
+            )
 
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
             Truth.assertThat((actualResults as RetrialResult.Error).errorType)
@@ -237,12 +235,11 @@ class DefaultRemoteWeatherDataSourceTest {
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
                 defaultLocation = DefaultLocation(
-                    longitude = 10.0,
-                    latitude = 12.90
+                    longitude = -122.084,
+                    latitude = 37.4234
                 ),
                 units = "metric"
-            ).first()
-
+            )
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
             Truth.assertThat((actualResults as RetrialResult.Error).errorType)
                 .isEqualTo(ErrorType.GENERIC)
@@ -250,7 +247,7 @@ class DefaultRemoteWeatherDataSourceTest {
 
 
     private fun createWeatherRepository(
-        networkHelper :NetworkHelper = mockNetworkHelper,
+        networkHelper: NetworkHelper = mockNetworkHelper,
         remoteWeatherDataSource: RemoteDataSource = DefaultRemoteWeatherDataSource(
             apiService = mockOpenWeatherService
         )

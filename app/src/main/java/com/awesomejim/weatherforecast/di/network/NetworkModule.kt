@@ -1,9 +1,9 @@
 package com.awesomejim.weatherforecast.di.network
 
 
-
 import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.di.ApiService
+import com.awesomejim.weatherforecast.di.flickr.FlickrApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideBaseUrl(): String = BuildConfig.OPEN_WEATHER_BASE_URL
+    fun provideBaseUrl(): Pair<String, String> =
+        Pair(BuildConfig.OPEN_WEATHER_BASE_URL, BuildConfig.FLICKR_PHOTOS_BASE_URL)
 
     @Singleton
     @Provides
@@ -49,7 +50,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         val level = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor.Level.BODY
         } else HttpLoggingInterceptor.Level.NONE
@@ -78,10 +79,14 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, BaseURL: String, json:Json): Retrofit {
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        baseURL: Pair<String, String>,
+        json: Json
+    ): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl(BaseURL)
+            .baseUrl(baseURL.first)
             .addConverterFactory(json.asConverterFactory(contentType))
             .client(okHttpClient)
             .build()
@@ -93,4 +98,18 @@ object NetworkModule {
         return retrofit.create(ApiService::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideFlickrApiService(
+        okHttpClient: OkHttpClient,
+        baseURL: Pair<String, String>,
+        json: Json
+    ): FlickrApiService {
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder()
+            .baseUrl(baseURL.second)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .client(okHttpClient)
+            .build().create(FlickrApiService::class.java)
+    }
 }

@@ -5,14 +5,15 @@ import java.util.Date
 
 data class LocationItemData(
     val locationName: String,
-    val locationId: Long,
+    var locationId: Long,
     val locationTimeZoneShift: Long,
     var locationDataTime: Long,
     val locationLongitude: Double,
     val locationLatitude: Double,
     val locationWeatherInfo: WeatherStatusInfo,
     val locationWeatherDay: Int,
-    val locationDataLastUpdate: Date
+    val locationDataLastUpdate: Date,
+    var forecastMoreDetails: ForecastMoreDetails? = null
 )
 
 data class WeatherStatusInfo(
