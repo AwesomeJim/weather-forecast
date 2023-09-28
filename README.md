@@ -28,7 +28,8 @@ This app enable users to:
 
 |                                      Screen Recording                                       |
 |:-------------------------------------------------------------------------------------------:|
-| <video src="screenshots/Screen_recording_20230927_070215.mov" width="300px" height="600px"> |
+| <video src="https://github.com/AwesomeJim/weather-forecast/assets/8529047/6e0cd4cb-9dd2-4418-bb52-da91d6fcd975" controls="controls" width="630" height="300"></video>|
+
 
 ## Tech-stack used 🛠
 | **Tech Tools**                                                                    | **Usage/Purpose**                                          |
@@ -48,6 +49,7 @@ This app enable users to:
 | [AndroidX](https://developer.android.com/jetpack/androidx)                        | Android library for core functionalities                   |
 | [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) | Manage data and UI State in lifecycle-aware fashion        |
 | [Room DB](https://developer.android.com/topic/libraries/architecture/room)        | 💾  For local data storage                                 |
+
 _**Testing**_ <br/>
 
 | **Testing Tools**                             | **Usage/Purpose** |
@@ -71,7 +73,7 @@ _Other Tools/Project setup_ <br/>
 
 _Other Tools_ <br/>
 
-| **Testing Tools**                                                            | **Usage/Purpose**                                                                   |
+| **Workflow Tools**                                                            | **Usage/Purpose**                                                                   |
 |------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [Bitrise](https://bitrise.io/integrations/steps)                             | For CI/CD                                                                           |
 | [Fastlane](https://docs.fastlane.tools/getting-started/android/screenshots/) | Local gradle tasks automation                                                       |
