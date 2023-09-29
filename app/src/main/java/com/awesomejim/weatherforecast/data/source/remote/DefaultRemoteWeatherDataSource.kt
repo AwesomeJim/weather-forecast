@@ -39,32 +39,30 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
             throw e
         }
 
-
-
     override suspend fun fetchWeatherDataWithLocationQuery(
         locationQuery: String,
         units: String
     ): RetrialResult<LocationItemData> =
-            try {
-                val response = apiService.fetchWeatherWithLocationQuery(
-                    appid = BuildConfig.OPEN_WEATHER_APP_ID,
-                    units = units,
-                    locationQuery = locationQuery
-                )
-                if (response.isSuccessful && response.body() != null) {
-                    val weatherData = response.body()!!.toCoreModel(addSummary = true)
-                    RetrialResult.Success(data = weatherData)
-                } else {
-                    val throwable = mapResponseCodeToThrowable(response.code())
-                    throw throwable
-                }
-            } catch (e: Exception) {
-                Timber.e(
-                    "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
-                    e.message
-                )
-                throw e
+        try {
+            val response = apiService.fetchWeatherWithLocationQuery(
+                appid = BuildConfig.OPEN_WEATHER_APP_ID,
+                units = units,
+                locationQuery = locationQuery
+            )
+            if (response.isSuccessful && response.body() != null) {
+                val weatherData = response.body()!!.toCoreModel(addSummary = true)
+                RetrialResult.Success(data = weatherData)
+            } else {
+                val throwable = mapResponseCodeToThrowable(response.code())
+                throw throwable
             }
+        } catch (e: Exception) {
+            Timber.e(
+                "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
+                e.message
+            )
+            throw e
+        }
 
     override suspend fun fetchWeatherForecastWithCoordinates(
         defaultLocation: DefaultLocation,

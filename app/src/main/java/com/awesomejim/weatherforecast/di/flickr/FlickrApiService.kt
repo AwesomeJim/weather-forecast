@@ -1,10 +1,8 @@
 package com.awesomejim.weatherforecast.di.flickr
 
-
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-
 
 interface FlickrApiService {
     @GET("?")
@@ -20,5 +18,4 @@ interface FlickrApiService {
         @Query("lon") lon: Double,
         @Query("page") page: Int
     ): Response<FlickrResponse>
-
 }

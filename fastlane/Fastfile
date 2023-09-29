@@ -32,6 +32,10 @@ platform :android do
      		build_type: "Release"
     	)
     	end
+      desc "automatically format Code via Sportless"
+       lane :spotlessApply do
+                gradle(task: "spotlessApply")
+        end
 
     desc "Run unit tests for all variants"
          lane :test do

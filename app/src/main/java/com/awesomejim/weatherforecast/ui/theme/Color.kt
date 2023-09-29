@@ -1,8 +1,6 @@
 package com.awesomejim.weatherforecast.ui.theme
 import androidx.compose.ui.graphics.Color
 
-
-
 val md_theme_light_primary = Color(0xFF9D3777)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFFFD8EA)
@@ -65,11 +63,8 @@ val md_theme_dark_surfaceTint = Color(0xFFFFAED9)
 val md_theme_dark_outlineVariant = Color(0xFF504349)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-
 val seed = Color(0xFF852263)
-
 
 val grey_cloudy = Color(0xFF54717A)
 val greenish_sunny = Color(0xFF47AB2F)
 val grey_rainy = Color(0xFF57575D)
-

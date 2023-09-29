@@ -62,14 +62,15 @@ _**Testing**_ <br/>
 
 _Other Tools/Project setup_ <br/>
 
-| **Tools**                                                                            | **Usage/Purpose**                                                  |
-|--------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| [Gradle secrets plugin](https://github.com/google/secrets-gradle-plugin)             | A Gradle plugin for providing your secrets to your Android project |
-| [Hilt(DI)](https://developer.android.com/training/dependency-injection/hilt-android) | Dependency Injection Library                                       |
-| [Kotlin Symbol Processing (KSP)](https://developer.android.com/build/migrate-to-ksp) | code generation  for Room and Hilt libraries                       |
-| [Timber](https://github.com/JakeWharton/timber)                                      | For local Logging                                                  |
-| [Lottie Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md)    | Icon and images animations                                         |
-| [Gradle version catalogs](https://docs.gradle.org/current/userguide/platforms.html)  | Gradle Dependencies management                                     |
+| **Tools**                                                                            | **Usage/Purpose**                                                                      |
+|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| [Gradle secrets plugin](https://github.com/google/secrets-gradle-plugin)             | A Gradle plugin for providing your secrets to your Android project                     |
+| [Hilt(DI)](https://developer.android.com/training/dependency-injection/hilt-android) | Dependency Injection Library                                                           |
+| [Kotlin Symbol Processing (KSP)](https://developer.android.com/build/migrate-to-ksp) | code generation  for Room and Hilt libraries                                           |
+| [Timber](https://github.com/JakeWharton/timber)                                      | For local Logging                                                                      |
+| [Lottie Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md)    | Icon and images animations                                                             |
+| [Gradle version catalogs](https://docs.gradle.org/current/userguide/platforms.html)  | Gradle Dependencies management                                                         |
+| [Spotless](https://github.com/diffplug/spotless)                                     | For Code formatting [check how to setup](https://funkymuse.dev/posts/spotless-ktlint/) |
 
 _Other Tools_ <br/>
 

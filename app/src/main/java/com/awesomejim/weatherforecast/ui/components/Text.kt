@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
 
-
 @Composable
 fun Subtitle(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
     Text(
@@ -74,7 +73,7 @@ fun VersionInfoText(versionInfo: String, modifier: Modifier) {
 
 @Composable
 fun BodyText(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
-  Text(
+    Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
         color = color,
@@ -84,7 +83,9 @@ fun BodyText(text: String, modifier: Modifier = Modifier, color: Color = Color.U
 
 @Composable
 fun ErrorTextWithAction(
-    @StringRes errorMessageId: Int, modifier: Modifier, onTryAgainClicked: () -> Unit
+    @StringRes errorMessageId: Int,
+    modifier: Modifier,
+    onTryAgainClicked: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         androidx.compose.material.Text(

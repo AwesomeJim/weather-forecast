@@ -2,7 +2,6 @@ package com.awesomejim.weatherforecast.data.model
 
 import java.util.Date
 
-
 data class LocationItemData(
     val locationName: String,
     var locationId: Long,

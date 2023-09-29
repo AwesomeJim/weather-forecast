@@ -27,7 +27,6 @@ import com.awesomejim.weatherforecast.ui.components.SettingOptionRadioButton
 import com.awesomejim.weatherforecast.ui.components.SettingOptionsDialog
 import com.awesomejim.weatherforecast.ui.components.VersionInfoText
 
-
 @Composable
 fun SettingsScreen(
     state: SettingsScreenViewState,
@@ -40,13 +39,18 @@ fun SettingsScreen(
             optionLabel = stringResource(R.string.settings_unit_label),
             optionValue = state.selectedUnit,
             optionIcon = R.drawable.ic_temp_unit,
-            optionIconContentDescription = stringResource(R.string.settings_content_description_unit_icon)
+            optionIconContentDescription =
+            stringResource(R.string.settings_content_description_unit_icon),
+            modifier = Modifier,
         ) {
             openUnitSelectionDialog.value = openUnitSelectionDialog.value.not()
         }
         if (openUnitSelectionDialog.value) {
             val availableUnits = state.availableUnits
-            val (selectedOption, onOptionSelected) = remember { mutableStateOf(state.selectedUnit) }
+            val (selectedOption, onOptionSelected) =
+                remember {
+                    mutableStateOf(state.selectedUnit)
+                }
             SettingOptionsDialog(
                 onDismiss = { openUnitSelectionDialog.value = false },
                 onConfirm = {
@@ -74,7 +78,6 @@ fun SettingsScreen(
         )
     }
 }
-
 
 @Composable
 fun SettingOptionRow(

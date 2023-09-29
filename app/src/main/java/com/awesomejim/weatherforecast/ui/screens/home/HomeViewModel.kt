@@ -9,6 +9,4 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val defaultWeatherRepository: WeatherRepository,
     private val settingsRepository: SettingsRepository
-) : ViewModel() {
-
-}
+) : ViewModel()

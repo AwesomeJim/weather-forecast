@@ -15,7 +15,7 @@ class FlickrPagingSource(
     private val defaultLocation: DefaultLocation
 ) : PagingSource<Int, FlickerPhotoResponse>() {
 
-    var errorMessage:String = "An error occurred please try again later"
+    var errorMessage: String = "An error occurred please try again later"
 
     override fun getRefreshKey(state: PagingState<Int, FlickerPhotoResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -35,11 +35,13 @@ class FlickrPagingSource(
                 lon = defaultLocation.longitude
             )
             if (response.isSuccessful && response.body() != null) {
-                if (response.body()!!.status == "fail"){
-                     errorMessage = response.body()!!.message ?: "An error occurred please try again later"
+                if (response.body()!!.status == "fail") {
+                    errorMessage =
+                        response.body()!!.message ?: "An error occurred please try again later"
+
                     val throwable = GenericException(message = errorMessage)
                     LoadResult.Error(throwable)
-                }else {
+                } else {
                     Timber.tag("Photos PagingSource")
                         .e("response init: ${response.body()!!.results?.photos}")
                     val photoResponse = response.body()!!.results?.photos ?: emptyList()
@@ -50,15 +52,15 @@ class FlickrPagingSource(
                     )
                 }
             } else {
-                if (response.body() != null){
-                    if (response.body()!!.status == "fail"){
-                        errorMessage = response.body()!!.message ?: "An error occurred please try again later"
+                if (response.body() != null) {
+                    if (response.body()!!.status == "fail") {
+                        errorMessage =
+                            response.body()!!.message ?: "An error occurred please try again later"
                     }
                 }
                 val throwable = GenericException(message = errorMessage)
                 LoadResult.Error(throwable)
             }
-
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {

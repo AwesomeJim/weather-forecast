@@ -18,14 +18,18 @@ import dagger.hilt.android.components.ViewModelComponent
 interface DataRepositoryModule {
 
     @Binds
-    fun bindWeatherRepository(weatherRepository: DefaultWeatherRepository): WeatherRepository
+    fun bindWeatherRepository(weatherRepository: DefaultWeatherRepository):
+        WeatherRepository
 
     @Binds
-    fun bindRemoteWeatherDataSource(remoteWeatherDataSource: DefaultRemoteWeatherDataSource): RemoteDataSource
+    fun bindRemoteWeatherDataSource(remoteWeatherDataSource: DefaultRemoteWeatherDataSource):
+        RemoteDataSource
 
     @Binds
-    fun bindSettingsRepository(settingsRepository: DefaultSettingsRepository): SettingsRepository
+    fun bindSettingsRepository(settingsRepository: DefaultSettingsRepository):
+        SettingsRepository
 
     @Binds
-    fun bindMediatorRepository(mediatorRepository: MediatorWeatherRepository): MediatorRepository
+    fun bindMediatorRepository(mediatorRepository: MediatorWeatherRepository):
+        MediatorRepository
 }

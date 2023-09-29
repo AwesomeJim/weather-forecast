@@ -9,6 +9,6 @@ import com.awesomejim.weatherforecast.data.source.local.entity.LocationItemEntit
 
 @Database(entities = [LocationItemEntity::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class)
-abstract class LocationDatabase :RoomDatabase(){
+abstract class LocationDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationItemDao
 }

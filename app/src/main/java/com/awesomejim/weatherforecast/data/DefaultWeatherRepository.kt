@@ -35,7 +35,10 @@ class DefaultWeatherRepository @Inject constructor(
                 when (remoteData) {
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
-                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
+                        Timber.e(
+                            "DefaultWeather" +
+                                "Repository weatherData :: ${weatherData.locationName}"
+                        )
                         RetrialResult.Success(weatherData)
                     }
 
@@ -50,7 +53,6 @@ class DefaultWeatherRepository @Inject constructor(
             }
         } else {
             RetrialResult.Error(ErrorType.IO_CONNECTION)
-
         }
     }
 
@@ -67,7 +69,10 @@ class DefaultWeatherRepository @Inject constructor(
                 when (remoteData) {
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
-                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
+                        Timber.e(
+                            "DefaultWeather" +
+                                "Repository weatherData :: ${weatherData.locationName}"
+                        )
                         RetrialResult.Success(weatherData)
                     }
 
@@ -97,7 +102,10 @@ class DefaultWeatherRepository @Inject constructor(
                 when (remoteData) {
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
-                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.size}")
+                        Timber.e(
+                            "DefaultWeather" +
+                                "Repository weatherData :: ${weatherData.size}"
+                        )
                         RetrialResult.Success(weatherData)
                     }
 
@@ -113,5 +121,4 @@ class DefaultWeatherRepository @Inject constructor(
             RetrialResult.Error(ErrorType.IO_CONNECTION)
         }
     }
-
 }

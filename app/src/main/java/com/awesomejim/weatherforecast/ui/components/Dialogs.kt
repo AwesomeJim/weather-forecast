@@ -38,7 +38,6 @@ import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
 
-
 @Composable
 fun PermissionRationaleDialog(
     isDialogShown: MutableState<Boolean>,
@@ -98,7 +97,6 @@ fun <T> SettingOptionsDialog(
                     )
                     Spacer(modifier = Modifier.weight(1f))
                 }
-
             }
         }
     }
@@ -146,15 +144,22 @@ fun DialogSearchSuccess(
                 ) {
                     Column(
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Image(
                             painter = painterResource(id = conditionIcon),
-                            contentDescription = locationItemData.locationWeatherInfo.weatherConditionDescription,
+                            contentDescription =
+                            locationItemData
+                                .locationWeatherInfo
+                                .weatherConditionDescription,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(48.dp)
                         )
                         Text(
-                            text = locationItemData.locationWeatherInfo.weatherConditionDescription,
+                            text =
+                            locationItemData
+                                .locationWeatherInfo
+                                .weatherConditionDescription,
                             modifier = Modifier.padding(16.dp),
                         )
                     }
@@ -205,10 +210,6 @@ fun DialogSearchSuccess(
     }
 }
 
-
-
-
-
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SearchBarPreview() {
@@ -219,6 +220,5 @@ fun SearchBarPreview() {
             conditionIcon = R.drawable.art_light_clouds,
             locationItemData = SampleData.sampleLocationItemData
         )
-
     }
 }

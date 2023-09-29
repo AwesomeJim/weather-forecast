@@ -46,7 +46,6 @@ data class CountryDetailsResponse(
     @SerialName("country") val locationCountry: String,
 )
 
-
 @Serializable
 data class CurrentWeatherResponse(
     @SerialName("temp") val weatherTemp: Float,

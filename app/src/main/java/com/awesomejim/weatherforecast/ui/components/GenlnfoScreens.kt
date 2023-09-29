@@ -43,7 +43,6 @@ fun EnableLocationSettingScreen() {
     GeneralInfoScreens(message = R.string.location_settings_not_enabled)
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun RequiresPermissionsScreenPreview() {

@@ -50,9 +50,16 @@ class MainActivity : ComponentActivity() {
     private val locationRequestLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                mainViewModel.processIntent(MainViewUiState.CheckLocationSettings(isEnabled = true))
+                mainViewModel.processIntent(
+                    MainViewUiState
+                        .CheckLocationSettings(isEnabled = true)
+                )
             } else {
-                mainViewModel.processIntent(MainViewUiState.CheckLocationSettings(isEnabled = false))
+                mainViewModel
+                    .processIntent(
+                        MainViewUiState
+                            .CheckLocationSettings(isEnabled = false)
+                    )
             }
         }
     private val permissionRequestLauncher =
@@ -62,10 +69,9 @@ class MainActivity : ComponentActivity() {
 
     // Get location updates.
     private val locationRequest = LocationRequest.Builder(30_000L)
-        .setPriority(Priority.PRIORITY_HIGH_ACCURACY) //PRIORITY_BALANCED_POWER_ACCURACY
+        .setPriority(Priority.PRIORITY_HIGH_ACCURACY) // PRIORITY_BALANCED_POWER_ACCURACY
         .build()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
 
     private val bottomNavigationItems = listOf(
         BottomNavItem.Home,
@@ -73,7 +79,6 @@ class MainActivity : ComponentActivity() {
         BottomNavItem.Settings
     )
     private lateinit var navController: NavHostController
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,40 +97,49 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
                 val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                when (navBackStackEntry?.destination?.route) { //Hide Button Navigation Bar
-                    BottomNavItem.LocationPhotos.routeWithArgs -> bottomBarState.value =
-                        false
+                when (navBackStackEntry?.destination?.route) { // Hide Button Navigation Bar
+                    BottomNavItem.LocationPhotos.routeWithArgs ->
+                        bottomBarState.value =
+                            false
 
-                    else -> { ///Show Button Navigation Bar
+                    else -> { // /Show Button Navigation Bar
                         if (!bottomBarState.value) bottomBarState.value = true
                     }
                 }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
-                        var title = stringResource(id = R.string.app_name) //default to the App Name
+                        var title =
+                            stringResource(id = R.string.app_name) // default to the App Name
                         var canNavigateBack = false
                         when (navBackStackEntry?.destination?.route) {
                             BottomNavItem.LocationPhotos.routeWithArgs -> {
                                 // Retrieve the passed argument
-                                title =
-                                    navBackStackEntry!!.arguments?.getString(BottomNavItem.LocationPhotos.locationNameTypeArg) ?: "Location Photos"
+                                title = navBackStackEntry!!
+                                    .arguments?.getString(
+                                        BottomNavItem
+                                            .LocationPhotos
+                                            .locationNameTypeArg
+                                    ) ?: "Location Photos"
                                 canNavigateBack = true
                             }
 
-                            BottomNavItem.Home.screenRoute -> title =
-                                stringResource(id = R.string.home_title_currently)
-                            
-                            BottomNavItem.Search.screenRoute -> title =
-                                stringResource(id = R.string.search_screen_title)
+                            BottomNavItem.Home.screenRoute ->
+                                title =
+                                    stringResource(id = R.string.home_title_currently)
 
-                            BottomNavItem.Settings.screenRoute -> title =
-                                stringResource(id = R.string.settings_screen_title)
+                            BottomNavItem.Search.screenRoute ->
+                                title =
+                                    stringResource(id = R.string.search_screen_title)
+
+                            BottomNavItem.Settings.screenRoute ->
+                                title =
+                                    stringResource(id = R.string.settings_screen_title)
                         }
                         WeatherTopAppBar(
                             title = title,
                             modifier = Modifier,
-                            navigateUp = {navController.navigateUp()},
+                            navigateUp = { navController.navigateUp() },
                             canNavigateBack = canNavigateBack
                         )
                     },
@@ -140,8 +154,12 @@ class MainActivity : ComponentActivity() {
                 ) { paddingValues ->
                     val state = mainViewModel.state.collectAsStateWithLifecycle().value
                     CheckForPermissions(
-                        onPermissionGranted = {
-                            mainViewModel.processIntent(MainViewUiState.GrantPermission(isGranted = true))
+                        onPermissionGranted =
+                        {
+                            mainViewModel.processIntent(
+                                MainViewUiState
+                                    .GrantPermission(isGranted = true)
+                            )
                         },
                         onPermissionDenied = {
                             OnPermissionDenied(activityPermissionResult = permissionRequestLauncher)
@@ -153,7 +171,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 
     @SuppressLint("MissingPermission")
     @Composable
@@ -186,7 +203,6 @@ class MainActivity : ComponentActivity() {
 //                    }
                 // WeatherAppScreensConfig(navController = rememberNavController())
                 NavigationGraph(navController = navController, mainViewModel, paddingValues)
-
             }
 
             state.isLocationSettingEnabled && !state.isPermissionGranted -> {
@@ -220,4 +236,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

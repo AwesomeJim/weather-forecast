@@ -2,7 +2,7 @@
 package com.awesomejim.weatherforecast.data.source.local.converter
 
 import androidx.room.TypeConverter
-import java.util.*
+import java.util.Date
 
 /**
  * Converts Date to a Long and Back

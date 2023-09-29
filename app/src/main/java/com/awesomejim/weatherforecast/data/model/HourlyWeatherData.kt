@@ -2,7 +2,6 @@ package com.awesomejim.weatherforecast.data.model
 
 import androidx.annotation.DrawableRes
 
-
 data class ForecastMoreDetails(
     val windDetails: String,
     val humidityDetails: String,

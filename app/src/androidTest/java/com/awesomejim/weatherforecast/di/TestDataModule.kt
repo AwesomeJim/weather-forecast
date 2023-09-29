@@ -20,5 +20,4 @@ object TestDataModule {
             context, LocationDatabase::class.java
         ).allowMainThreadQueries()
             .build()
-
 }

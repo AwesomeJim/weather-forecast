@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
 @StringRes
 fun ErrorType.toResourceId(): Int = when (this) {
     ErrorType.SERVER -> R.string.error_server
@@ -17,13 +16,11 @@ fun ErrorType.toResourceId(): Int = when (this) {
     ErrorType.CLIENT -> R.string.error_client
 }
 
-
 fun getDate(utcInMillis: Long, formatPattern: String): String {
     val sdf = SimpleDateFormat(formatPattern, Locale.getDefault())
     val dateFormat = Date(utcInMillis * 1000)
     return sdf.format(dateFormat)
 }
-
 
 fun getUpdatedOnDate(date: Date): String {
     val DATE_FORMAT = "EEE, d MMM yyyy HH:mm aa"

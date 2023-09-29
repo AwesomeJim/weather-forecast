@@ -19,7 +19,7 @@ object WeatherUtils {
      *
      * @return resource ID for the corresponding icon. -1 if no relation is found.
      */
-    fun getLargeArtResourceIdForWeatherCondition(weatherId: Int): Int {
+    fun iconIdForWeatherCondition(weatherId: Int): Int {
 
         /*
          * Based on weather code data for Open Weather Map.

@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
 
-
 @Composable
 fun ConfirmButton(
     modifier: Modifier,
@@ -54,9 +53,9 @@ fun SettingOptionRadioButton(
             selected = (text == selectedOption),
             onClick = null
         )
-        BodyText(text = text, modifier = Modifier.padding(start = 8.dp),
-           color = MaterialTheme.colorScheme.onSecondaryContainer)
+        BodyText(
+            text = text, modifier = Modifier.padding(start = 8.dp),
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
     }
 }
-
-

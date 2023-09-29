@@ -30,6 +30,4 @@ class NetworkHelper @Inject constructor(
             else -> false
         }
     }
-
-
 }

@@ -44,7 +44,6 @@ import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreenUiState
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsViewModel
 import timber.log.Timber
 
-
 /**
  * BottomNavItem sealed class with bottom navigation item title, item icon and item route
  *
@@ -64,7 +63,7 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
         const val locationLatTypeArg = "latitude"
         const val locationlogTypeArg = "longitude"
         val routeWithArgs =
-            "${screenRoute}/{${locationNameTypeArg}}/{${locationLatTypeArg}}/{${locationlogTypeArg}}"
+            "$screenRoute/{$locationNameTypeArg}/{$locationLatTypeArg}/{$locationlogTypeArg}"
         val arguments = listOf(
             navArgument(locationNameTypeArg) { type = NavType.StringType },
             navArgument(locationLatTypeArg) { type = NavType.FloatType },
@@ -72,7 +71,6 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
         )
     }
 }
-
 
 /**
  * Navigation graph
@@ -108,7 +106,8 @@ fun NavigationGraph(
                         currentWeatherUiState.errorMessageId,
                         onTryAgainClicked = {
                             mainViewModel.fetchWeatherData()
-                        })
+                        }
+                    )
                 }
 
                 is CurrentWeatherUiState.Success -> {
@@ -122,13 +121,14 @@ fun NavigationGraph(
         }
         composable(BottomNavItem.Search.screenRoute) {
             val searchViewModel = hiltViewModel<SearchViewModel>()
-            SearchScreen(searchViewModel = searchViewModel,
+            SearchScreen(
+                searchViewModel = searchViewModel,
                 onViewPhotosClick = { locationItemData ->
                     Timber.tag("onViewPhotosClick")
                         .e("locationItemData ${locationItemData.locationName}")
                     navController.navigateToViewPhotos(locationItemData)
-                })
-
+                }
+            )
         }
         composable(
             BottomNavItem.LocationPhotos.routeWithArgs,
@@ -136,8 +136,6 @@ fun NavigationGraph(
         ) { navBackStackEntry ->
             val photosViewModel = hiltViewModel<PhotosViewModel>()
             // Retrieve the passed argument
-//            val locationNameTypeArg =
-//                navBackStackEntry.arguments?.getString(BottomNavItem.LocationPhotos.locationNameTypeArg)
             val latitude =
                 navBackStackEntry.arguments?.getFloat(locationLatTypeArg)
             val longitude =
@@ -156,7 +154,13 @@ fun NavigationGraph(
             val settingsState = settingsViewModel
                 .state.collectAsStateWithLifecycle()
                 .value
-            settingsViewModel.processSettingsScreenUiState(SettingsScreenUiState.LoadSettingScreenData)
+            //
+            settingsViewModel
+                .processSettingsScreenUiState(
+                    SettingsScreenUiState
+                        .LoadSettingScreenData
+                )
+            //
             SettingsScreen(
                 settingsState,
                 onUnitChanged = { selectedUnit ->
@@ -165,7 +169,8 @@ fun NavigationGraph(
                             selectedUnit
                         )
                     )
-                })
+                }
+            )
         }
     }
 }
@@ -173,8 +178,14 @@ fun NavigationGraph(
 private fun NavHostController.navigateToViewPhotos(locationItemData: LocationItemData) {
     val locationNameTypeArg = locationItemData.locationName
     val locationLatTypeArg = locationItemData.locationLatitude.toFloat()
-    val locationlogTypeArg = locationItemData.locationLongitude.toFloat()
-    this.navigate("${BottomNavItem.LocationPhotos.screenRoute}/$locationNameTypeArg/$locationLatTypeArg/$locationlogTypeArg")
+    val locationLogTypeArg = locationItemData.locationLongitude.toFloat()
+    this.navigate(
+        "${
+        BottomNavItem
+            .LocationPhotos
+            .screenRoute
+        }/$locationNameTypeArg/$locationLatTypeArg/$locationLogTypeArg"
+    )
 }
 
 /**
@@ -222,4 +233,3 @@ fun AppBottomNavigationItem(
         }
     }
 }
-

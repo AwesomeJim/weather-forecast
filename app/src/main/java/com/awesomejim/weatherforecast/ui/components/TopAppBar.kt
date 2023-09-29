@@ -22,8 +22,6 @@ import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
  * 29/09/2023
  */
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherTopAppBar(

@@ -45,13 +45,13 @@ class LocalDataSourceTest {
         database.close()
     }
 
-
     @Test
     fun insert_Insert_Location_Is_Successful_And_Available_InFlow() = runBlocking {
         val locationItemData = FakeLocalDataSource.locationList.first()
         locationItemDao.insertLocation(locationItemData.toLocationEntity())
-       // When the repository emits a value
-        val actual = locationItemDao.getLocationById(locationItemData.locationId)?.toLocationItem() // Returns the first item in the flow
+        // When the repository emits a value
+        // Returns the first item in the flow
+        val actual = locationItemDao.getLocationById(locationItemData.locationId)?.toLocationItem()
 
         assertThat(locationItemData).isEqualTo(actual)
     }
@@ -59,7 +59,7 @@ class LocalDataSourceTest {
     @Test
     fun insert_loading_all_location_items_is_Successful_And_Available_InFlow() = runBlocking {
         val locationItemDataList = FakeLocalDataSource.locationList
-        //Insert the 3 fake items into the list
+        // Insert the 3 fake items into the list
         locationItemDataList.forEach { item ->
             locationItemDao.insertLocation(item.toLocationEntity())
         }
@@ -71,37 +71,38 @@ class LocalDataSourceTest {
         assertThat(locationItemDataList).containsAnyIn(actual)
     }
 
-
     @Test
     fun assert_DeletedItem_ShouldNot_be_present_inFlow() = runBlocking {
         val locationItemDataList = FakeLocalDataSource.locationList
-        //Insert the 3 fake items into the list
+        // Insert the 3 fake items into the list
         locationItemDataList.forEach { item ->
             locationItemDao.insertLocation(item.toLocationEntity())
         }
         // we delete the 2nd item from db
         locationItemDao.deleteLocation(locationItemDataList[1].toLocationEntity())
 
-        //our db should have only 2 items
+        // our db should have only 2 items
         val list = locationItemDao.loadAllLocation().first()
         assertThat(list?.size).isEqualTo(2)
         // deleted item should not exits in the db
-        val actual = locationItemDao.getLocationById(locationItemDataList[1].locationId)?.toLocationItem()
+        val actual = locationItemDao
+            .getLocationById(locationItemDataList[1].locationId)
+            ?.toLocationItem()
         assertThat(actual).isNull()
     }
 
     @Test
-    fun assert_getLocationById_of_non_existing_item_Should_Not_not_return_item_inFlow() = runBlocking {
-        // try to load a dummy location using a dummy id
-        val actual = locationItemDao.getLocationById(637733)?.toLocationItem()
-        assertThat(actual).isNull()
-    }
-
+    fun assert_getLocationById_of_non_existing_item_Should_Not_not_return_item_inFlow() =
+        runBlocking {
+            // try to load a dummy location using a dummy id
+            val actual = locationItemDao.getLocationById(637733)?.toLocationItem()
+            assertThat(actual).isNull()
+        }
 
     @Test
     fun assert_clear_All_Items_Should_Not_not_return_items_inFlow() = runBlocking {
         val locationItemDataList = FakeLocalDataSource.locationList
-        //Insert the 3 fake items into the list
+        // Insert the 3 fake items into the list
         locationItemDataList.forEach { item ->
             locationItemDao.insertLocation(item.toLocationEntity())
         }
@@ -109,7 +110,9 @@ class LocalDataSourceTest {
         locationItemDao.clearAll()
 
         // deleted item should not exits in the db
-        val actual = locationItemDao.getLocationById(locationItemDataList[1].locationId)?.toLocationItem()
+        val actual = locationItemDao
+            .getLocationById(locationItemDataList[1].locationId)
+            ?.toLocationItem()
         assertThat(actual).isNull()
     }
 }

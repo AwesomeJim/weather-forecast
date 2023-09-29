@@ -37,7 +37,6 @@ import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import timber.log.Timber
 
-
 @Composable
 fun PhotosScreen(
     photosViewModel: PhotosViewModel,
@@ -65,9 +64,9 @@ fun PhotosScreen(
                     }
                 }
             }
-            when (val state = photosList.loadState.refresh) { //FIRST LOAD
+            when (val state = photosList.loadState.refresh) { // FIRST LOAD
                 is LoadState.Error -> {
-                    //state.error to get error message
+                    // state.error to get error message
                     Timber.tag("PhotosScreen").e(state.error)
                 }
 
@@ -77,7 +76,6 @@ fun PhotosScreen(
                             modifier = Modifier
                                 .size(200.dp)
                         )
-
                     }
                 }
 
@@ -85,7 +83,7 @@ fun PhotosScreen(
             }
             when (val state = photosList.loadState.append) { // Pagination
                 is LoadState.Error -> {
-                    //state.error to get error message
+                    // state.error to get error message
                     Timber.tag("PhotosScreen").e(state.error)
                     item {
                         PhotosErrorScreen(retryAction = {}, modifier = Modifier.fillMaxSize())

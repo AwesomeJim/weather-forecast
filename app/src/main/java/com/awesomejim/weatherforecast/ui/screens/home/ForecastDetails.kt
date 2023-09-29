@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -39,8 +38,7 @@ fun ForecastMoreDetails(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp).fillMaxWidth()
-    )
-    {
+    ) {
         Column(modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)) {
             ConditionsLabelSection(modifier, R.drawable.ic_wind, R.string.wind_label)
             ConditionsLabelSection(modifier, R.drawable.ic_humidity, R.string.humidity_label)
@@ -120,7 +118,6 @@ fun HourlyDataElementRow(
             HourlyDataElement(item)
         }
     }
-
 }
 
 @Composable
@@ -136,7 +133,6 @@ fun ForecastMoreDetailsSection(
         ForecastMoreDetails(forecastMoreDetails)
         HourlyDataElementRow(forecastMoreDetails.hourlyWeatherData)
     }
-
 }
 
 @Preview(
@@ -160,7 +156,6 @@ fun HourlyDataElementPreview() {
         )
     }
 }
-
 
 @Preview(
     showBackground = true,
@@ -197,15 +192,16 @@ fun HourlyDataElementRowPreview() {
     }
 }
 
-
 @Preview(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "DefaultPreviewDark"
 )
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     backgroundColor = 0xFFF0EAE2,
-    showSystemUi = true)
+    showSystemUi = true
+)
 @Composable
 fun ForecastMoreDetailsSectionPreview() {
     WeatherForecastTheme {

@@ -92,8 +92,8 @@ fun SearchScreen(
     //
     if (searchUiState.isSearchingSuccessful) {
         searchUiState.searchResultWeatherData?.let { searchResults ->
-            val weatherIcon =
-                WeatherUtils.getLargeArtResourceIdForWeatherCondition(searchResults.locationWeatherInfo.weatherConditionId)
+            val weatherIcon = WeatherUtils
+                .iconIdForWeatherCondition(searchResults.locationWeatherInfo.weatherConditionId)
             DialogSearchSuccess(
                 onDismissRequest = {
                     searchViewModel.updateSearchStatus()
@@ -150,8 +150,8 @@ fun SearchScreen(
                 // Provide a unique key based on the item  content, for our case we use locationId
                 key = { _, item -> item.locationId }
             ) { _, location ->
-                val drawable =
-                    WeatherUtils.getLargeArtResourceIdForWeatherCondition(location.locationWeatherInfo.weatherConditionId)
+                val drawable = WeatherUtils
+                    .iconIdForWeatherCondition(location.locationWeatherInfo.weatherConditionId)
                 EditableLocationItem(
                     locationItemData = location,
                     conditionIcon = drawable,
@@ -167,7 +167,6 @@ fun SearchScreen(
                         onViewPhotosClick(it)
                     }
                 )
-
             }
         } else {
             item {
@@ -194,7 +193,6 @@ fun SearchScreen(
         }
     }
 }
-
 
 /**
  * Composable representing an email item with swipe-to-dismiss functionality.
@@ -311,7 +309,6 @@ fun SearchBar(
     }
 }
 
-
 @Composable
 fun SavedLocationItem(
     @DrawableRes conditionIcon: Int,
@@ -369,7 +366,9 @@ fun SavedLocationItem(
                 ) {
                     Image(
                         painter = painterResource(id = conditionIcon),
-                        contentDescription = locationItemData.locationWeatherInfo.weatherConditionDescription,
+                        contentDescription =
+                        locationItemData
+                            .locationWeatherInfo.weatherConditionDescription,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.size(48.dp)
                     )
@@ -386,11 +385,11 @@ fun SavedLocationItem(
                 ) {
                     androidx.compose.material3.Icon(
                         imageVector = Icons.Filled.ImageSearch,
-                        contentDescription = stringResource(R.string.expand_button_content_description),
+                        contentDescription =
+                        stringResource(R.string.expand_button_content_description),
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-
             }
             Row {
                 Column(
@@ -434,10 +433,8 @@ fun SavedLocationItem(
                 }
             }
         }
-
     }
 }
-
 
 @Preview(
     showBackground = true,
@@ -455,7 +452,6 @@ fun SavedLocationItemPreview() {
         )
     }
 }
-
 
 @Preview(
     showBackground = true,
@@ -521,7 +517,6 @@ fun AlertDialogError(
     )
 }
 
-
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Preview(
     showBackground = true,
@@ -539,6 +534,5 @@ fun AlertDialogPreview() {
             dialogTitle = "Alert dialog example",
             dialogText = "This is an example of an alert dialog with buttons."
         )
-
     }
 }
