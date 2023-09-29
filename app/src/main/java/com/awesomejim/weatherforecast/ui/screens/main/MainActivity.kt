@@ -9,19 +9,29 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.ui.common.CheckForPermissions
 import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
+import com.awesomejim.weatherforecast.ui.components.WeatherTopAppBar
+import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
+import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
+import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -57,6 +67,14 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
 
+    private val bottomNavigationItems = listOf(
+        BottomNavItem.Home,
+        BottomNavItem.Search,
+        BottomNavItem.Settings
+    )
+    private lateinit var navController: NavHostController
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -71,11 +89,55 @@ class MainActivity : ComponentActivity() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
             WeatherForecastTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
+                navController = rememberNavController()
+                val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                when (navBackStackEntry?.destination?.route) { //Hide Button Navigation Bar
+                    BottomNavItem.LocationPhotos.routeWithArgs -> bottomBarState.value =
+                        false
+
+                    else -> { ///Show Button Navigation Bar
+                        if (!bottomBarState.value) bottomBarState.value = true
+                    }
+                }
+                Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
+                    topBar = {
+                        var title = stringResource(id = R.string.app_name) //default to the App Name
+                        var canNavigateBack = false
+                        when (navBackStackEntry?.destination?.route) {
+                            BottomNavItem.LocationPhotos.routeWithArgs -> {
+                                // Retrieve the passed argument
+                                title =
+                                    navBackStackEntry!!.arguments?.getString(BottomNavItem.LocationPhotos.locationNameTypeArg) ?: "Location Photos"
+                                canNavigateBack = true
+                            }
+
+                            BottomNavItem.Home.screenRoute -> title =
+                                stringResource(id = R.string.home_title_currently)
+                            
+                            BottomNavItem.Search.screenRoute -> title =
+                                stringResource(id = R.string.search_screen_title)
+
+                            BottomNavItem.Settings.screenRoute -> title =
+                                stringResource(id = R.string.settings_screen_title)
+                        }
+                        WeatherTopAppBar(
+                            title = title,
+                            modifier = Modifier,
+                            navigateUp = {navController.navigateUp()},
+                            canNavigateBack = canNavigateBack
+                        )
+                    },
+                    bottomBar = {
+                        if (bottomBarState.value) {
+                            AppBottomNavigationItem(
+                                navController = navController,
+                                bottomNavigationItems
+                            )
+                        }
+                    }
+                ) { paddingValues ->
                     val state = mainViewModel.state.collectAsStateWithLifecycle().value
                     CheckForPermissions(
                         onPermissionGranted = {
@@ -86,7 +148,7 @@ class MainActivity : ComponentActivity() {
                         }
                     )
 
-                    InitMainScreen(state)
+                    InitMainScreen(state, paddingValues)
                 }
             }
         }
@@ -95,7 +157,7 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("MissingPermission")
     @Composable
-    private fun InitMainScreen(state: MainViewState) {
+    private fun InitMainScreen(state: MainViewState, paddingValues: PaddingValues) {
         when {
             state.isLocationSettingEnabled && state.isPermissionGranted -> {
                 // Get the current location of the device.
@@ -123,7 +185,7 @@ class MainActivity : ComponentActivity() {
 //                        Timber.tag("MainViewModel").e("addOnCanceledListener ")
 //                    }
                 // WeatherAppScreensConfig(navController = rememberNavController())
-                MainScreenView(mainViewModel)
+                NavigationGraph(navController = navController, mainViewModel, paddingValues)
 
             }
 
@@ -156,22 +218,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WeatherForecastTheme {
-        Greeting("Android")
     }
 }
 

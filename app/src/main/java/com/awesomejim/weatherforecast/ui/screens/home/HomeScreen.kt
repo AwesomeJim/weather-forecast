@@ -21,9 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -271,23 +269,8 @@ fun HomeContentScreen(
             bgImage = R.drawable.sea_rainy
         }
     }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.home_title_currently),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                },
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-        }
-    ) { contentPadding ->
         LazyColumn(
             modifier = modifier
-                .padding(contentPadding).padding(bottom = 56.dp)
                 .background(bgColor)
                 .fillMaxHeight()
         ) {
@@ -338,7 +321,6 @@ fun HomeContentScreen(
                 }
             }
         }
-    }
 }
 
 

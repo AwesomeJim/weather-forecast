@@ -28,11 +28,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Favorite
@@ -124,90 +122,76 @@ fun SearchScreen(
             )
         }
     }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.saved_screen_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.onSecondaryContainer)
+    ) {
+        item {
+            Spacer(Modifier.height(16.dp))
+            SearchBar(
+                searchTerm = searchUiState.searchKeyWord,
+                isSearchWordValid = searchUiState.isSearchWordValid,
+                onSearchTermChanged = {
+                    searchViewModel.updateUserSearchKeyWord(it)
                 },
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+                onKeyboardDone = {
+                    if (searchUiState.isSearchWordValid) {
+                        searchViewModel.fetchForecastCurrentWeatherData()
+                    }
+                },
+                isSearching = searchUiState.isSearching,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
-    ) { contentPadding ->
-      // val  dpToFloat = 64 * Resources.getSystem().displayMetrics.density
-        LazyColumn(
-            modifier = Modifier
-                .padding(contentPadding).padding(bottom = 56.dp)
-                .fillMaxHeight()
-                .background(MaterialTheme.colorScheme.onSecondaryContainer)
-        ) {
-            item {
-                Spacer(Modifier.height(16.dp))
-                SearchBar(
-                    searchTerm = searchUiState.searchKeyWord,
-                    isSearchWordValid = searchUiState.isSearchWordValid,
-                    onSearchTermChanged = {
-                        searchViewModel.updateUserSearchKeyWord(it)
+        if (savedLocationListUiState.itemList.isNotEmpty()) {
+            itemsIndexed(
+                items = savedLocationListUiState.itemList,
+                // Provide a unique key based on the item  content, for our case we use locationId
+                key = { _, item -> item.locationId }
+            ) { _, location ->
+                val drawable =
+                    WeatherUtils.getLargeArtResourceIdForWeatherCondition(location.locationWeatherInfo.weatherConditionId)
+                EditableLocationItem(
+                    locationItemData = location,
+                    conditionIcon = drawable,
+                    onRefresh = { locationItemData ->
+                        Timber.e("dismissValue onRemove ${locationItemData.locationId}")
+                        searchViewModel.refreshWeatherData(locationItemData)
                     },
-                    onKeyboardDone = {
-                        if (searchUiState.isSearchWordValid) {
-                            searchViewModel.fetchForecastCurrentWeatherData()
-                        }
+                    onRemove = { locationItemData ->
+                        Timber.e("dismissValue onRemove ${locationItemData.locationId}")
+                        searchViewModel.deleteLocationItem(locationItemData)
                     },
-                    isSearching = searchUiState.isSearching,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-            if (savedLocationListUiState.itemList.isNotEmpty()) {
-                itemsIndexed(
-                    items = savedLocationListUiState.itemList,
-                    // Provide a unique key based on the item  content, for our case we use locationId
-                    key = { _, item -> item.locationId }
-                ) { _, location ->
-                    val drawable =
-                        WeatherUtils.getLargeArtResourceIdForWeatherCondition(location.locationWeatherInfo.weatherConditionId)
-                    EditableLocationItem(
-                        locationItemData = location,
-                        conditionIcon = drawable,
-                        onRefresh = { locationItemData ->
-                            Timber.e("dismissValue onRemove ${locationItemData.locationId}")
-                            searchViewModel.refreshWeatherData(locationItemData)
-                        },
-                        onRemove = { locationItemData ->
-                            Timber.e("dismissValue onRemove ${locationItemData.locationId}")
-                            searchViewModel.deleteLocationItem(locationItemData)
-                        },
-                        onViewPhotosClick = {
-                            onViewPhotosClick(it)
-                        }
-                    )
-
-                }
-            }else {
-                item {
-                    Column(
-                        modifier = Modifier.fillMaxSize().padding(top = 100.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            imageVector = Icons.Default.Favorite,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondaryContainer
-                        )
-                        Text(text = "Search and save some favorite location",
-                            color = MaterialTheme.colorScheme.secondaryContainer)
-                        Spacer(modifier = Modifier.weight(1f))
+                    onViewPhotosClick = {
+                        onViewPhotosClick(it)
                     }
+                )
+
+            }
+        } else {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 100.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                    Text(
+                        text = "Search and save some favorite location",
+                        color = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
-
     }
 }
 

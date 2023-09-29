@@ -1,5 +1,7 @@
 package com.awesomejim.weatherforecast.ui.nav
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -57,7 +59,7 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
     object Search : BottomNavItem("Search", Icons.Filled.Search, "search")
     object Settings : BottomNavItem("Settings", Icons.Filled.Settings, "settings")
     object LocationPhotos :
-        BottomNavItem("Location_Photos", Icons.Filled.Image, "location_photos") {
+        BottomNavItem("Location Photos", Icons.Filled.Image, "location_photos") {
         const val locationNameTypeArg = "location_name"
         const val locationLatTypeArg = "latitude"
         const val locationlogTypeArg = "longitude"
@@ -81,9 +83,13 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    paddingValues: PaddingValues,
 ) {
-    NavHost(navController, startDestination = BottomNavItem.Home.screenRoute) {
+    NavHost(
+        navController, startDestination = BottomNavItem.Home.screenRoute,
+        modifier = Modifier.padding(paddingValues)
+    ) {
         composable(BottomNavItem.Home.screenRoute) {
             val currentWeatherUiState = mainViewModel
                 .currentWeatherUiState
@@ -118,8 +124,9 @@ fun NavigationGraph(
             val searchViewModel = hiltViewModel<SearchViewModel>()
             SearchScreen(searchViewModel = searchViewModel,
                 onViewPhotosClick = { locationItemData ->
-                    Timber.tag("onViewPhotosClick").e("locationItemData ${locationItemData.locationName}")
-                   navController.navigateToViewPhotos(locationItemData)
+                    Timber.tag("onViewPhotosClick")
+                        .e("locationItemData ${locationItemData.locationName}")
+                    navController.navigateToViewPhotos(locationItemData)
                 })
 
         }
@@ -129,8 +136,8 @@ fun NavigationGraph(
         ) { navBackStackEntry ->
             val photosViewModel = hiltViewModel<PhotosViewModel>()
             // Retrieve the passed argument
-            val locationNameTypeArg =
-                navBackStackEntry.arguments?.getString(BottomNavItem.LocationPhotos.locationNameTypeArg)
+//            val locationNameTypeArg =
+//                navBackStackEntry.arguments?.getString(BottomNavItem.LocationPhotos.locationNameTypeArg)
             val latitude =
                 navBackStackEntry.arguments?.getFloat(locationLatTypeArg)
             val longitude =
@@ -141,9 +148,6 @@ fun NavigationGraph(
             )
             PhotosScreen(
                 photosViewModel = photosViewModel,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() },
-                locationName = locationNameTypeArg ?: "Location Photos",
                 defaultLocation = defaultLocation
             )
         }
@@ -167,9 +171,9 @@ fun NavigationGraph(
 }
 
 private fun NavHostController.navigateToViewPhotos(locationItemData: LocationItemData) {
-     val locationNameTypeArg = locationItemData.locationName
-     val locationLatTypeArg = locationItemData.locationLatitude.toFloat()
-     val locationlogTypeArg = locationItemData.locationLongitude.toFloat()
+    val locationNameTypeArg = locationItemData.locationName
+    val locationLatTypeArg = locationItemData.locationLatitude.toFloat()
+    val locationlogTypeArg = locationItemData.locationLongitude.toFloat()
     this.navigate("${BottomNavItem.LocationPhotos.screenRoute}/$locationNameTypeArg/$locationLatTypeArg/$locationlogTypeArg")
 }
 
