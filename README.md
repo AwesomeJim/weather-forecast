@@ -18,13 +18,13 @@ This app enable users to:
 
 # [Screenshots 📱](screenshots)
 
-|                    Home       (Dark Theme)                    |                         Home  (Light Theme)                         |
-|:-------------------------------------------------------------:|:-------------------------------------------------------------------:|
-| <img src="screenshots/home.png" width="300px" height="600px"> | <img src="screenshots/home_light.png" width="300px" height="600px"> |
+|                          Home       (Dark Theme)                          |                            Home  (Light Theme)                             |
+|:-------------------------------------------------------------------------:|:--------------------------------------------------------------------------:|
+| <img src="screenshots/home_screen_dark.png" width="300px" height="600px"> | <img src="screenshots/home_screen_light.png" width="300px" height="600px"> |
 
-|                      Saved Locations  (Dark Theme)                      |                                 (Light Theme)                                 |
-|:-----------------------------------------------------------------------:|:-----------------------------------------------------------------------------:|
-| <img src="screenshots/saved_location.png" width="300px" height="600px"> | <img src="screenshots/saved_location_light.png" width="300px" height="600px"> |
+|                       Saved Locations  (Dark Theme)                        |                                (Light Theme)                                 |
+|:--------------------------------------------------------------------------:|:----------------------------------------------------------------------------:|
+| <img src="screenshots/seach_screen_dark.png" width="300px" height="600px"> | <img src="screenshots/search_screen_light.png" width="300px" height="600px"> |
 
 |                                                                           Screen Recording                                                                            |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|

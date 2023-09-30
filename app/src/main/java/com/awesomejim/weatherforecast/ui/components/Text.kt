@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -88,11 +88,11 @@ fun ErrorTextWithAction(
     onTryAgainClicked: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        androidx.compose.material.Text(
+        Text(
             text = stringResource(id = errorMessageId),
             textAlign = TextAlign.Center,
             modifier = modifier.align(Alignment.CenterHorizontally),
-            style = androidx.compose.material.MaterialTheme.typography.body1
+            style = MaterialTheme.typography.bodyMedium
         )
         Button(
             onClick = { onTryAgainClicked() },
@@ -100,9 +100,9 @@ fun ErrorTextWithAction(
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            androidx.compose.material.Text(
+            Text(
                 text = stringResource(R.string.home_error_try_again),
-                style = androidx.compose.material.MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
             )
         }

@@ -25,24 +25,24 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DismissValue
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -125,7 +125,6 @@ fun SearchScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.onSecondaryContainer)
     ) {
         item {
             Spacer(Modifier.height(16.dp))
@@ -268,7 +267,7 @@ fun SearchBar(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         TextField(
             value = searchTerm,
@@ -297,7 +296,10 @@ fun SearchBar(
             )
         )
         if (searchTerm.isNotEmpty() && !isSearchWordValid) {
-            Text(text = "Please enter valid text", color = MaterialTheme.colorScheme.error)
+            Text(
+                text = "Please enter valid text",
+                color = MaterialTheme.colorScheme.error
+            )
         }
         if (isSearching) {
             CircularProgressIndicator(
@@ -330,9 +332,8 @@ fun SavedLocationItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(16.dp),
-        backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+            .padding(4.dp),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -383,7 +384,7 @@ fun SavedLocationItem(
                     },
                     modifier = modifier
                 ) {
-                    androidx.compose.material3.Icon(
+                    Icon(
                         imageVector = Icons.Filled.ImageSearch,
                         contentDescription =
                         stringResource(R.string.expand_button_content_description),

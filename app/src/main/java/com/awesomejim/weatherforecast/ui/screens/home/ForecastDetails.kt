@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,25 +49,25 @@ fun ForecastMoreDetails(
             Text(
                 text = forecastMoreDetails.windDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.humidityDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.visibilityDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.pressureDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
         }
@@ -86,7 +86,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.temperature,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Image(
             painter = painterResource(hourlyWeatherData.drawableIcon),
@@ -99,7 +99,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.hourTime,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -112,7 +112,7 @@ fun HourlyDataElementRow(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(horizontal = 4.dp),
-        modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+        modifier = modifier
     ) {
         items(hourlyWeatherData) { item ->
             HourlyDataElement(item)
@@ -128,7 +128,7 @@ fun ForecastMoreDetailsSection(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(horizontal = 1.dp, vertical = 4.dp).fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         ForecastMoreDetails(forecastMoreDetails)
         HourlyDataElementRow(forecastMoreDetails.hourlyWeatherData)
@@ -199,8 +199,7 @@ fun HourlyDataElementRowPreview() {
 )
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFFF0EAE2,
-    showSystemUi = true
+    backgroundColor = 0xFFF0EAE2
 )
 @Composable
 fun ForecastMoreDetailsSectionPreview() {

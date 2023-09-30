@@ -193,7 +193,7 @@ androidx = [
 compose = [
     "androidx-compose-foundation",
     "androidx-compose-foundation-layout",
-    "androidx-compose-material",
+    #"androidx-compose-material",
     "androidx-compose-material3",
     "androidx-compose-material-iconsExtended",
     "androidx-compose-materialWindow",
