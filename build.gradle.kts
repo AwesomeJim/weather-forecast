@@ -58,4 +58,10 @@ subprojects {
             }
         }
     }
+
+//    afterEvaluate {
+//        tasks.named("preBuild") {
+//            dependsOn("spotlessApply")
+//        }
+//    }
 }
