@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -77,6 +78,7 @@ import com.awesomejim.weatherforecast.utilities.WeatherUtils
 import kotlinx.coroutines.delay
 import timber.log.Timber
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel,
@@ -154,6 +156,7 @@ fun SearchScreen(
                 EditableLocationItem(
                     locationItemData = location,
                     conditionIcon = drawable,
+                    modifier = Modifier.animateItemPlacement(),
                     onRefresh = { locationItemData ->
                         Timber.e("dismissValue onRemove ${locationItemData.locationId}")
                         searchViewModel.refreshWeatherData(locationItemData)
@@ -204,6 +207,7 @@ fun SearchScreen(
 fun EditableLocationItem(
     locationItemData: LocationItemData,
     @DrawableRes conditionIcon: Int,
+    modifier: Modifier = Modifier,
     onRefresh: (LocationItemData) -> Unit,
     onRemove: (LocationItemData) -> Unit,
     onViewPhotosClick: (LocationItemData) -> Unit
@@ -232,7 +236,7 @@ fun EditableLocationItem(
     ) {
         SwipeToDismiss(
             state = dismissState,
-            modifier = Modifier,
+            modifier = modifier,
             background = {
                 DismissBackground(dismissState)
             },
@@ -301,13 +305,15 @@ fun SearchBar(
                 color = MaterialTheme.colorScheme.error
             )
         }
-        if (isSearching) {
-            CircularProgressIndicator(
-                modifier = Modifier.width(34.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                trackColor = MaterialTheme.colorScheme.primary,
-            )
-        }
+       // if (isSearching) {
+            AnimatedVisibility(visible = isSearching) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(34.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    trackColor = MaterialTheme.colorScheme.primary,
+                )
+            }
+        //}
     }
 }
 
@@ -332,7 +338,7 @@ fun SavedLocationItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
@@ -422,17 +428,22 @@ fun SavedLocationItem(
                     onClick = { expanded = !expanded }
                 )
             }
-            if (expanded) {
-                locationItemData.forecastMoreDetails?.let { data ->
-                    Divider(color = MaterialTheme.colorScheme.onTertiaryContainer, thickness = 1.dp)
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = modifier.padding(horizontal = 12.dp, vertical = 0.dp)
-                    ) {
-                        ForecastMoreDetails(data)
+            //if (expanded) {
+                AnimatedVisibility(visible = expanded) {
+                    locationItemData.forecastMoreDetails?.let { data ->
+                        Divider(
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            thickness = 1.dp
+                        )
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            modifier = modifier.padding(horizontal = 12.dp, vertical = 0.dp)
+                        ) {
+                            ForecastMoreDetails(data)
+                        }
                     }
                 }
-            }
+           // }
         }
     }
 }

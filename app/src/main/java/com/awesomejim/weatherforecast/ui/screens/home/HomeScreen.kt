@@ -3,6 +3,7 @@ package com.awesomejim.weatherforecast.ui.screens.home
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -284,6 +285,10 @@ fun HomeContentScreen(
 //            bgImage = R.drawable.sea_rainy
 //        }
 //    }
+
+    // Holds the data that is currently expanded to show its moredetails.
+    var expandedDate by remember { mutableStateOf<LocationItemData?>(null) }
+
     LazyColumn(
         modifier = modifier
             .fillMaxHeight()
@@ -325,6 +330,10 @@ fun HomeContentScreen(
                         WeatherUtils
                             .iconIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
                         forecastMoreDetails = item.forecastMoreDetails,
+                        expanded = expandedDate == item,
+                        onClick = {
+                            expandedDate = if (expandedDate == item) null else item
+                        },
                         modifier = Modifier.animateItemPlacement()
                     )
                 }
@@ -345,15 +354,17 @@ fun ForecastItem(
     tempLow: String,
     forecastMoreDetails: ForecastMoreDetails?,
     @DrawableRes drawable: Int,
+    expanded: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
     ElevatedCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         shape = MaterialTheme.shapes.small,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+            .animateContentSize()
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -399,7 +410,7 @@ fun ForecastItem(
             }
             ExpandItemButton(
                 expanded = expanded,
-                onClick = { expanded = !expanded }
+                onClick = onClick
             )
         }
         if (expanded) {
@@ -507,6 +518,8 @@ fun ForecastItemPreview() {
             tempLow = "12*",
             drawable = R.drawable.art_clear,
             forecastMoreDetails = SampleData.forecastMoreDetails,
+            expanded = false,
+            onClick = {},
             modifier = Modifier.padding(0.dp)
         )
     }
