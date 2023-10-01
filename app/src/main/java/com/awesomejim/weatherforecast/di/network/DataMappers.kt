@@ -148,7 +148,8 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
                 val hourlyData = HourlyWeatherData(
                     temperature = temperature,
                     drawableIcon = drawableIcon,
-                    hourTime = hourTime
+                    hourTime = hourTime,
+                    temperatureFloat = item.locationWeatherInfo.weatherTemp
                 )
                 hourlyWeatherDataList.add(hourlyData)
             }

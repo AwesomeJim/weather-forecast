@@ -62,6 +62,16 @@ import com.awesomejim.weatherforecast.utilities.WeatherUtils
 private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Modifier) {
     val drawable = WeatherUtils
         .iconIdForWeatherCondition(currentWeather.locationWeatherInfo.weatherConditionId)
+//    val animateTween by rememberInfiniteTransition(label = "").animateFloat(
+//        initialValue = -1f,
+//        targetValue = 1f,
+//        animationSpec = infiniteRepeatable(
+//            tween(2000, easing = LinearEasing),
+//            RepeatMode.Reverse
+//        ), label = ""
+//    )
+    //modifier = Modifier.offset(0.dp, (-5).dp * animateTween)
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -97,12 +107,13 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
             ) {
                 Column(
                     modifier = modifier
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .height(100.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val temp = stringResource(
@@ -115,16 +126,19 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                         currentWeather.locationWeatherInfo.weatherTempMin
                     )
                     TemperatureHeadline(
-                        temperature = temp
+                        temperature = temp,
+
                     )
+                    Spacer(modifier = Modifier.weight(1f))
                     SubtitleSmall(
-                        text = highLow
+                        text = highLow,
+                        modifier = modifier.padding(bottom = 8.dp)
                     )
                 }
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.padding(16.dp)
+                    modifier = modifier.padding(16.dp).height(100.dp)
                 ) {
                     Image(
                         painter = painterResource(id = drawable),
@@ -134,8 +148,10 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.size(48.dp)
                     )
+                    Spacer(modifier = Modifier.weight(1f))
                     Subtitle(
-                        text = currentWeather.locationWeatherInfo.weatherConditionDescription
+                        text = currentWeather.locationWeatherInfo.weatherConditionDescription,
+                        modifier = modifier.padding(bottom = 8.dp)
                     )
                 }
             }
@@ -363,7 +379,8 @@ fun ForecastItem(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+        modifier = modifier
+            .padding(vertical = 4.dp, horizontal = 4.dp)
             .animateContentSize()
     ) {
         Row(
