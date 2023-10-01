@@ -305,7 +305,6 @@ fun SearchBar(
                 color = MaterialTheme.colorScheme.error
             )
         }
-       // if (isSearching) {
             AnimatedVisibility(visible = isSearching) {
                 CircularProgressIndicator(
                     modifier = Modifier.width(34.dp),
@@ -313,7 +312,6 @@ fun SearchBar(
                     trackColor = MaterialTheme.colorScheme.primary,
                 )
             }
-        //}
     }
 }
 

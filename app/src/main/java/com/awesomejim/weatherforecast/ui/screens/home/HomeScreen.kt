@@ -49,6 +49,7 @@ import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import com.awesomejim.weatherforecast.di.network.getFormattedWind
 import com.awesomejim.weatherforecast.ui.common.getDate
+import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.ErrorTextWithAction
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.Subtitle
@@ -71,7 +72,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
 //        ), label = ""
 //    )
     //modifier = Modifier.offset(0.dp, (-5).dp * animateTween)
-
+    val lastUpdatedOn = getUpdatedOnDate(currentWeather.locationDataLastUpdate)
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -84,7 +85,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -138,7 +139,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.padding(16.dp).height(100.dp)
+                    modifier = modifier.padding(16.dp).height(100.dp).fillMaxWidth()
                 ) {
                     Image(
                         painter = painterResource(id = drawable),
@@ -154,6 +155,21 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                         modifier = modifier.padding(bottom = 8.dp)
                     )
                 }
+            }
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier.fillMaxWidth()){
+                Text(
+                    text = "As at:",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                )
+                Text(
+                    text = lastUpdatedOn,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)
+                )
             }
         }
     }

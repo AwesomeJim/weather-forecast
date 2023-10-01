@@ -68,6 +68,9 @@ fun PhotosScreen(
                 is LoadState.Error -> {
                     // state.error to get error message
                     Timber.tag("PhotosScreen").e(state.error)
+                    item {
+                        PhotosErrorScreen(retryAction = {}, modifier = Modifier.fillMaxSize())
+                    }
                 }
 
                 is LoadState.Loading -> { // Loading UI
@@ -94,8 +97,7 @@ fun PhotosScreen(
                     item {
                         PhotosLoadingScreen(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .size(200.dp)
+                                .size(200.dp).fillMaxSize()
                         )
                     }
                 }
@@ -145,7 +147,7 @@ fun PhotoCard(photo: FlickerPhotoResponse, modifier: Modifier = Modifier) {
 @Composable
 fun PhotosLoadingScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

@@ -98,51 +98,62 @@ class MainActivity : ComponentActivity() {
             WeatherForecastTheme {
                 navController = rememberNavController()
                 val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+                val title = rememberSaveable { (mutableStateOf("")) }
+                val canNavigateBackState = rememberSaveable { (mutableStateOf(false)) }
+                val refreshButtonState = rememberSaveable { (mutableStateOf(false)) }
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                when (navBackStackEntry?.destination?.route) { // Hide Button Navigation Bar
-                    BottomNavItem.LocationPhotos.routeWithArgs ->
-                        bottomBarState.value =
-                            false
 
-                    else -> { // /Show Button Navigation Bar
+                when (navBackStackEntry?.destination?.route) {
+                    BottomNavItem.LocationPhotos.routeWithArgs -> {
+                        // Retrieve the passed argument
+                        title.value = navBackStackEntry!!
+                            .arguments?.getString(
+                                BottomNavItem
+                                    .LocationPhotos
+                                    .locationNameTypeArg
+                            ) ?: "Location Photos"
+                        canNavigateBackState.value = true
+                        bottomBarState.value = false
+                        if (refreshButtonState.value) refreshButtonState.value = false
+                    }
+
+                    BottomNavItem.Home.screenRoute -> {
+                        title.value =
+                            stringResource(id = R.string.home_title_currently)
+                        refreshButtonState.value = true
                         if (!bottomBarState.value) bottomBarState.value = true
+                        if (canNavigateBackState.value) canNavigateBackState.value = false
+                    }
+
+                    BottomNavItem.Search.screenRoute -> {
+                        title.value =
+                            stringResource(id = R.string.search_screen_title)
+                        if (!bottomBarState.value) bottomBarState.value = true
+                        if (canNavigateBackState.value) canNavigateBackState.value = false
+                        if (refreshButtonState.value) refreshButtonState.value = false
+                    }
+
+                    BottomNavItem.Settings.screenRoute -> {
+                        title.value =
+                            stringResource(id = R.string.settings_screen_title)
+                        if (!bottomBarState.value) bottomBarState.value = true
+                        if (canNavigateBackState.value) canNavigateBackState.value = false
+                        if (refreshButtonState.value) refreshButtonState.value = false
                     }
                 }
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
-                        var title =
-                            stringResource(id = R.string.app_name) // default to the App Name
-                        var canNavigateBack = false
-                        when (navBackStackEntry?.destination?.route) {
-                            BottomNavItem.LocationPhotos.routeWithArgs -> {
-                                // Retrieve the passed argument
-                                title = navBackStackEntry!!
-                                    .arguments?.getString(
-                                        BottomNavItem
-                                            .LocationPhotos
-                                            .locationNameTypeArg
-                                    ) ?: "Location Photos"
-                                canNavigateBack = true
-                            }
-
-                            BottomNavItem.Home.screenRoute ->
-                                title =
-                                    stringResource(id = R.string.home_title_currently)
-
-                            BottomNavItem.Search.screenRoute ->
-                                title =
-                                    stringResource(id = R.string.search_screen_title)
-
-                            BottomNavItem.Settings.screenRoute ->
-                                title =
-                                    stringResource(id = R.string.settings_screen_title)
-                        }
                         WeatherTopAppBar(
-                            title = title,
+                            title = title.value,
                             modifier = Modifier,
                             navigateUp = { navController.navigateUp() },
-                            canNavigateBack = canNavigateBack
+                            canNavigateBack = canNavigateBackState.value,
+                            refreshButtonState = refreshButtonState.value,
+                            onRefreshClicked = {
+                                mainViewModel.fetchWeatherData()
+                            }
                         )
                     },
                     bottomBar = {
@@ -168,7 +179,6 @@ class MainActivity : ComponentActivity() {
                                 OnPermissionDenied(activityPermissionResult = permissionRequestLauncher)
                             }
                         )
-
                         InitMainScreen(state, paddingValues)
                     }
                 }

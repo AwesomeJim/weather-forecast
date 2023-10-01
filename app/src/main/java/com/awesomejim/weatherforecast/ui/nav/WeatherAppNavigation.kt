@@ -1,5 +1,8 @@
 package com.awesomejim.weatherforecast.ui.nav
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -131,7 +134,19 @@ fun NavigationGraph(
         }
         composable(
             BottomNavItem.LocationPhotos.routeWithArgs,
-            arguments = BottomNavItem.LocationPhotos.arguments
+            arguments = BottomNavItem.LocationPhotos.arguments,
+            enterTransition = {
+                slideInVertically(
+                    animationSpec = tween(700),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    animationSpec = tween(700),
+                    targetOffsetY = { it }
+                )
+            }
         ) { navBackStackEntry ->
             val photosViewModel = hiltViewModel<PhotosViewModel>()
             // Retrieve the passed argument
@@ -180,9 +195,9 @@ private fun NavHostController.navigateToViewPhotos(locationItemData: LocationIte
     val locationLogTypeArg = locationItemData.locationLongitude.toFloat()
     this.navigate(
         "${
-        BottomNavItem
-            .LocationPhotos
-            .screenRoute
+            BottomNavItem
+                .LocationPhotos
+                .screenRoute
         }/$locationNameTypeArg/$locationLatTypeArg/$locationLogTypeArg"
     )
 }
