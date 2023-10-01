@@ -144,6 +144,7 @@ fun SearchScreen(
                 isSearching = searchUiState.isSearching,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+            Spacer(Modifier.height(16.dp))
         }
         if (savedLocationListUiState.itemList.isNotEmpty()) {
             itemsIndexed(
@@ -269,10 +270,29 @@ fun SearchBar(
     onKeyboardDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+ //   var active by rememberSaveable { mutableStateOf(false) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
+//        DockedSearchBar(
+//            modifier = modifier
+//                .align(Alignment.CenterHorizontally)
+//                .padding(top = 8.dp)
+//                .semantics { traversalIndex = -1f },
+//            query = searchTerm,
+//            onQueryChange = onSearchTermChanged,
+//            onSearch = {
+//                active = false
+//                onKeyboardDone()
+//            },
+//            active = active,
+//            onActiveChange = { active = it },
+//            placeholder = { Text(stringResource(R.string.placeholder_search)) },
+//            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+//            content = {}
+//        )
+
         TextField(
             value = searchTerm,
             onValueChange = onSearchTermChanged,
@@ -297,7 +317,8 @@ fun SearchBar(
                 onSearch = {
                     onKeyboardDone()
                 }
-            )
+            ),
+            shape = RoundedCornerShape(6.dp)
         )
         if (searchTerm.isNotEmpty() && !isSearchWordValid) {
             Text(
@@ -305,13 +326,13 @@ fun SearchBar(
                 color = MaterialTheme.colorScheme.error
             )
         }
-            AnimatedVisibility(visible = isSearching) {
-                CircularProgressIndicator(
-                    modifier = Modifier.width(34.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    trackColor = MaterialTheme.colorScheme.primary,
-                )
-            }
+        AnimatedVisibility(visible = isSearching) {
+            CircularProgressIndicator(
+                modifier = Modifier.width(34.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                trackColor = MaterialTheme.colorScheme.primary,
+            )
+        }
     }
 }
 
@@ -427,21 +448,21 @@ fun SavedLocationItem(
                 )
             }
             //if (expanded) {
-                AnimatedVisibility(visible = expanded) {
-                    locationItemData.forecastMoreDetails?.let { data ->
-                        Divider(
-                            color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            thickness = 1.dp
-                        )
-                        Column(
-                            horizontalAlignment = Alignment.Start,
-                            modifier = modifier.padding(horizontal = 12.dp, vertical = 0.dp)
-                        ) {
-                            ForecastMoreDetails(data)
-                        }
+            AnimatedVisibility(visible = expanded) {
+                locationItemData.forecastMoreDetails?.let { data ->
+                    Divider(
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        thickness = 1.dp
+                    )
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        modifier = modifier.padding(horizontal = 12.dp, vertical = 0.dp)
+                    ) {
+                        ForecastMoreDetails(data)
                     }
                 }
-           // }
+            }
+            // }
         }
     }
 }
