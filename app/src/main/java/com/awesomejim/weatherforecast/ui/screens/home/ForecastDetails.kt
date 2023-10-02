@@ -1,25 +1,27 @@
 package com.awesomejim.weatherforecast.ui.screens.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,8 +41,7 @@ fun ForecastMoreDetails(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp).fillMaxWidth()
-    )
-    {
+    ) {
         Column(modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)) {
             ConditionsLabelSection(modifier, R.drawable.ic_wind, R.string.wind_label)
             ConditionsLabelSection(modifier, R.drawable.ic_humidity, R.string.humidity_label)
@@ -51,25 +52,25 @@ fun ForecastMoreDetails(
             Text(
                 text = forecastMoreDetails.windDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.humidityDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.visibilityDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.pressureDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
         }
@@ -88,7 +89,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.temperature,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Image(
             painter = painterResource(hourlyWeatherData.drawableIcon),
@@ -101,10 +102,52 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.hourTime,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }
+/**
+ * Render hourly temperature with curve-line chart
+ * show with animation
+ */
+@Composable
+fun LineChart(
+    modifier: Modifier,
+    hourlyWeatherData: List<HourlyWeatherData>
+) {
+    val zipList: List<Pair<HourlyWeatherData, HourlyWeatherData>> = hourlyWeatherData.zipWithNext()
+    Row(modifier = modifier.padding(horizontal = 24.dp)) {
+        val max = hourlyWeatherData.maxBy { it.temperatureFloat }.temperatureFloat
+        val min = hourlyWeatherData.minBy { it.temperatureFloat }.temperatureFloat
+
+        val lineColor = MaterialTheme.colorScheme.primary
+
+        for (pair in zipList) {
+
+            val fromValuePercentage = getValuePercentageForRange(pair.first.temperatureFloat, max, min)
+            val toValuePercentage = getValuePercentageForRange(pair.second.temperatureFloat, max, min)
+
+            Canvas(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+                onDraw = {
+                    val fromPoint = Offset(x = 0f, y = size.height.times(1 - fromValuePercentage))
+                    val toPoint =
+                        Offset(x = size.width, y = size.height.times(1 - toValuePercentage))
+                    drawLine(
+                        color = lineColor,
+                        start = fromPoint,
+                        end = toPoint,
+                        strokeWidth = 3f
+                    )
+                })
+        }
+    }
+}
+
+private fun getValuePercentageForRange(value: Float, max: Float, min: Float) =
+    (value - min) / (max - min)
 
 @Composable
 fun HourlyDataElementRow(
@@ -112,15 +155,14 @@ fun HourlyDataElementRow(
     modifier: Modifier = Modifier
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp),
-        modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        modifier = modifier.fillMaxWidth()
     ) {
         items(hourlyWeatherData) { item ->
             HourlyDataElement(item)
         }
     }
-
 }
 
 @Composable
@@ -131,12 +173,11 @@ fun ForecastMoreDetailsSection(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(horizontal = 1.dp, vertical = 4.dp).fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         ForecastMoreDetails(forecastMoreDetails)
+        LineChart(Modifier.height(50.dp).fillMaxWidth(), forecastMoreDetails.hourlyWeatherData)
         HourlyDataElementRow(forecastMoreDetails.hourlyWeatherData)
     }
-
 }
 
 @Preview(
@@ -160,7 +201,6 @@ fun HourlyDataElementPreview() {
         )
     }
 }
-
 
 @Preview(
     showBackground = true,
@@ -197,15 +237,15 @@ fun HourlyDataElementRowPreview() {
     }
 }
 
-
 @Preview(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "DefaultPreviewDark"
 )
-@Preview(showBackground = true,
-    backgroundColor = 0xFFF0EAE2,
-    showSystemUi = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFF0EAE2
+)
 @Composable
 fun ForecastMoreDetailsSectionPreview() {
     WeatherForecastTheme {

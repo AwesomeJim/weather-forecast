@@ -1,15 +1,19 @@
 package com.awesomejim.weatherforecast.ui.nav
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -42,7 +46,6 @@ import com.awesomejim.weatherforecast.ui.screens.settings.SettingsScreenUiState
 import com.awesomejim.weatherforecast.ui.screens.settings.SettingsViewModel
 import timber.log.Timber
 
-
 /**
  * BottomNavItem sealed class with bottom navigation item title, item icon and item route
  *
@@ -57,12 +60,12 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
     object Search : BottomNavItem("Search", Icons.Filled.Search, "search")
     object Settings : BottomNavItem("Settings", Icons.Filled.Settings, "settings")
     object LocationPhotos :
-        BottomNavItem("Location_Photos", Icons.Filled.Image, "location_photos") {
+        BottomNavItem("Location Photos", Icons.Filled.Image, "location_photos") {
         const val locationNameTypeArg = "location_name"
         const val locationLatTypeArg = "latitude"
         const val locationlogTypeArg = "longitude"
         val routeWithArgs =
-            "${screenRoute}/{${locationNameTypeArg}}/{${locationLatTypeArg}}/{${locationlogTypeArg}}"
+            "$screenRoute/{$locationNameTypeArg}/{$locationLatTypeArg}/{$locationlogTypeArg}"
         val arguments = listOf(
             navArgument(locationNameTypeArg) { type = NavType.StringType },
             navArgument(locationLatTypeArg) { type = NavType.FloatType },
@@ -70,7 +73,6 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
         )
     }
 }
-
 
 /**
  * Navigation graph
@@ -81,9 +83,13 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    paddingValues: PaddingValues,
 ) {
-    NavHost(navController, startDestination = BottomNavItem.Home.screenRoute) {
+    NavHost(
+        navController, startDestination = BottomNavItem.Home.screenRoute,
+        modifier = Modifier.padding(paddingValues)
+    ) {
         composable(BottomNavItem.Home.screenRoute) {
             val currentWeatherUiState = mainViewModel
                 .currentWeatherUiState
@@ -102,7 +108,8 @@ fun NavigationGraph(
                         currentWeatherUiState.errorMessageId,
                         onTryAgainClicked = {
                             mainViewModel.fetchWeatherData()
-                        })
+                        }
+                    )
                 }
 
                 is CurrentWeatherUiState.Success -> {
@@ -116,21 +123,33 @@ fun NavigationGraph(
         }
         composable(BottomNavItem.Search.screenRoute) {
             val searchViewModel = hiltViewModel<SearchViewModel>()
-            SearchScreen(searchViewModel = searchViewModel,
+            SearchScreen(
+                searchViewModel = searchViewModel,
                 onViewPhotosClick = { locationItemData ->
-                    Timber.tag("onViewPhotosClick").e("locationItemData ${locationItemData.locationName}")
-                   navController.navigateToViewPhotos(locationItemData)
-                })
-
+                    Timber.tag("onViewPhotosClick")
+                        .e("locationItemData ${locationItemData.locationName}")
+                    navController.navigateToViewPhotos(locationItemData)
+                }
+            )
         }
         composable(
             BottomNavItem.LocationPhotos.routeWithArgs,
-            arguments = BottomNavItem.LocationPhotos.arguments
+            arguments = BottomNavItem.LocationPhotos.arguments,
+            enterTransition = {
+                slideInVertically(
+                    animationSpec = tween(700),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    animationSpec = tween(700),
+                    targetOffsetY = { it }
+                )
+            }
         ) { navBackStackEntry ->
             val photosViewModel = hiltViewModel<PhotosViewModel>()
             // Retrieve the passed argument
-            val locationNameTypeArg =
-                navBackStackEntry.arguments?.getString(BottomNavItem.LocationPhotos.locationNameTypeArg)
             val latitude =
                 navBackStackEntry.arguments?.getFloat(locationLatTypeArg)
             val longitude =
@@ -141,9 +160,6 @@ fun NavigationGraph(
             )
             PhotosScreen(
                 photosViewModel = photosViewModel,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() },
-                locationName = locationNameTypeArg ?: "Location Photos",
                 defaultLocation = defaultLocation
             )
         }
@@ -152,7 +168,13 @@ fun NavigationGraph(
             val settingsState = settingsViewModel
                 .state.collectAsStateWithLifecycle()
                 .value
-            settingsViewModel.processSettingsScreenUiState(SettingsScreenUiState.LoadSettingScreenData)
+            //
+            settingsViewModel
+                .processSettingsScreenUiState(
+                    SettingsScreenUiState
+                        .LoadSettingScreenData
+                )
+            //
             SettingsScreen(
                 settingsState,
                 onUnitChanged = { selectedUnit ->
@@ -161,16 +183,23 @@ fun NavigationGraph(
                             selectedUnit
                         )
                     )
-                })
+                }
+            )
         }
     }
 }
 
 private fun NavHostController.navigateToViewPhotos(locationItemData: LocationItemData) {
-     val locationNameTypeArg = locationItemData.locationName
-     val locationLatTypeArg = locationItemData.locationLatitude.toFloat()
-     val locationlogTypeArg = locationItemData.locationLongitude.toFloat()
-    this.navigate("${BottomNavItem.LocationPhotos.screenRoute}/$locationNameTypeArg/$locationLatTypeArg/$locationlogTypeArg")
+    val locationNameTypeArg = locationItemData.locationName
+    val locationLatTypeArg = locationItemData.locationLatitude.toFloat()
+    val locationLogTypeArg = locationItemData.locationLongitude.toFloat()
+    this.navigate(
+        "${
+            BottomNavItem
+                .LocationPhotos
+                .screenRoute
+        }/$locationNameTypeArg/$locationLatTypeArg/$locationLogTypeArg"
+    )
 }
 
 /**
@@ -184,14 +213,11 @@ fun AppBottomNavigationItem(
     items: List<BottomNavItem>
 ) {
 
-    BottomNavigation(
-        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-    ) {
+    NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
-            BottomNavigationItem(
+            NavigationBarItem(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
                 label = {
                     Text(
@@ -199,8 +225,6 @@ fun AppBottomNavigationItem(
                         fontSize = 9.sp
                     )
                 },
-                selectedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                unselectedContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screenRoute,
                 onClick = {
@@ -218,4 +242,3 @@ fun AppBottomNavigationItem(
         }
     }
 }
-

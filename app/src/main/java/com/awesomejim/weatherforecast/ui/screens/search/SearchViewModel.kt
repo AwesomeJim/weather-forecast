@@ -47,7 +47,6 @@ class SearchViewModel @Inject constructor(
 
     private var searchKeyWord by mutableStateOf("")
 
-
     val savedLocationListUiState: StateFlow<SavedLocationListUiState> =
         localDataSource.loadAllLocation().map { list ->
             if (list != null) {
@@ -71,7 +70,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-
     /**
      * Save location to the Local Database
      *
@@ -92,7 +90,6 @@ class SearchViewModel @Inject constructor(
             localDataSource.deleteLocation(locationItemData)
         }
     }
-
 
     /**
      * Refresh saved location by fetching update data
@@ -119,7 +116,6 @@ class SearchViewModel @Inject constructor(
                 is RetrialResult.Error -> {
                     Timber.e("Error :: ${result.errorType.toResourceId()}")
                 }
-
             }
         }
     }
@@ -141,7 +137,7 @@ class SearchViewModel @Inject constructor(
     }
 
     /**
-    Reset to default
+     Reset to default
      */
     fun updateSearchStatus() {
         _uiState.update { currentState ->
@@ -156,7 +152,6 @@ class SearchViewModel @Inject constructor(
             )
         }
     }
-
 
     /**
      * Fetch 5 days forecast weather data for the current location
@@ -203,7 +198,6 @@ class SearchViewModel @Inject constructor(
                         )
                     }
                 }
-
             }
         }
     }
@@ -224,7 +218,6 @@ class SearchViewModel @Inject constructor(
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
-
 }
 
 /**

@@ -40,9 +40,14 @@ class MediatorWeatherRepository @Inject constructor(
                 when (remoteData) {
                     is RetrialResult.Success -> {
                         val weatherData = remoteData.data
-                        Timber.e("DefaultWeatherRepository weatherData :: ${weatherData.locationName}")
-                        // when pulling data from open weather sometimes we get different location id with the same coordinates
-                        locationId?.let{
+                        Timber.e(
+                            "DefaultWeather" +
+                                "Repository weatherData :: ${weatherData.locationName}"
+                        )
+
+                        // when pulling data from open weather sometimes we
+                        // get different location id with the same coordinates
+                        locationId?.let {
                             weatherData.locationId = it
                         }
                         locationItemDao.insertLocation(weatherData.toLocationEntity())
@@ -57,7 +62,8 @@ class MediatorWeatherRepository @Inject constructor(
                 RetrialResult.Error(errorType)
             }
         } else {
-            // there is no internet access let's check and show last saved location if it exits otherwise show No internet error
+            // there is no internet access let's check
+            // and show last saved location if it exits otherwise show No internet error
             if (locationId != null) {
                 val savedData = locationItemDao.getLocationById(locationId)
                 if (savedData != null) {

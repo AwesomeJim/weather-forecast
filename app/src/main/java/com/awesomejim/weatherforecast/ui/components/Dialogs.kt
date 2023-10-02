@@ -1,6 +1,7 @@
 package com.awesomejim.weatherforecast.ui.components
 
 import android.Manifest
+import android.content.res.Configuration
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -16,12 +17,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -38,7 +40,6 @@ import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
 
-
 @Composable
 fun PermissionRationaleDialog(
     isDialogShown: MutableState<Boolean>,
@@ -46,14 +47,19 @@ fun PermissionRationaleDialog(
     showWeatherUI: MutableState<Boolean>
 ) {
     AlertDialog(
-        onDismissRequest = { isDialogShown.value = false },
+        onDismissRequest = {
+            // Dismiss the dialog when the user clicks outside the dialog or on the back
+            // button. If you want to disable that functionality, simply use an empty
+            // onDismissRequest.
+            isDialogShown.value = false
+        },
         title = {
             Text(text = stringResource(R.string.location_rationale_title))
         },
         text = {
             Text(text = stringResource(R.string.location_rationale_description))
         },
-        buttons = {
+        confirmButton = {
             Button(onClick = {
                 isDialogShown.value = false
                 activityPermissionResult.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -98,7 +104,6 @@ fun <T> SettingOptionsDialog(
                     )
                     Spacer(modifier = Modifier.weight(1f))
                 }
-
             }
         }
     }
@@ -127,7 +132,10 @@ fun DialogSearchSuccess(
                 .height(375.dp)
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            )
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,8 +143,7 @@ fun DialogSearchSuccess(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Subtitle(
-                    text = locationItemData.locationName,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                    text = locationItemData.locationName
                 )
                 Row(
                     modifier = Modifier
@@ -146,15 +153,22 @@ fun DialogSearchSuccess(
                 ) {
                     Column(
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Image(
                             painter = painterResource(id = conditionIcon),
-                            contentDescription = locationItemData.locationWeatherInfo.weatherConditionDescription,
+                            contentDescription =
+                            locationItemData
+                                .locationWeatherInfo
+                                .weatherConditionDescription,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(48.dp)
                         )
                         Text(
-                            text = locationItemData.locationWeatherInfo.weatherConditionDescription,
+                            text =
+                            locationItemData
+                                .locationWeatherInfo
+                                .weatherConditionDescription,
                             modifier = Modifier.padding(16.dp),
                         )
                     }
@@ -206,9 +220,11 @@ fun DialogSearchSuccess(
 }
 
 
-
-
-
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SearchBarPreview() {
@@ -219,6 +235,5 @@ fun SearchBarPreview() {
             conditionIcon = R.drawable.art_light_clouds,
             locationItemData = SampleData.sampleLocationItemData
         )
-
     }
 }

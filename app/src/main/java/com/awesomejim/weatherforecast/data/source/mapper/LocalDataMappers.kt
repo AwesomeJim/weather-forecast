@@ -7,7 +7,6 @@ import com.awesomejim.weatherforecast.data.source.local.entity.LocationItemEntit
 import com.awesomejim.weatherforecast.data.source.local.entity.WeatherStatusInfoEntity
 import com.awesomejim.weatherforecast.di.network.getFormattedWind
 
-
 fun LocationItemData.toLocationEntity() = LocationItemEntity(
     locationId = locationId,
     locationName = locationName,
@@ -35,7 +34,7 @@ fun LocationItemData.toLocationEntity() = LocationItemEntity(
     )
 )
 
-fun LocationItemEntity.toLocationItem(addSummary:Boolean = true):LocationItemData {
+fun LocationItemEntity.toLocationItem(addSummary: Boolean = true): LocationItemData {
     val locationItemData = LocationItemData(
         locationName = locationName,
         locationId = locationId,
@@ -61,17 +60,20 @@ fun LocationItemEntity.toLocationItem(addSummary:Boolean = true):LocationItemDat
         locationWeatherDay = locationWeatherDay,
         locationDataLastUpdate = locationDataLastUpdate
     )
-    if (addSummary){
-        val windDirection = getFormattedWind(locationItemData.locationWeatherInfo.weatherWindDegrees)
+    if (addSummary) {
+        val windDirection =
+            getFormattedWind(locationItemData.locationWeatherInfo.weatherWindDegrees)
         val visibility = locationItemData.locationWeatherInfo.weatherVisibility / 1000
         val forecastMoreDetails = ForecastMoreDetails(
             windDetails = "%1\$1.0f km/h %2\$s".format(
                 locationItemData.locationWeatherInfo.weatherWindSpeed.toFloat(),
                 windDirection
             ),
-            humidityDetails = "%1.0f %%".format(locationItemData.locationWeatherInfo.weatherHumidity.toFloat()),
+            humidityDetails = "%1.0f %%"
+                .format(locationItemData.locationWeatherInfo.weatherHumidity.toFloat()),
             visibilityDetails = "$visibility km",
-            pressureDetails = "%1.0f hPa".format(locationItemData.locationWeatherInfo.weatherPressure.toFloat()),
+            pressureDetails = "%1.0f hPa"
+                .format(locationItemData.locationWeatherInfo.weatherPressure.toFloat()),
             hourlyWeatherData = listOf()
         )
 

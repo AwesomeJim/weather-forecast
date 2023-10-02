@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
 import com.awesomejim.weatherforecast.ui.components.PermissionRationaleDialog
 
-
 @Composable
 fun Activity.OnPermissionDenied(
     activityPermissionResult: ActivityResultLauncher<String>,
@@ -36,10 +35,12 @@ fun Context.CheckForPermissions(
     onPermissionGranted: @Composable () -> Unit,
     onPermissionDenied: @Composable () -> Unit
 ) {
-    when (ContextCompat.checkSelfPermission(
-        this,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )) {
+    when (
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    ) {
         PackageManager.PERMISSION_GRANTED -> {
             onPermissionGranted()
         }

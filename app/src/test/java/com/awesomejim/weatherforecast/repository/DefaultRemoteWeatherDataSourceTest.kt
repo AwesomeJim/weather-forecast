@@ -33,7 +33,7 @@ class DefaultRemoteWeatherDataSourceTest {
     val mockNetworkHelper = mockk<NetworkHelper>()
 
     @Test
-    fun `when we fetch location weather data successfully, then a successfully mapped result is emitted`() =
+    fun `when we fetch location weather data successfully, a valid mapped result is emitted`() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(returnValue = true)
             coEvery {
@@ -61,13 +61,12 @@ class DefaultRemoteWeatherDataSourceTest {
             Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
             Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
                 .isEqualTo(expectedResult.locationId)
-            
         }
 
     @Test
-    fun `when we fetch weather data and a server error occurs, then a server error is emitted`() =
+    fun `when we fetch weather data & a server-error occurs, a server-error is emitted`() =
         runBlocking {
-            //let mockNetworkHelper.isNetworkConnected() always return true
+            // let mockNetworkHelper.isNetworkConnected() always return true
             every { mockNetworkHelper.isNetworkConnected() }.returns(true)
             coEvery {
                 mockOpenWeatherService.fetchWeatherDataWithCoordinates(
@@ -96,9 +95,9 @@ class DefaultRemoteWeatherDataSourceTest {
         }
 
     @Test
-    fun `when we fetch weather data and a client error occurs, then a client error is emitted`() =
+    fun `when fetching weather data & a client error occurs, a client error is emitted`() =
         runBlocking {
-            //let mockNetworkHelper.isNetworkConnected() always return true
+            // let mockNetworkHelper.isNetworkConnected() always return true
             every { mockNetworkHelper.isNetworkConnected() }.returns(true)
             coEvery {
                 mockOpenWeatherService.fetchWeatherDataWithCoordinates(
@@ -126,9 +125,8 @@ class DefaultRemoteWeatherDataSourceTest {
                 .isEqualTo(ErrorType.CLIENT)
         }
 
-
     @Test
-    fun `when we fetch weather data and an unauthorized error occurs, then an unauthorized error is emitted`() =
+    fun `when fetching weather data & a 401 error occurs, unauthorized error is emitted`() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(true)
             coEvery {
@@ -158,9 +156,8 @@ class DefaultRemoteWeatherDataSourceTest {
                 .isEqualTo(ErrorType.UNAUTHORIZED)
         }
 
-
     @Test
-    fun `when we fetch weather data and a generic error occurs, then a generic error is emitted`() =
+    fun `when fetching weather data & a generic error occurs, generic-error is emitted`() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(true)
             coEvery {
@@ -191,7 +188,7 @@ class DefaultRemoteWeatherDataSourceTest {
         }
 
     @Test
-    fun `when we fetch weather data and an IOException is thrown, then a connection error is emitted`() =
+    fun `when  fetching data & an IOException is thrown, a connection error is emitted`() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(true)
             coEvery {
@@ -219,7 +216,7 @@ class DefaultRemoteWeatherDataSourceTest {
         }
 
     @Test
-    fun `when we fetch weather data and an unknown Exception is thrown, then a generic error is emitted`() =
+    fun `when fetching data & an unknown Exception is thrown,a generic error is emitted`() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(true)
             coEvery {
@@ -244,7 +241,6 @@ class DefaultRemoteWeatherDataSourceTest {
             Truth.assertThat((actualResults as RetrialResult.Error).errorType)
                 .isEqualTo(ErrorType.GENERIC)
         }
-
 
     private fun createWeatherRepository(
         networkHelper: NetworkHelper = mockNetworkHelper,

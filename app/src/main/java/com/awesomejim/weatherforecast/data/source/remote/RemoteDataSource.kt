@@ -11,17 +11,13 @@ interface RemoteDataSource {
         units: String
     ): RetrialResult<LocationItemData>
 
-
     suspend fun fetchWeatherDataWithLocationQuery(
         locationQuery: String,
         units: String
     ): RetrialResult<LocationItemData>
 
-
-
     suspend fun fetchWeatherForecastWithCoordinates(
         defaultLocation: DefaultLocation,
         units: String
     ): RetrialResult<List<LocationItemData>>
-
 }

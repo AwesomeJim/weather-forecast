@@ -11,14 +11,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Scaffold
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,13 +37,9 @@ import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import timber.log.Timber
 
-
 @Composable
 fun PhotosScreen(
     photosViewModel: PhotosViewModel,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    locationName:String,
     defaultLocation: DefaultLocation
 ) {
     val photosList = photosViewModel.getLocationPhotos(
@@ -58,93 +48,67 @@ fun PhotosScreen(
             latitude = defaultLocation.latitude
         )
     ).collectAsLazyPagingItems()
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = locationName,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                },
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                navigationIcon = {
-                    if (canNavigateBack) {
-                        IconButton(onClick = navigateUp) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                                contentDescription = stringResource(R.string.back_button)
-                            )
-                        }
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Adaptive(200.dp),
+        verticalItemSpacing = 4.dp,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        content = {
+            items(
+                count = photosList.itemCount,
+                key = photosList.itemKey { it.photoId }
+            ) { index ->
+                val photo = photosList[index]
+                photo?.let { validPhoto ->
+                    validPhoto.photoUrl?.let { valid ->
+                        PhotoCard(photo = validPhoto)
                     }
                 }
-            )
-        }
-    ) { contentPadding ->
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(200.dp),
-            verticalItemSpacing = 4.dp,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            content = {
-                items(
-                    count = photosList.itemCount,
-                    key = photosList.itemKey { it.photoId }
-                ) { index ->
-                    val photo = photosList[index]
-                    photo?.let {validPhoto->
-                        validPhoto.photoUrl?.let { valid ->
-                            PhotoCard(photo = validPhoto)
-                        }
+            }
+            when (val state = photosList.loadState.refresh) { // FIRST LOAD
+                is LoadState.Error -> {
+                    // state.error to get error message
+                    Timber.tag("PhotosScreen").e(state.error)
+                    item {
+                        PhotosErrorScreen(retryAction = {}, modifier = Modifier.fillMaxSize())
                     }
                 }
-                when (val state = photosList.loadState.refresh) { //FIRST LOAD
-                    is LoadState.Error -> {
-                        //state.error to get error message
-                        Timber.tag("PhotosScreen").e(state.error)
+
+                is LoadState.Loading -> { // Loading UI
+                    item {
+                        PhotosLoadingScreen(
+                            modifier = Modifier
+                                .size(200.dp)
+                        )
                     }
-
-                    is LoadState.Loading -> { // Loading UI
-                        item {
-                            PhotosLoadingScreen(
-                                modifier = Modifier
-                                    .size(200.dp)
-                            )
-
-                        }
-                    }
-
-                    else -> {}
                 }
-                when (val state = photosList.loadState.append) { // Pagination
-                    is LoadState.Error -> {
-                        //state.error to get error message
-                        Timber.tag("PhotosScreen").e(state.error)
-                        item {
-                            PhotosErrorScreen(retryAction = {}, modifier = Modifier.fillMaxSize())
-                        }
-                    }
 
-                    is LoadState.Loading -> { // Pagination Loading UI
-                        item {
-                            PhotosLoadingScreen(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .size(200.dp)
-                            )
-                        }
+                else -> {}
+            }
+            when (val state = photosList.loadState.append) { // Pagination
+                is LoadState.Error -> {
+                    // state.error to get error message
+                    Timber.tag("PhotosScreen").e(state.error)
+                    item {
+                        PhotosErrorScreen(retryAction = {}, modifier = Modifier.fillMaxSize())
                     }
-
-                    else -> {}
                 }
-            },
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(contentPadding).padding(bottom = 64.dp)
-        )
-    }
+
+                is LoadState.Loading -> { // Pagination Loading UI
+                    item {
+                        PhotosLoadingScreen(
+                            modifier = Modifier
+                                .size(200.dp).fillMaxSize()
+                        )
+                    }
+                }
+
+                else -> {}
+            }
+        },
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(bottom = 64.dp)
+    )
 }
 
 @Composable
@@ -183,7 +147,7 @@ fun PhotoCard(photo: FlickerPhotoResponse, modifier: Modifier = Modifier) {
 @Composable
 fun PhotosLoadingScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,69 +27,57 @@ import com.awesomejim.weatherforecast.ui.components.SettingOptionRadioButton
 import com.awesomejim.weatherforecast.ui.components.SettingOptionsDialog
 import com.awesomejim.weatherforecast.ui.components.VersionInfoText
 
-
 @Composable
 fun SettingsScreen(
     state: SettingsScreenViewState,
     onUnitChanged: (String) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.settings_screen_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                },
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-        }
-    ) { contentPadding ->
-        Column(modifier = Modifier.padding(paddingValues = contentPadding)) {
+    Column(modifier = Modifier) {
+        val openUnitSelectionDialog = remember { mutableStateOf(false) }
 
-            val openUnitSelectionDialog = remember { mutableStateOf(false) }
-            SettingOptionRow(
-                optionLabel = stringResource(R.string.settings_unit_label),
-                optionValue = state.selectedUnit,
-                optionIcon = R.drawable.ic_temp_unit,
-                optionIconContentDescription = stringResource(R.string.settings_content_description_unit_icon)
-            ) {
-                openUnitSelectionDialog.value = openUnitSelectionDialog.value.not()
-            }
-            if (openUnitSelectionDialog.value) {
-                val availableUnits = state.availableUnits
-                val (selectedOption, onOptionSelected) = remember { mutableStateOf(state.selectedUnit) }
-                SettingOptionsDialog(
-                    onDismiss = { openUnitSelectionDialog.value = false },
-                    onConfirm = {
-                        onUnitChanged(selectedOption)
-                        openUnitSelectionDialog.value = false
-                    },
-                    items = availableUnits,
-                ) { unit ->
-                    SettingOptionRadioButton(
-                        text = unit,
-                        selectedOption = selectedOption,
-                        onOptionSelected = onOptionSelected
-                    )
+        SettingOptionRow(
+            optionLabel = stringResource(R.string.settings_unit_label),
+            optionValue = state.selectedUnit,
+            optionIcon = R.drawable.ic_temp_unit,
+            optionIconContentDescription =
+            stringResource(R.string.settings_content_description_unit_icon),
+            modifier = Modifier,
+        ) {
+            openUnitSelectionDialog.value = openUnitSelectionDialog.value.not()
+        }
+        if (openUnitSelectionDialog.value) {
+            val availableUnits = state.availableUnits
+            val (selectedOption, onOptionSelected) =
+                remember {
+                    mutableStateOf(state.selectedUnit)
                 }
+            SettingOptionsDialog(
+                onDismiss = { openUnitSelectionDialog.value = false },
+                onConfirm = {
+                    onUnitChanged(selectedOption)
+                    openUnitSelectionDialog.value = false
+                },
+                items = availableUnits,
+            ) { unit ->
+                SettingOptionRadioButton(
+                    text = unit,
+                    selectedOption = selectedOption,
+                    onOptionSelected = onOptionSelected
+                )
             }
-
-            Spacer(modifier = Modifier.weight(1.0f))
-
-            VersionInfoText(
-                versionInfo = state.versionInfo,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.CenterHorizontally),
-            )
         }
+
+        Spacer(modifier = Modifier.weight(1.0f))
+
+        VersionInfoText(
+            versionInfo = state.versionInfo,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
+        )
     }
 }
-
 
 @Composable
 fun SettingOptionRow(
@@ -108,7 +94,8 @@ fun SettingOptionRow(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onOptionClicked() }
-            .padding(16.dp).background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Image(
             painter = painterResource(id = optionIcon),

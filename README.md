@@ -1,7 +1,7 @@
 # Weather - Forecast
-
-[![Build Status](https://app.bitrise.io/app/dc7317ba-d218-4979-b14c-a193597bd8fb/status.svg?token=_oRiikKEyHvyJG4TjElgBg&branch=main)](https://app.bitrise.io/app/dc7317ba-d218-4979-b14c-a193597bd8fb)
-![](https://res.cloudinary.com/practicaldev/image/fetch/s--Bdhwem_P--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://img.shields.io/badge/Android_Studio-3DDC84%3Fstyle%3Dfor-the-badge%26logo%3Dandroid-studio%26logoColor%3Dwhite)
+###### Status
+[![Build Status](https://app.bitrise.io/app/dc7317ba-d218-4979-b14c-a193597bd8fb/status.svg?token=_oRiikKEyHvyJG4TjElgBg&branch=main)](https://app.bitrise.io/app/dc7317ba-d218-4979-b14c-a193597bd8fb)[![codecov](https://codecov.io/gh/AwesomeJim/weather-forecast/graph/badge.svg?token=ZLY2OR7PL0)](https://codecov.io/gh/AwesomeJim/weather-forecast)
+<br/>![](https://camo.githubusercontent.com/1b2edec5981c14868f0ca656d83058415bf55ca30c8e1138255418bbd484739e/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f616e64726f69642d2532333230323332612e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d616e64726f6964266c6f676f436f6c6f723d25613463363339)![](https://res.cloudinary.com/practicaldev/image/fetch/s--Bdhwem_P--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://img.shields.io/badge/Android_Studio-3DDC84%3Fstyle%3Dfor-the-badge%26logo%3Dandroid-studio%26logoColor%3Dwhite)
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--zQlcdRlF--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://img.shields.io/badge/Kotlin-0095D5%3Fstyle%3Dfor-the-badge%26logo%3Dkotlin%26logoColor%3Dwhite)
 [![License](https://camo.githubusercontent.com/2a2157c971b7ae1deb8eb095799440551c33dcf61ea3d965d86b496a5a65df55/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d417061636865253230322e302d626c75652e737667)](https://opensource.org/licenses/Apache-2.0) [![API](https://camo.githubusercontent.com/e4be58c2eb500c8634ceff111c34f70b52db29ed45acc60eaf229098fddc801c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4150492d32312532422d627269676874677265656e2e7376673f7374796c653d666c6174)](https://android-arsenal.com/api?level=23)
 <br/>
@@ -18,17 +18,18 @@ This app enable users to:
 
 # [Screenshots 📱](screenshots)
 
-|                    Home       (Dark Theme)                    |                         Home  (Light Theme)                         |
-|:-------------------------------------------------------------:|:-------------------------------------------------------------------:|
-| <img src="screenshots/home.png" width="300px" height="600px"> | <img src="screenshots/home_light.png" width="300px" height="600px"> |
+|                          Home       (Dark Theme)                          |                            Home  (Light Theme)                             |
+|:-------------------------------------------------------------------------:|:--------------------------------------------------------------------------:|
+| <img src="screenshots/home_screen_dark.png" width="300px" height="600px"> | <img src="screenshots/home_screen_light.png" width="300px" height="600px"> |
 
-|                      Saved Locations  (Dark Theme)                      |                                 (Light Theme)                                 |
-|:-----------------------------------------------------------------------:|:-----------------------------------------------------------------------------:|
-| <img src="screenshots/saved_location.png" width="300px" height="600px"> | <img src="screenshots/saved_location_light.png" width="300px" height="600px"> |
+|                       Saved Locations  (Dark Theme)                        |                                (Light Theme)                                 |
+|:--------------------------------------------------------------------------:|:----------------------------------------------------------------------------:|
+| <img src="screenshots/seach_screen_dark.png" width="300px" height="600px"> | <img src="screenshots/search_screen_light.png" width="300px" height="600px"> |
 
-|                                      Screen Recording                                       |
-|:-------------------------------------------------------------------------------------------:|
-| <video src="https://github.com/AwesomeJim/weather-forecast/assets/8529047/6e0cd4cb-9dd2-4418-bb52-da91d6fcd975" controls="controls" width="630" height="300"></video>|
+|                                                                           Screen Recording                                                                            |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| <video src="https://github.com/AwesomeJim/weather-forecast/assets/8529047/6e0cd4cb-9dd2-4418-bb52-da91d6fcd975" controls="controls" width="630" height="300"></video> |
+
 
 
 ## Tech-stack used 🛠
@@ -62,18 +63,19 @@ _**Testing**_ <br/>
 
 _Other Tools/Project setup_ <br/>
 
-| **Tools**                                                                            | **Usage/Purpose**                                                  |
-|--------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| [Gradle secrets plugin](https://github.com/google/secrets-gradle-plugin)             | A Gradle plugin for providing your secrets to your Android project |
-| [Hilt(DI)](https://developer.android.com/training/dependency-injection/hilt-android) | Dependency Injection Library                                       |
-| [Kotlin Symbol Processing (KSP)](https://developer.android.com/build/migrate-to-ksp) | code generation  for Room and Hilt libraries                       |
-| [Timber](https://github.com/JakeWharton/timber)                                      | For local Logging                                                  |
-| [Lottie Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md)    | Icon and images animations                                         |
-| [Gradle version catalogs](https://docs.gradle.org/current/userguide/platforms.html)  | Gradle Dependencies management                                     |
+| **Tools**                                                                            | **Usage/Purpose**                                                                      |
+|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| [Gradle secrets plugin](https://github.com/google/secrets-gradle-plugin)             | A Gradle plugin for providing your secrets to your Android project                     |
+| [Hilt(DI)](https://developer.android.com/training/dependency-injection/hilt-android) | Dependency Injection Library                                                           |
+| [Kotlin Symbol Processing (KSP)](https://developer.android.com/build/migrate-to-ksp) | code generation  for Room and Hilt libraries                                           |
+| [Timber](https://github.com/JakeWharton/timber)                                      | For local Logging                                                                      |
+| [Lottie Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md)    | Icon and images animations                                                             |
+| [Gradle version catalogs](https://docs.gradle.org/current/userguide/platforms.html)  | Gradle Dependencies management                                                         |
+| [Spotless](https://github.com/diffplug/spotless)                                     | For Code formatting [check how to setup](https://funkymuse.dev/posts/spotless-ktlint/) |
 
 _Other Tools_ <br/>
 
-| **Workflow Tools**                                                            | **Usage/Purpose**                                                                   |
+| **Workflow Tools**                                                           | **Usage/Purpose**                                                                   |
 |------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [Bitrise](https://bitrise.io/integrations/steps)                             | For CI/CD                                                                           |
 | [Fastlane](https://docs.fastlane.tools/getting-started/android/screenshots/) | Local gradle tasks automation                                                       |

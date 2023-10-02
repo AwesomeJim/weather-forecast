@@ -21,12 +21,14 @@ object SampleData {
             drawableIcon = R.drawable.art_storm,
             hourTime = "17:00"
 
-        ), HourlyWeatherData(
+        ),
+        HourlyWeatherData(
             temperature = "15\u00B0",
             drawableIcon = R.drawable.art_snow,
             hourTime = "18:00"
 
-        ), HourlyWeatherData(
+        ),
+        HourlyWeatherData(
             temperature = "14\u00B0",
             drawableIcon = R.drawable.art_clouds,
             hourTime = "19:00"
@@ -43,12 +45,14 @@ object SampleData {
             drawableIcon = R.drawable.art_storm,
             hourTime = "17:00"
 
-        ), HourlyWeatherData(
+        ),
+        HourlyWeatherData(
             temperature = "15\u00B0",
             drawableIcon = R.drawable.art_snow,
             hourTime = "18:00"
 
-        ), HourlyWeatherData(
+        ),
+        HourlyWeatherData(
             temperature = "14\u00B0",
             drawableIcon = R.drawable.art_clouds,
             hourTime = "19:00"
@@ -89,7 +93,6 @@ object SampleData {
         forecastMoreDetails = forecastMoreDetails,
         locationDataLastUpdate = Date()
     )
-
 
     val foreCastList = listOf(
         LocationItemData(
@@ -141,7 +144,8 @@ object SampleData {
             ),
             locationWeatherDay = 5,
             locationDataLastUpdate = Date()
-        ), LocationItemData(
+        ),
+        LocationItemData(
             locationName = "Fern Herring",
             locationId = 7088,
             locationTimeZoneShift = 7333,
@@ -167,6 +171,4 @@ object SampleData {
             locationDataLastUpdate = Date()
         )
     )
-
-
 }

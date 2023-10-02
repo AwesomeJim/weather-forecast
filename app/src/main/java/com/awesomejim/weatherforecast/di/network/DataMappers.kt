@@ -1,6 +1,5 @@
 package com.awesomejim.weatherforecast.di.network
 
-
 import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
 import com.awesomejim.weatherforecast.data.model.HourlyWeatherData
 import com.awesomejim.weatherforecast.data.model.LocationItemData
@@ -20,8 +19,7 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.roundToInt
 
-
-fun WeatherItemResponse.toCoreModel(addSummary:Boolean = false): LocationItemData {
+fun WeatherItemResponse.toCoreModel(addSummary: Boolean = false): LocationItemData {
     val locationItemData = LocationItemData(
         locationName = "$locationName - ${countryDetails.locationCountry}",
         locationId = locationId,
@@ -51,21 +49,27 @@ fun WeatherItemResponse.toCoreModel(addSummary:Boolean = false): LocationItemDat
         locationWeatherDay = getWeatherDay(forecastedTime),
         locationDataLastUpdate = Date()
     )
-    if (addSummary){
-        val windDirection = getFormattedWind(locationItemData.locationWeatherInfo.weatherWindDegrees)
+    if (addSummary) {
+
+        val windDirection =
+            getFormattedWind(locationItemData.locationWeatherInfo.weatherWindDegrees)
+
         val visibility = locationItemData.locationWeatherInfo.weatherVisibility / 1000
+
         val forecastMoreDetails = ForecastMoreDetails(
             windDetails = "%1\$1.0f km/h %2\$s".format(
                 locationItemData.locationWeatherInfo.weatherWindSpeed.toFloat(),
                 windDirection
             ),
-            humidityDetails = "%1.0f %%".format(locationItemData.locationWeatherInfo.weatherHumidity.toFloat()),
+            humidityDetails = "%1.0f %%"
+                .format(locationItemData.locationWeatherInfo.weatherHumidity.toFloat()),
             visibilityDetails = "$visibility km",
-            pressureDetails = "%1.0f hPa".format(locationItemData.locationWeatherInfo.weatherPressure.toFloat()),
+            pressureDetails = "%1.0f hPa"
+                .format(locationItemData.locationWeatherInfo.weatherPressure.toFloat()),
             hourlyWeatherData = listOf()
         )
 
-      locationItemData.forecastMoreDetails = forecastMoreDetails
+        locationItemData.forecastMoreDetails = forecastMoreDetails
     }
     return locationItemData
 }
@@ -100,11 +104,13 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
                 locationWeatherInfo = WeatherStatusInfo(
                     weatherConditionId = weatherConditionResponse[0].id,
                     weatherCondition = weatherConditionResponse[0].main,
-                    weatherConditionDescription = weatherConditionResponse[0].description.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.ROOT
-                        ) else it.toString()
-                    },
+                    weatherConditionDescription =
+                    weatherConditionResponse[0].description
+                        .replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.ROOT
+                            ) else it.toString()
+                        },
                     weatherConditionIcon = weatherConditionResponse[0].icon,
                     weatherTemp = currentWeatherMain.weatherTemp,
                     weatherTempMin = currentWeatherMain.weatherTempMin,
@@ -131,32 +137,37 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
     val groupedMap = responseList.groupBy { it.locationWeatherDay }.toSortedMap()
     val result = mutableListOf<LocationItemData>()
     groupedMap.forEach { (num, list) ->
-        if (num != todayDate) {// we skip the first item which equals today
+        if (num != todayDate) { // we skip the first item which equals today
             val hourlyWeatherDataList = mutableListOf<HourlyWeatherData>()
             for (item in list) {
                 val temperature =
                     formatTemperatureValue(item.locationWeatherInfo.weatherTemp, units)
-                val drawableIcon =
-                    WeatherUtils.getLargeArtResourceIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId)
+                val drawableIcon = WeatherUtils
+                    .iconIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId)
                 val hourTime = getDate(item.locationDataTime, "HH:SS")
                 val hourlyData = HourlyWeatherData(
                     temperature = temperature,
                     drawableIcon = drawableIcon,
-                    hourTime = hourTime
+                    hourTime = hourTime,
+                    temperatureFloat = item.locationWeatherInfo.weatherTemp
                 )
                 hourlyWeatherDataList.add(hourlyData)
             }
             val fList = list[0]
             val windDirection = getFormattedWind(fList.locationWeatherInfo.weatherWindDegrees)
+
             val visibility = fList.locationWeatherInfo.weatherVisibility / 1000
             val forecastMoreDetails = ForecastMoreDetails(
-                windDetails = "%1\$1.0f km/h %2\$s".format(
-                    fList.locationWeatherInfo.weatherWindSpeed.toFloat(),
-                    windDirection
-                ),
-                humidityDetails = "%1.0f %%".format(fList.locationWeatherInfo.weatherHumidity.toFloat()),
+                windDetails = "%1\$1.0f km/h %2\$s"
+                    .format(
+                        fList.locationWeatherInfo.weatherWindSpeed.toFloat(),
+                        windDirection
+                    ),
+                humidityDetails = "%1.0f %%"
+                    .format(fList.locationWeatherInfo.weatherHumidity.toFloat()),
                 visibilityDetails = "$visibility km",
-                pressureDetails = "%1.0f hPa".format(fList.locationWeatherInfo.weatherPressure.toFloat()),
+                pressureDetails = "%1.0f hPa"
+                    .format(fList.locationWeatherInfo.weatherPressure.toFloat()),
                 hourlyWeatherData = hourlyWeatherDataList
             )
 
@@ -164,10 +175,9 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
             result.add(fList)
         }
     }
-      // sort by date
+    // sort by date
     return result.sortedBy { it.locationDataTime }
 }
-
 
 fun mapResponseCodeToThrowable(code: Int): Throwable = when (code) {
     HttpURLConnection.HTTP_UNAUTHORIZED -> UnauthorizedException("Unauthorized access : $code")
@@ -197,7 +207,6 @@ private fun getTodayDay(): Int {
     val calendar = Calendar.getInstance(TimeZone.getDefault())
     return calendar[Calendar.DAY_OF_MONTH]
 }
-
 
 fun formatTemperatureValue(temperature: Float, unit: String): String =
     "${temperature.roundToInt()}${getUnitSymbols(unit = unit)}"
@@ -254,5 +263,4 @@ fun getFormattedWind(degrees: Double): String {
         }
     }
     return direction
-
 }

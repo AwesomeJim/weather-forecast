@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,14 +16,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
 
-
 @Composable
 fun Subtitle(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
     Text(
         text = text,
-        style = MaterialTheme.typography.displayMedium,
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-        color = color
+        style = MaterialTheme.typography.titleLarge,
+        modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+        color = color,
+        textAlign = TextAlign.Center
     )
 }
 
@@ -31,7 +31,7 @@ fun Subtitle(text: String, modifier: Modifier = Modifier, color: Color = Color.U
 fun SubtitleSmall(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
     Text(
         text = text,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.titleSmall,
         modifier = modifier.padding(horizontal = 16.dp, vertical = 0.dp),
         color = color
     )
@@ -57,7 +57,7 @@ fun Headline(text: String, modifier: Modifier = Modifier, color: Color = Color.U
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.displayLarge,
+        style = MaterialTheme.typography.displayMedium,
         color = color
     )
 }
@@ -74,7 +74,7 @@ fun VersionInfoText(versionInfo: String, modifier: Modifier) {
 
 @Composable
 fun BodyText(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
-  Text(
+    Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
         color = color,
@@ -84,14 +84,16 @@ fun BodyText(text: String, modifier: Modifier = Modifier, color: Color = Color.U
 
 @Composable
 fun ErrorTextWithAction(
-    @StringRes errorMessageId: Int, modifier: Modifier, onTryAgainClicked: () -> Unit
+    @StringRes errorMessageId: Int,
+    modifier: Modifier,
+    onTryAgainClicked: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        androidx.compose.material.Text(
+        Text(
             text = stringResource(id = errorMessageId),
             textAlign = TextAlign.Center,
             modifier = modifier.align(Alignment.CenterHorizontally),
-            style = androidx.compose.material.MaterialTheme.typography.body1
+            style = MaterialTheme.typography.bodyMedium
         )
         Button(
             onClick = { onTryAgainClicked() },
@@ -99,9 +101,9 @@ fun ErrorTextWithAction(
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            androidx.compose.material.Text(
+            Text(
                 text = stringResource(R.string.home_error_try_again),
-                style = androidx.compose.material.MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
             )
         }

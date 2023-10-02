@@ -1,6 +1,5 @@
 package com.awesomejim.weatherforecast.di.network
 
-
 import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.di.ApiService
 import com.awesomejim.weatherforecast.di.flickr.FlickrApiService
@@ -17,10 +16,9 @@ import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -75,7 +73,6 @@ object NetworkModule {
             .connectionSpecs(Collections.singletonList(spec))
             .addInterceptor(loggingInterceptor)
             .build()
-
 
     @Singleton
     @Provides

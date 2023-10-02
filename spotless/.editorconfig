@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+trim_trailing_whitespace = true
+
+#https://pinterest.github.io/ktlint/0.50.0/rules/configuration-ktlint/
+#https://funkymuse.dev/posts/spotless-ktlint/
+
+[*.{kt,kts}]
+indent_size = 4
+ktlint_standard = enabled
+ktlint_experimental = enabled
+ktlint_code_style = official
+ktlint_standard_comment-spacing = disabled
+ktlint_standard_package-name = disabled
+ktlint_experimental_package-naming = disabled
+ktlint_ignore_back_ticked_identifier = false
+max_line_length = off
+ij_kotlin_allow_trailing_comma = false
+ij_kotlin_allow_trailing_comma_on_call_site = false
+
+
+

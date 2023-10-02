@@ -60,7 +60,7 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             isDebuggable = true
             isShrinkResources = false
             if (keystorePropertiesFile.exists()) {

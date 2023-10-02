@@ -22,7 +22,7 @@ class SettingsViewModel @Inject constructor(
         when (settingsScreenUiState) {
             SettingsScreenUiState.LoadSettingScreenData -> {
                 viewModelScope.launch {
-                        settingsRepository.getUnits().collect {  units ->
+                    settingsRepository.getUnits().collect { units ->
                         setState {
                             copy(
                                 selectedUnit = units,
@@ -56,7 +56,6 @@ data class SettingsScreenViewState(
     val versionInfo: String = "",
     val error: Throwable? = null
 )
-
 
 sealed class SettingsScreenUiState {
 

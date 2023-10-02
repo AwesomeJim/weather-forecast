@@ -1,6 +1,5 @@
 package com.awesomejim.weatherforecast.ui.screens.main
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.data.SettingsRepository
@@ -31,13 +30,11 @@ class MainViewModel @Inject constructor(
     private val _state = MutableStateFlow(MainViewState())
     val state: StateFlow<MainViewState> = _state.asStateFlow()
 
-
     private val _currentWeatherUiState =
         MutableStateFlow<CurrentWeatherUiState>(CurrentWeatherUiState.Loading)
 
     val currentWeatherUiState: StateFlow<CurrentWeatherUiState> =
         _currentWeatherUiState.asStateFlow()
-
 
     private val _forecastListState =
         MutableStateFlow<List<LocationItemData>>(emptyList())
@@ -69,7 +66,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
     /**
      * Fetch 5 days forecast weather data for the current location
      *
@@ -97,9 +93,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
     fun processIntent(mainViewUiState: MainViewUiState) {
-        Timber.tag("MainViewModel").e("processIntent called ${mainViewUiState.toString()}")
+        Timber.tag("MainViewModel").e("processIntent called $mainViewUiState")
         when (mainViewUiState) {
             is MainViewUiState.GrantPermission -> {
                 setState { copy(isPermissionGranted = mainViewUiState.isGranted) }
@@ -130,8 +125,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
-    private fun processCurrentWeatherResult(result: RetrialResult<LocationItemData>): CurrentWeatherUiState {
+    private fun processCurrentWeatherResult(result: RetrialResult<LocationItemData>):
+        CurrentWeatherUiState {
         isLoadingData = false
         return when (result) {
             is RetrialResult.Success -> {
@@ -178,8 +173,6 @@ class MainViewModel @Inject constructor(
             Timber.tag("MainViewModel").e("No Location Details")
         }
     }
-
-
 }
 
 data class MainViewState(
@@ -198,9 +191,7 @@ sealed class MainViewUiState {
     data class CheckLocationSettings(val isEnabled: Boolean) : MainViewUiState()
 
     data class ReceiveLocation(val latitude: Double, val longitude: Double) : MainViewUiState()
-
 }
-
 
 sealed interface CurrentWeatherUiState {
     data class Success(val currentWeather: LocationItemData) : CurrentWeatherUiState

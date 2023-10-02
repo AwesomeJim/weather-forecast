@@ -2,7 +2,6 @@ package com.awesomejim.weatherforecast.data.model
 
 import androidx.annotation.DrawableRes
 
-
 data class ForecastMoreDetails(
     val windDetails: String,
     val humidityDetails: String,
@@ -14,5 +13,6 @@ data class ForecastMoreDetails(
 data class HourlyWeatherData(
     val temperature: String,
     @DrawableRes val drawableIcon: Int,
-    val hourTime: String
+    val hourTime: String,
+    var temperatureFloat: Float = 0.0f,
 )

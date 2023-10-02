@@ -12,7 +12,7 @@ import java.util.Date
 
 object FakeResponseData {
 
-    val fakeSuccessWeatherResponse =  WeatherItemResponse(
+    val fakeSuccessWeatherResponse = WeatherItemResponse(
         locationName = "Mountain View",
         locationId = 1695383,
         locationNameTimeZoneShift = -25200,
@@ -34,7 +34,8 @@ object FakeResponseData {
                 id = 804,
                 main = "Clouds",
                 description = "overcast clouds",
-                icon = "04n")
+                icon = "04n"
+            )
         ),
         currentWeatherWind = WindResponse(
             speed = 36.37,
@@ -42,7 +43,7 @@ object FakeResponseData {
         ),
         locationCoordinates = CoordinatesResponse(
             longitude = -122.084,
-            latitude =  37.4234
+            latitude = 37.4234
         )
 
     )

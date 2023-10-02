@@ -4,7 +4,6 @@ import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
 import java.util.Date
 
-
 object FakeLocalDataSource {
     val locationList = listOf<LocationItemData>(
         LocationItemData(

@@ -25,7 +25,6 @@ class LocalDataSource @Inject constructor(private val locationItemDao: LocationI
             }
     }
 
-
     suspend fun updateLocation(locationEntry: LocationItemData) = withContext(Dispatchers.IO) {
         locationItemDao.updateLocation(locationEntry.toLocationEntity())
     }

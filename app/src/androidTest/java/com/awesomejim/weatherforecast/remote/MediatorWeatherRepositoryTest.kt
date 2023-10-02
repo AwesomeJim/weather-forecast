@@ -57,17 +57,14 @@ class MediatorWeatherRepositoryTest {
         database.close()
     }
 
-
     @MockK
     val mockOpenWeatherService = mockk<ApiService>(relaxed = true)
-
 
     @MockK
     val mockNetworkHelper = mockk<NetworkHelper>()
 
-
     @Test
-    fun assert_That_when_we_fetch_location_weather_data_successfully_then_a_successfully_mapped_result_is_emitted() =
+    fun assert_when_we_fetch_location_weather_data_successfully_a_mapped_result_is_emitted() =
         runBlocking {
             every { mockNetworkHelper.isNetworkConnected() }.returns(returnValue = true)
             coEvery {
@@ -103,8 +100,6 @@ class MediatorWeatherRepositoryTest {
             val actual = locationItemDao.getLocationById(locationItemData.locationId)
                 ?.toLocationItem() // Returns the first item in the flow
             Truth.assertThat(locationItemData.locationId).isEqualTo(actual?.locationId)
-
-
         }
 
     private fun createWeatherRepository(

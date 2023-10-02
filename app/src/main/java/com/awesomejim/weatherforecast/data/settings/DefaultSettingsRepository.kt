@@ -10,11 +10,9 @@ import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.data.SettingsRepository
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.utilities.Units
-
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
 import javax.inject.Inject
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -25,10 +23,9 @@ class DefaultSettingsRepository @Inject constructor(
     private val PREF_UNITS by lazy { stringPreferencesKey("units") }
     private val PREF_LAT_LNG by lazy { stringPreferencesKey("lat_lng") }
 
-    //Nairobi
+    // Nairobi
     private val DEFAULT_LONGITUDE = 36.820248
     private val DEFAULT_LATITUDE = -1.29729
-
 
     override suspend fun setUnits(units: String) {
         set(key = PREF_UNITS, value = units)
@@ -36,7 +33,6 @@ class DefaultSettingsRepository @Inject constructor(
 
     override suspend fun getUnits(): Flow<String> =
         get(key = PREF_UNITS, default = Units.METRIC.value)
-
 
     override fun getAvailableUnits(): List<String> = Units.values().map { it.value }
 
@@ -66,7 +62,6 @@ class DefaultSettingsRepository @Inject constructor(
         }
     }
 
-
-    override fun getAppVersion(): String = "App Version : ${BuildConfig.VERSION_NAME}-${BuildConfig.BUILD_TYPE}"
-
+    override fun getAppVersion(): String =
+        "App Version : ${BuildConfig.VERSION_NAME}-${BuildConfig.BUILD_TYPE}"
 }
