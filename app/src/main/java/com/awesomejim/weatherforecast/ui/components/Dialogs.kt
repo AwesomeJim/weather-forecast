@@ -1,6 +1,7 @@
 package com.awesomejim.weatherforecast.ui.components
 
 import android.Manifest
+import android.content.res.Configuration
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -132,7 +133,7 @@ fun DialogSearchSuccess(
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
             )
         ) {
@@ -218,6 +219,12 @@ fun DialogSearchSuccess(
     }
 }
 
+
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SearchBarPreview() {

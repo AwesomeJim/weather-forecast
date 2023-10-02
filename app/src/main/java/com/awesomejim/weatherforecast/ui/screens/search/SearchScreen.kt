@@ -8,7 +8,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +32,7 @@ import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
@@ -40,10 +40,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,6 +60,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -129,7 +132,6 @@ fun SearchScreen(
             .fillMaxHeight()
     ) {
         item {
-            Spacer(Modifier.height(16.dp))
             SearchBar(
                 searchTerm = searchUiState.searchKeyWord,
                 isSearchWordValid = searchUiState.isSearchWordValid,
@@ -142,7 +144,7 @@ fun SearchScreen(
                     }
                 },
                 isSearching = searchUiState.isSearching,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
             )
             Spacer(Modifier.height(16.dp))
         }
@@ -270,11 +272,16 @@ fun SearchBar(
     onKeyboardDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
- //   var active by rememberSaveable { mutableStateOf(false) }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+    //   var active by rememberSaveable { mutableStateOf(false) }
+    Surface(
+        tonalElevation = 2.dp,
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.secondaryContainer
     ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp)
+        ) {
 //        DockedSearchBar(
 //            modifier = modifier
 //                .align(Alignment.CenterHorizontally)
@@ -293,45 +300,52 @@ fun SearchBar(
 //            content = {}
 //        )
 
-        TextField(
-            value = searchTerm,
-            onValueChange = onSearchTermChanged,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null
-                )
-            },
-            isError = searchTerm.isNotEmpty() && !isSearchWordValid,
+            TextField(
+                value = searchTerm,
+                onValueChange = onSearchTermChanged,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
+                },
+                isError = searchTerm.isNotEmpty() && !isSearchWordValid,
 
-            placeholder = {
-                Text(stringResource(R.string.placeholder_search))
-            },
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = 56.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onKeyboardDone()
-                }
-            ),
-            shape = RoundedCornerShape(6.dp)
-        )
-        if (searchTerm.isNotEmpty() && !isSearchWordValid) {
-            Text(
-                text = "Please enter valid text",
-                color = MaterialTheme.colorScheme.error
+                placeholder = {
+                    Text(stringResource(R.string.placeholder_search))
+                },
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    errorContainerColor = MaterialTheme.colorScheme.errorContainer
+                ),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 56.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onKeyboardDone()
+                    }
+                ),
+                shape = RoundedCornerShape(6.dp)
             )
-        }
-        AnimatedVisibility(visible = isSearching) {
-            CircularProgressIndicator(
-                modifier = Modifier.width(34.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                trackColor = MaterialTheme.colorScheme.primary,
-            )
+            if (searchTerm.isNotEmpty() && !isSearchWordValid) {
+                Text(
+                    text = "Please enter valid text",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+            AnimatedVisibility(visible = isSearching) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(34.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    trackColor = MaterialTheme.colorScheme.primary,
+                )
+            }
         }
     }
 }
@@ -359,6 +373,9 @@ fun SavedLocationItem(
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -377,11 +394,11 @@ fun SavedLocationItem(
                 ) {
                     TemperatureHeadline(
                         temperature = temp,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     SubtitleSmall(
                         text = highLow,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -400,7 +417,7 @@ fun SavedLocationItem(
                     )
                     Subtitle(
                         text = locationItemData.locationWeatherInfo.weatherConditionDescription,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
                 IconButton(
@@ -429,7 +446,7 @@ fun SavedLocationItem(
                     Row {
                         Text(
                             text = "Updated on:",
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.labelSmall,
                             modifier = modifier.padding(horizontal = 16.dp, vertical = 2.dp),
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -493,14 +510,13 @@ fun SavedLocationItemPreview() {
 @Composable
 fun SearchBarPreview() {
     WeatherForecastTheme {
-        SearchBar(
-            searchTerm = "",
-            isSearchWordValid = true,
-            isSearching = true,
-            onSearchTermChanged = {},
-            onKeyboardDone = {},
-            modifier = Modifier.padding(8.dp)
-        )
+            SearchBar(
+                searchTerm = "",
+                isSearchWordValid = true,
+                isSearching = true,
+                onSearchTermChanged = {},
+                onKeyboardDone = {}
+            )
     }
 }
 

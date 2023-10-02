@@ -3,7 +3,6 @@ package com.awesomejim.weatherforecast.ui.screens.home
 import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,25 +52,25 @@ fun ForecastMoreDetails(
             Text(
                 text = forecastMoreDetails.windDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.humidityDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.visibilityDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
             Text(
                 text = forecastMoreDetails.pressureDetails,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
             )
         }
@@ -90,7 +89,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.temperature,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Image(
             painter = painterResource(hourlyWeatherData.drawableIcon),
@@ -103,7 +102,7 @@ fun HourlyDataElement(
         Text(
             text = hourlyWeatherData.hourTime,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }
@@ -121,7 +120,7 @@ fun LineChart(
         val max = hourlyWeatherData.maxBy { it.temperatureFloat }.temperatureFloat
         val min = hourlyWeatherData.minBy { it.temperatureFloat }.temperatureFloat
 
-        val lineColor = MaterialTheme.colorScheme.tertiary
+        val lineColor = MaterialTheme.colorScheme.primary
 
         for (pair in zipList) {
 
@@ -174,7 +173,6 @@ fun ForecastMoreDetailsSection(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(horizontal = 1.dp, vertical = 4.dp).fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         ForecastMoreDetails(forecastMoreDetails)
         LineChart(Modifier.height(50.dp).fillMaxWidth(), forecastMoreDetails.hourlyWeatherData)

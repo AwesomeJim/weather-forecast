@@ -6,11 +6,13 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +31,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,10 +40,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
@@ -54,7 +63,6 @@ import com.awesomejim.weatherforecast.ui.components.ErrorTextWithAction
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
-import com.awesomejim.weatherforecast.ui.components.TemperatureHeadline
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
 import com.awesomejim.weatherforecast.utilities.WeatherUtils
@@ -79,7 +87,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
             .padding(8.dp),
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Column(
@@ -99,7 +107,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(16.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                 )
                 Subtitle(
                     text = currentWeather.locationName
@@ -126,8 +134,15 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                         currentWeather.locationWeatherInfo.weatherTempMax,
                         currentWeather.locationWeatherInfo.weatherTempMin
                     )
-                    TemperatureHeadline(
-                        temperature = temp,
+                    Text(
+                        text = temp,
+                        style = MaterialTheme.typography.displayMedium.copy(
+                            shadow = Shadow(
+                                color = Color.Black.copy(alpha = 0.3f),
+                                offset = Offset(3f, 3f),
+                                blurRadius = 6f
+                            )
+                        )
 
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -139,7 +154,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.padding(16.dp).height(100.dp).fillMaxWidth()
+                    modifier = modifier.padding(8.dp).height(100.dp).fillMaxWidth()
                 ) {
                     Image(
                         painter = painterResource(id = drawable),
@@ -152,7 +167,7 @@ private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Mod
                     Spacer(modifier = Modifier.weight(1f))
                     Subtitle(
                         text = currentWeather.locationWeatherInfo.weatherConditionDescription,
-                        modifier = modifier.padding(bottom = 8.dp)
+                        modifier = modifier.padding(bottom = 8.dp).fillMaxWidth()
                     )
                 }
             }
@@ -184,7 +199,7 @@ fun ConditionsSection(
 ) {
     ElevatedCard(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Column(
@@ -219,13 +234,13 @@ fun ConditionsLabelSection(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(12.dp),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
         )
         Text(
             text = stringResource(conditionLabel),
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
 
         )
     }
@@ -392,12 +407,16 @@ fun ForecastItem(
 ) {
     ElevatedCard(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
         shape = MaterialTheme.shapes.small,
         modifier = modifier
             .padding(vertical = 4.dp, horizontal = 4.dp)
             .animateContentSize()
+            .semantics {
+                toggleableState = if (expanded) ToggleableState.On else ToggleableState.Off
+            }
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -406,6 +425,9 @@ fun ForecastItem(
                 .fillMaxWidth()
                 .height(50.dp)
                 .padding(vertical = 4.dp, horizontal = 4.dp)
+                .clickable {
+                    onClick()
+                }
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
@@ -413,11 +435,13 @@ fun ForecastItem(
             ) {
                 Text(
                     text = forecastDate,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color =  MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = conditionText,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color =  MaterialTheme.colorScheme.onSurface
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -433,12 +457,14 @@ fun ForecastItem(
             ) {
                 Text(
                     text = tempHigh,
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    color =  MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = tempLow,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color =  MaterialTheme.colorScheme.onSurface
                 )
             }
             ExpandItemButton(
@@ -571,7 +597,12 @@ fun ForecastItemPreview() {
 @Composable
 fun HomeContentScreenPreview() {
     WeatherForecastTheme {
-        val locationItemData = SampleData.sampleLocationItemData
-        HomeContentScreen(locationItemData, SampleData.foreCastList)
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            val locationItemData = SampleData.sampleLocationItemData
+            HomeContentScreen(locationItemData, SampleData.foreCastList)
+        }
     }
 }

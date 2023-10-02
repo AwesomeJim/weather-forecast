@@ -20,9 +20,10 @@ import com.awesomejim.weatherforecast.R
 fun Subtitle(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
     Text(
         text = text,
-        style = MaterialTheme.typography.displayMedium,
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-        color = color
+        style = MaterialTheme.typography.titleLarge,
+        modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+        color = color,
+        textAlign = TextAlign.Center
     )
 }
 
@@ -30,7 +31,7 @@ fun Subtitle(text: String, modifier: Modifier = Modifier, color: Color = Color.U
 fun SubtitleSmall(text: String, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
     Text(
         text = text,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.titleSmall,
         modifier = modifier.padding(horizontal = 16.dp, vertical = 0.dp),
         color = color
     )
@@ -56,7 +57,7 @@ fun Headline(text: String, modifier: Modifier = Modifier, color: Color = Color.U
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.displayLarge,
+        style = MaterialTheme.typography.displayMedium,
         color = color
     )
 }
