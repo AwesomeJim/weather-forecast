@@ -34,6 +34,7 @@ import com.awesomejim.weatherforecast.ui.components.WeatherTopAppBar
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
 import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
+import com.awesomejim.weatherforecast.ui.screens.maps.launchDetailsActivity
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -101,6 +102,7 @@ class MainActivity : ComponentActivity() {
                 val title = rememberSaveable { (mutableStateOf("")) }
                 val canNavigateBackState = rememberSaveable { (mutableStateOf(false)) }
                 val refreshButtonState = rememberSaveable { (mutableStateOf(false)) }
+                val mapsButtonState = rememberSaveable { (mutableStateOf(false)) }
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 when (navBackStackEntry?.destination?.route) {
@@ -115,6 +117,7 @@ class MainActivity : ComponentActivity() {
                         canNavigateBackState.value = true
                         bottomBarState.value = false
                         if (refreshButtonState.value) refreshButtonState.value = false
+                        if (mapsButtonState.value) mapsButtonState.value = false
                     }
 
                     BottomNavItem.Home.screenRoute -> {
@@ -123,6 +126,7 @@ class MainActivity : ComponentActivity() {
                         refreshButtonState.value = true
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
+                        if (mapsButtonState.value) mapsButtonState.value = false
                     }
 
                     BottomNavItem.Search.screenRoute -> {
@@ -131,6 +135,7 @@ class MainActivity : ComponentActivity() {
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
                         if (refreshButtonState.value) refreshButtonState.value = false
+                        mapsButtonState.value = true
                     }
 
                     BottomNavItem.Settings.screenRoute -> {
@@ -139,6 +144,7 @@ class MainActivity : ComponentActivity() {
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
                         if (refreshButtonState.value) refreshButtonState.value = false
+                        if (mapsButtonState.value) mapsButtonState.value = false
                     }
                 }
 
@@ -153,6 +159,12 @@ class MainActivity : ComponentActivity() {
                             refreshButtonState = refreshButtonState.value,
                             onRefreshClicked = {
                                 mainViewModel.fetchWeatherData()
+                            },
+                            mapsButtonState = mapsButtonState.value,
+                            onMapsClicked = {
+                                launchDetailsActivity(
+                                    context = this
+                                )
                             }
                         )
                     },

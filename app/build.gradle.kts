@@ -189,6 +189,18 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
 
+    implementation(libs.maps.compose)
+
+    // Optionally, you can include the Compose utils library for Clustering, etc.
+    implementation(libs.maps.compose.utils)
+
+    constraints {
+        // Volley is a transitive dependency of maps
+        implementation("com.android.volley:volley:1.2.1") {
+            because("Only volley 1.2.0 or newer are available on maven.google.com")
+        }
+    }
+
 
     //-----------Retrofit & okhttp--------------------
     implementation(libs.retrofit)

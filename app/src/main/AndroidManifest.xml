@@ -7,6 +7,17 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
+    <!--
+    Android 11 package visibility changes require that apps specify which
+    set of other packages on the device that they can access. Since this
+    sample uses Google Maps, specifying the Google Maps package name is
+    required so that the buttons on the Map toolbar launch the Google Maps app.
+-->
+    <queries>
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
+
+
     <application
         android:name=".WeatherForecastApp"
         android:allowBackup="true"
@@ -18,6 +29,12 @@
         android:supportsRtl="true"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.WeatherForecast">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}"/>
+
+
         <activity
             android:name=".ui.screens.main.MainActivity"
             android:exported="true"
@@ -28,6 +45,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.screens.maps.MapsViewActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

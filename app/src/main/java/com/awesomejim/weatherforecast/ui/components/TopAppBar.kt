@@ -2,6 +2,7 @@ package com.awesomejim.weatherforecast.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,8 +31,10 @@ fun WeatherTopAppBar(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit = {},
     canNavigateBack: Boolean = false,
-    refreshButtonState:Boolean = false,
-    onRefreshClicked: () -> Unit = {}
+    refreshButtonState: Boolean = false,
+    onRefreshClicked: () -> Unit = {},
+    mapsButtonState: Boolean = false,
+    onMapsClicked: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
@@ -47,14 +50,22 @@ fun WeatherTopAppBar(
         ),
         modifier = modifier,
         actions = {
-           if (refreshButtonState) {
-               IconButton(onClick = onRefreshClicked) {
-                   Icon(
-                       imageVector = Icons.Filled.Refresh,
-                       contentDescription = "Refresh Weather data"
-                   )
-               }
-           }
+            if (refreshButtonState) {
+                IconButton(onClick = onRefreshClicked) {
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = "Refresh Weather data"
+                    )
+                }
+            }
+            if (mapsButtonState) {
+                IconButton(onClick = onMapsClicked) {
+                    Icon(
+                        imageVector = Icons.Filled.Map,
+                        contentDescription = "View on the Map"
+                    )
+                }
+            }
         },
         navigationIcon = {
             if (canNavigateBack) {
