@@ -1,37 +1,12 @@
-/*
- * Copyright 2020 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.awesomejim.weatherforecast.ui.screens.maps
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -49,121 +24,82 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
-var singapore = LatLng(1.3588227, 103.8742114)
-fun launchDetailsActivity(context: Context) {
-    context.startActivity(createDetailsActivityIntent(context))
-}
+/**
+ * Created by Awesome Jim on.
+ * 03/10/2023
+ */
 
-@VisibleForTesting
-fun createDetailsActivityIntent(context: Context): Intent {
-    return Intent(context, MapsViewActivity::class.java)
-}
+var myCurrentLocation = LatLng(1.3588227, 103.8742114)
 
-private val TAG = "MapsViewActivity"
-@AndroidEntryPoint
-class MapsViewActivity : ComponentActivity() {
+private const val TAG = "MapsViewScreen"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        setContent {
-            WeatherForecastTheme {
-                Surface {
-                    DetailsScreen(
-                        onErrorLoading = { },
-                        modifier = Modifier.systemBarsPadding()
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
-fun DetailsScreen(
-    onErrorLoading: () -> Unit,
+fun MapsViewScreen(
     modifier: Modifier = Modifier,
-    viewModel: MapsViewModel = viewModel()
+    viewModel: MapsViewModel
 ) {
+    //
     val savedLocationListUiState = viewModel
         .savedLocationListUiState
         .collectAsStateWithLifecycle().value
+    val defaultLocation = viewModel.currentLocation
 
-    // when {
+    //
+    myCurrentLocation = LatLng(
+        defaultLocation.latitude,
+        defaultLocation.longitude
+    )
+    //
     if (savedLocationListUiState.itemList.isNotEmpty()) {
-        DetailsContent(savedLocationListUiState.itemList, modifier.fillMaxSize())
+        MapsViewContent(savedLocationListUiState.itemList, modifier.fillMaxSize())
     }
-
-//        uiState.isLoading -> {
-//            Box(modifier.fillMaxSize()) {
-//                CircularProgressIndicator(
-//                    color = MaterialTheme.colorScheme.onSurface,
-//                    modifier = Modifier.align(Alignment.Center)
-//                )
-//            }
-//        }
-
-    //   else -> {
-    // onErrorLoading()
-    //   }
-    //}
 }
 
 @Composable
-fun DetailsContent(
+fun MapsViewContent(
     exploreList: List<LocationItemData>,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer), verticalArrangement = Arrangement.Center) {
-        Spacer(Modifier.height(32.dp))
-        Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "Saved Location",
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
-        )
-
-        Spacer(Modifier.height(16.dp))
-        singapore = LatLng(
-            exploreList[0].locationLatitude,
-            exploreList[0].locationLongitude
-        )
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer),
+        verticalArrangement = Arrangement.Center
+    ) {
         GoogleMapCreateClusters(exploreList)
     }
 }
 
 @Composable
 fun GoogleMapCreateClusters(exploreList: List<LocationItemData>) {
-    val items = remember { mutableStateListOf<MyItem>() }
+    val items = remember { mutableStateListOf<LocationItem>() }
     LaunchedEffect(Unit) {
         for (item in exploreList) {
             val position = LatLng(
                 item.locationLatitude,
                 item.locationLongitude
             )
-             val weatherTemp  = "%1\$1.0f \u00B0 %2\$s".format(item.locationWeatherInfo.weatherTemp,item.locationWeatherInfo.weatherConditionDescription)
-            items.add(MyItem(position, item.locationName, weatherTemp, 9f))
+            val weatherTemp = "%1\$1.0f \u00B0 %2\$s".format(
+                item.locationWeatherInfo.weatherTemp,
+                item.locationWeatherInfo.weatherConditionDescription
+            )
+            items.add(LocationItem(position, item.locationName, weatherTemp, 9f))
         }
     }
     GoogleMapClustering(items = items)
@@ -172,13 +108,25 @@ fun GoogleMapCreateClusters(exploreList: List<LocationItemData>) {
 
 @OptIn(MapsComposeExperimentalApi::class)
 @Composable
-fun GoogleMapClustering(items: List<MyItem>) {
-    val uiSettings by remember { mutableStateOf(MapUiSettings(compassEnabled = false, myLocationButtonEnabled = true)) }
+fun GoogleMapClustering(items: List<LocationItem>) {
+    val uiSettings by remember {
+        mutableStateOf(
+            MapUiSettings(
+                compassEnabled = false,
+                myLocationButtonEnabled = true
+            )
+        )
+    }
+    val properties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+
     GoogleMap(
         uiSettings = uiSettings,
+        properties = properties,
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(singapore, 10f)
+            position = CameraPosition.fromLatLngZoom(myCurrentLocation, 10f)
         }
     ) {
         Clustering(
@@ -218,7 +166,7 @@ fun GoogleMapClustering(items: List<MyItem>) {
             clusterItemContent = null
         )
         MarkerInfoWindow(
-            state = rememberMarkerState(position = singapore),
+            state = rememberMarkerState(position = myCurrentLocation),
             onClick = {
                 Timber.tag(TAG).d("Non-cluster marker clicked! %s", it)
                 true
@@ -227,7 +175,7 @@ fun GoogleMapClustering(items: List<MyItem>) {
     }
 }
 
-data class MyItem(
+data class LocationItem(
     val itemPosition: LatLng,
     val itemTitle: String,
     val itemSnippet: String,

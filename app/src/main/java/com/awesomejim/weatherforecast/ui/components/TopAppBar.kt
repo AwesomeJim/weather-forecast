@@ -1,10 +1,14 @@
 package com.awesomejim.weatherforecast.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
@@ -86,5 +91,37 @@ fun WeatherTopAppBar(
 private fun TopAppBarPreview() {
     WeatherForecastTheme {
         WeatherTopAppBar("Awesome Jim")
+    }
+}
+
+
+/**
+ * Shows the floating action button.
+ *
+ * @param extended Whether the tab should be shown in its expanded state.
+ */
+@Composable
+fun SearchFloatingActionButton(
+    extended: Boolean,
+    onClick: () -> Unit
+) {
+    // how it should animate.
+    FloatingActionButton(onClick = onClick) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Map,
+                contentDescription = "View On the Map"
+            )
+            // Toggle the visibility of the content with animation.
+            AnimatedVisibility (extended) {
+                Text(
+                    text = "View On the Map",
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 3.dp)
+                )
+            }
+        }
     }
 }

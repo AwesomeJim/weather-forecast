@@ -107,7 +107,6 @@ fun PhotosScreen(
         },
         modifier = Modifier
             .fillMaxHeight()
-            .padding(bottom = 64.dp)
     )
 }
 

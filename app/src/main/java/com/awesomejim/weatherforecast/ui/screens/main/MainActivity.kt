@@ -30,11 +30,11 @@ import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
+import com.awesomejim.weatherforecast.ui.components.SearchFloatingActionButton
 import com.awesomejim.weatherforecast.ui.components.WeatherTopAppBar
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
 import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
-import com.awesomejim.weatherforecast.ui.screens.maps.launchDetailsActivity
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -162,9 +162,9 @@ class MainActivity : ComponentActivity() {
                             },
                             mapsButtonState = mapsButtonState.value,
                             onMapsClicked = {
-                                launchDetailsActivity(
-                                    context = this
-                                )
+//                                launchDetailsActivity(
+//                                    context = this
+//                                )
                             }
                         )
                     },
@@ -173,6 +173,18 @@ class MainActivity : ComponentActivity() {
                             AppBottomNavigationItem(
                                 navController = navController,
                                 bottomNavigationItems
+                            )
+                        }
+                    },
+                    floatingActionButton = {
+                        if(mapsButtonState.value) {
+                            SearchFloatingActionButton(
+                                extended = false,//lazyListState.isScrollingUp(),
+                                onClick = {
+//                                coroutineScope.launch {
+//                                    showEditMessage()
+//                                }
+                                }
                             )
                         }
                     }
@@ -229,7 +241,6 @@ class MainActivity : ComponentActivity() {
 //                    .addOnCanceledListener {
 //                        Timber.tag("MainViewModel").e("addOnCanceledListener ")
 //                    }
-                // WeatherAppScreensConfig(navController = rememberNavController())
                 NavigationGraph(navController = navController, mainViewModel, paddingValues)
             }
 

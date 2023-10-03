@@ -56,6 +56,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -72,7 +75,6 @@ import com.awesomejim.weatherforecast.ui.components.DialogSearchSuccess
 import com.awesomejim.weatherforecast.ui.components.DismissBackground
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
-import com.awesomejim.weatherforecast.ui.components.TemperatureHeadline
 import com.awesomejim.weatherforecast.ui.screens.home.ExpandItemButton
 import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
@@ -392,9 +394,16 @@ fun SavedLocationItem(
                         .padding(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TemperatureHeadline(
-                        temperature = temp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    Text(
+                        text = temp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        style = MaterialTheme.typography.displayMedium.copy(
+                            shadow = Shadow(
+                                color = Color.Black.copy(alpha = 0.3f),
+                                offset = Offset(3f, 3f),
+                                blurRadius = 6f
+                            )
+                        )
                     )
                     SubtitleSmall(
                         text = highLow,
