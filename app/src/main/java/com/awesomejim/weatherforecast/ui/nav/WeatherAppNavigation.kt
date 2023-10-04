@@ -37,6 +37,8 @@ import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
 import com.awesomejim.weatherforecast.ui.screens.home.HomeContentScreen
 import com.awesomejim.weatherforecast.ui.screens.main.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.screens.main.MainViewModel
+import com.awesomejim.weatherforecast.ui.screens.maps.MapsViewModel
+import com.awesomejim.weatherforecast.ui.screens.maps.MapsViewScreen
 import com.awesomejim.weatherforecast.ui.screens.photos.PhotosScreen
 import com.awesomejim.weatherforecast.ui.screens.photos.PhotosViewModel
 import com.awesomejim.weatherforecast.ui.screens.search.SearchScreen
@@ -72,6 +74,8 @@ sealed class BottomNavItem(var title: String, var icon: ImageVector, var screenR
             navArgument(locationlogTypeArg) { type = NavType.FloatType }
         )
     }
+
+    object MapsView : BottomNavItem("Maps View", Icons.Filled.Settings, "maps_view")
 }
 
 /**
@@ -129,6 +133,9 @@ fun NavigationGraph(
                     Timber.tag("onViewPhotosClick")
                         .e("locationItemData ${locationItemData.locationName}")
                     navController.navigateToViewPhotos(locationItemData)
+                },
+                onViewOnMapClick = {
+                    navController.navigate(BottomNavItem.MapsView.screenRoute)
                 }
             )
         }
@@ -186,6 +193,25 @@ fun NavigationGraph(
                 }
             )
         }
+        composable(BottomNavItem.MapsView.screenRoute,
+            enterTransition = {
+                slideInVertically(
+                    animationSpec = tween(700),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    animationSpec = tween(700),
+                    targetOffsetY = { it }
+                )
+            }) {
+            val mapsViewModel = hiltViewModel<MapsViewModel>()
+            MapsViewScreen(
+                viewModel = mapsViewModel
+            )
+        }
+
     }
 }
 

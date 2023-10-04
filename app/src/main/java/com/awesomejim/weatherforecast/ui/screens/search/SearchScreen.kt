@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +22,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -49,7 +52,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -73,6 +78,7 @@ import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.DialogSearchSuccess
 import com.awesomejim.weatherforecast.ui.components.DismissBackground
+import com.awesomejim.weatherforecast.ui.components.SearchFloatingActionButton
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
 import com.awesomejim.weatherforecast.ui.screens.home.ExpandItemButton
@@ -87,7 +93,8 @@ import timber.log.Timber
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel,
-    onViewPhotosClick: (LocationItemData) -> Unit = {}
+    onViewPhotosClick: (LocationItemData) -> Unit = {},
+    onViewOnMapClick: () -> Unit = {}
 ) {
     val savedLocationListUiState = searchViewModel
         .savedLocationListUiState
@@ -115,6 +122,10 @@ fun SearchScreen(
         }
     }
 
+    //
+    val lazyListState = rememberLazyListState()
+
+
     if (searchUiState.isSearchError) {
         searchUiState.searchErrorMessage?.let { errorMessageId ->
             AlertDialogError(
@@ -130,6 +141,7 @@ fun SearchScreen(
         }
     }
     LazyColumn(
+        state = lazyListState,
         modifier = Modifier
             .fillMaxHeight()
     ) {
@@ -199,6 +211,40 @@ fun SearchScreen(
             }
         }
     }
+    // Overlay the FloatingActionButton
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        if (savedLocationListUiState.itemList.isNotEmpty()) {
+            SearchFloatingActionButton(
+                extended = lazyListState.isScrollingUp(),
+                onClick = onViewOnMapClick
+            )
+        }
+    }
+
+}
+
+/**
+ * Returns whether the lazy list is currently scrolling up.
+ */
+@Composable
+private fun LazyListState.isScrollingUp(): Boolean {
+    var previousIndex by remember(this) { mutableIntStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableIntStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
 }
 
 /**
@@ -282,7 +328,9 @@ fun SearchBar(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp)
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
 //        DockedSearchBar(
 //            modifier = modifier
@@ -473,7 +521,6 @@ fun SavedLocationItem(
                     onClick = { expanded = !expanded }
                 )
             }
-            //if (expanded) {
             AnimatedVisibility(visible = expanded) {
                 locationItemData.forecastMoreDetails?.let { data ->
                     Divider(
@@ -488,7 +535,6 @@ fun SavedLocationItem(
                     }
                 }
             }
-            // }
         }
     }
 }
@@ -519,13 +565,13 @@ fun SavedLocationItemPreview() {
 @Composable
 fun SearchBarPreview() {
     WeatherForecastTheme {
-            SearchBar(
-                searchTerm = "",
-                isSearchWordValid = true,
-                isSearching = true,
-                onSearchTermChanged = {},
-                onKeyboardDone = {}
-            )
+        SearchBar(
+            searchTerm = "",
+            isSearchWordValid = true,
+            isSearching = true,
+            onSearchTermChanged = {},
+            onKeyboardDone = {}
+        )
     }
 }
 

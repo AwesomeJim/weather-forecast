@@ -106,16 +106,22 @@ fun SearchFloatingActionButton(
     onClick: () -> Unit
 ) {
     // how it should animate.
-    FloatingActionButton(onClick = onClick) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = Modifier.padding(8.dp),
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
+    ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Map,
-                contentDescription = "View On the Map"
+                contentDescription = "View On the Map",
+                tint = MaterialTheme.colorScheme.onPrimary
             )
             // Toggle the visibility of the content with animation.
-            AnimatedVisibility (extended) {
+            AnimatedVisibility(extended) {
                 Text(
                     text = "View On the Map",
                     modifier = Modifier

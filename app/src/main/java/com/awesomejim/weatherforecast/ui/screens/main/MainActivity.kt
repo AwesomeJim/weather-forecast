@@ -30,7 +30,6 @@ import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
 import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
-import com.awesomejim.weatherforecast.ui.components.SearchFloatingActionButton
 import com.awesomejim.weatherforecast.ui.components.WeatherTopAppBar
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
@@ -102,7 +101,7 @@ class MainActivity : ComponentActivity() {
                 val title = rememberSaveable { (mutableStateOf("")) }
                 val canNavigateBackState = rememberSaveable { (mutableStateOf(false)) }
                 val refreshButtonState = rememberSaveable { (mutableStateOf(false)) }
-                val mapsButtonState = rememberSaveable { (mutableStateOf(false)) }
+
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 when (navBackStackEntry?.destination?.route) {
@@ -117,7 +116,6 @@ class MainActivity : ComponentActivity() {
                         canNavigateBackState.value = true
                         bottomBarState.value = false
                         if (refreshButtonState.value) refreshButtonState.value = false
-                        if (mapsButtonState.value) mapsButtonState.value = false
                     }
 
                     BottomNavItem.Home.screenRoute -> {
@@ -126,7 +124,7 @@ class MainActivity : ComponentActivity() {
                         refreshButtonState.value = true
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
-                        if (mapsButtonState.value) mapsButtonState.value = false
+
                     }
 
                     BottomNavItem.Search.screenRoute -> {
@@ -135,7 +133,6 @@ class MainActivity : ComponentActivity() {
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
                         if (refreshButtonState.value) refreshButtonState.value = false
-                        mapsButtonState.value = true
                     }
 
                     BottomNavItem.Settings.screenRoute -> {
@@ -144,7 +141,14 @@ class MainActivity : ComponentActivity() {
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
                         if (refreshButtonState.value) refreshButtonState.value = false
-                        if (mapsButtonState.value) mapsButtonState.value = false
+                    }
+
+                    BottomNavItem.MapsView.screenRoute -> {
+                        title.value =
+                            stringResource(id = R.string.saved_location_on_map_screen_title)
+                        bottomBarState.value = false
+                        canNavigateBackState.value = true
+                        if (refreshButtonState.value) refreshButtonState.value = false
                     }
                 }
 
@@ -159,12 +163,6 @@ class MainActivity : ComponentActivity() {
                             refreshButtonState = refreshButtonState.value,
                             onRefreshClicked = {
                                 mainViewModel.fetchWeatherData()
-                            },
-                            mapsButtonState = mapsButtonState.value,
-                            onMapsClicked = {
-//                                launchDetailsActivity(
-//                                    context = this
-//                                )
                             }
                         )
                     },
@@ -176,18 +174,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     },
-                    floatingActionButton = {
-                        if(mapsButtonState.value) {
-                            SearchFloatingActionButton(
-                                extended = false,//lazyListState.isScrollingUp(),
-                                onClick = {
-//                                coroutineScope.launch {
-//                                    showEditMessage()
-//                                }
-                                }
-                            )
-                        }
-                    }
                 ) { paddingValues ->
                     Surface(
                         color = MaterialTheme.colorScheme.surface

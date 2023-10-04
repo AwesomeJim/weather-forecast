@@ -1,5 +1,8 @@
 package com.awesomejim.weatherforecast.ui.screens.maps
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -109,6 +115,7 @@ fun GoogleMapCreateClusters(exploreList: List<LocationItemData>) {
 @OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun GoogleMapClustering(items: List<LocationItem>) {
+    var isMapLoaded by remember { mutableStateOf(false) }
     val uiSettings by remember {
         mutableStateOf(
             MapUiSettings(
@@ -118,60 +125,85 @@ fun GoogleMapClustering(items: List<LocationItem>) {
         )
     }
     val properties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+        mutableStateOf(
+            MapProperties(
+                mapType = MapType.NORMAL,
+                // To show blue dot on map
+                isMyLocationEnabled = true
+            )
+        )
     }
-
-    GoogleMap(
-        uiSettings = uiSettings,
-        properties = properties,
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(myCurrentLocation, 10f)
-        }
-    ) {
-        Clustering(
-            items = items,
-            // Optional: Handle clicks on clusters, cluster items, and cluster item info windows
-            onClusterClick = {
-                Timber.tag(TAG).d("Cluster clicked! %s", it)
-                false
+    Box(Modifier.fillMaxSize()) {
+        GoogleMap(
+            uiSettings = uiSettings,
+            properties = properties,
+            onMapLoaded = {
+                isMapLoaded = true
             },
-            onClusterItemClick = {
-                Timber.tag(TAG).d("Cluster item clicked! %s", it)
-                false
-            },
-            onClusterItemInfoWindowClick = {
-                Timber.tag(TAG).d("Cluster item info window clicked! %s", it)
-            },
-            // Optional: Custom rendering for clusters
-            clusterContent = { cluster ->
-                Surface(
-                    Modifier.size(40.dp),
-                    shape = CircleShape,
-                    color = Color.Blue,
-                    contentColor = Color.White,
-                    border = BorderStroke(1.dp, Color.White)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            "%,d".format(cluster.size),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Black,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            },
-            // Optional: Custom rendering for non-clustered items
-            clusterItemContent = null
-        )
-        MarkerInfoWindow(
-            state = rememberMarkerState(position = myCurrentLocation),
-            onClick = {
-                Timber.tag(TAG).d("Non-cluster marker clicked! %s", it)
-                true
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(myCurrentLocation, 10f)
             }
-        )
+        ) {
+            Clustering(
+                items = items,
+                // Optional: Handle clicks on clusters, cluster items, and cluster item info windows
+                onClusterClick = {
+                    Timber.tag(TAG).d("Cluster clicked! %s", it)
+                    false
+                },
+                onClusterItemClick = {
+                    Timber.tag(TAG).d("Cluster item clicked! %s", it)
+                    false
+                },
+                onClusterItemInfoWindowClick = {
+                    Timber.tag(TAG).d("Cluster item info window clicked! %s", it)
+                },
+                // Optional: Custom rendering for clusters
+                clusterContent = { cluster ->
+                    Surface(
+                        Modifier.size(40.dp),
+                        shape = CircleShape,
+                        color = Color.Blue,
+                        contentColor = Color.White,
+                        border = BorderStroke(1.dp, Color.White)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                "%,d".format(cluster.size),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Black,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                },
+                // Optional: Custom rendering for non-clustered items
+                clusterItemContent = null
+            )
+            MarkerInfoWindow(
+                state = rememberMarkerState(position = myCurrentLocation),
+                onClick = {
+                    Timber.tag(TAG).d("Non-cluster marker clicked! %s", it)
+                    true
+                }
+            )
+        }
+        if (!isMapLoaded) {
+            AnimatedVisibility(
+                modifier = Modifier
+                    .matchParentSize(),
+                visible = !isMapLoaded,
+                enter = EnterTransition.None,
+                exit = fadeOut()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .wrapContentSize()
+                )
+            }
+        }
     }
 }
 
@@ -190,6 +222,4 @@ data class LocationItem(
     override fun getSnippet(): String =
         itemSnippet
 
-    fun getZIndex(): Float =
-        itemZIndex
 }

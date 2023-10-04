@@ -86,6 +86,7 @@
 
     <string name="saved_screen_title">My Saved Locations</string>
     <string name="search_screen_title">Search</string>
+    <string name="saved_location_on_map_screen_title">Saved Locations</string>
 
     <string name="home_error_occurred">An issue occurred</string>
     <string name="home_error_try_again">Try Again</string>
