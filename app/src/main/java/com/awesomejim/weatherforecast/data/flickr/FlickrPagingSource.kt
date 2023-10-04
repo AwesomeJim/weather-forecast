@@ -5,6 +5,7 @@ import com.awesomejim.weatherforecast.BuildConfig
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.di.flickr.FlickerPhotoResponse
 import com.awesomejim.weatherforecast.di.flickr.FlickrApiService
+import com.awesomejim.weatherforecast.di.flickr.toCleanPhotos
 import com.awesomejim.weatherforecast.utilities.GenericException
 import okio.IOException
 import retrofit2.HttpException
@@ -46,7 +47,7 @@ class FlickrPagingSource(
                         .e("response init: ${response.body()!!.results?.photos}")
                     val photoResponse = response.body()!!.results?.photos ?: emptyList()
                     LoadResult.Page(
-                        data = photoResponse,
+                        data = photoResponse.toCleanPhotos(),
                         prevKey = if (page == 1) null else page.minus(1),
                         nextKey = if (photoResponse.isEmpty()) null else page.plus(1),
                     )
