@@ -6,15 +6,16 @@ import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.di.flickr.FlickrApiService
 import javax.inject.Inject
 
-const val PAGE_SIZE = 20
+const val NETWORK_PAGE_SIZE = 20
+
 class FlickrRepository @Inject constructor(
     private val flickrApiService: FlickrApiService
 ) {
     fun getPhotos(defaultLocation: DefaultLocation) = Pager(
         config = PagingConfig(
-            pageSize = PAGE_SIZE,
+            pageSize = NETWORK_PAGE_SIZE,
             prefetchDistance = 10,
-            initialLoadSize = PAGE_SIZE
+            initialLoadSize = NETWORK_PAGE_SIZE * 2
         ),
         pagingSourceFactory = {
             FlickrPagingSource(

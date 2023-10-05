@@ -1,5 +1,6 @@
 package com.awesomejim.weatherforecast.di.flickr
 
+import com.awesomejim.weatherforecast.data.flickr.NETWORK_PAGE_SIZE
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -9,7 +10,7 @@ interface FlickrApiService {
     suspend fun getLocationPhotos(
         @Query("method") method: String = "flickr.photos.search",
         @Query("radius") radius: Int = 20,
-        @Query("per_page") per_page: Int = 24,
+        @Query("per_page") per_page: Int = NETWORK_PAGE_SIZE,
         @Query("extras") extras: String = "url_m",
         @Query("format") format: String = "json",
         @Query("nojsoncallback") nojsoncallback: Int = 1,

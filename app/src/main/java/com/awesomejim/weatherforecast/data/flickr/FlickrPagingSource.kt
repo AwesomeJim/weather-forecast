@@ -11,6 +11,7 @@ import okio.IOException
 import retrofit2.HttpException
 import timber.log.Timber
 
+const val FLICKR_STARTING_PAGE_INDEX = 1
 class FlickrPagingSource(
     private val newsApiService: FlickrApiService,
     private val defaultLocation: DefaultLocation
@@ -27,7 +28,7 @@ class FlickrPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FlickerPhotoResponse> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: FLICKR_STARTING_PAGE_INDEX
             Timber.tag("Photos PagingSource").e("load init: $page $defaultLocation")
             val response = newsApiService.getLocationPhotos(
                 page = page,
@@ -46,10 +47,19 @@ class FlickrPagingSource(
                     Timber.tag("Photos PagingSource")
                         .e("response init: ${response.body()!!.results?.photos}")
                     val photoResponse = response.body()!!.results?.photos ?: emptyList()
+                    val nextKey = if (photoResponse.isEmpty()) {
+                        null
+                    } else {
+                        // initial load size = 3 * NETWORK_PAGE_SIZE
+                        // ensure we're not requesting duplicating items, at the 2nd request
+                        page + (params.loadSize / NETWORK_PAGE_SIZE)
+                    }
+                    Timber.tag("Photos PagingSource")
+                        .e("nextKey init: $nextKey")
                     LoadResult.Page(
                         data = photoResponse.toCleanPhotos(),
-                        prevKey = if (page == 1) null else page.minus(1),
-                        nextKey = if (photoResponse.isEmpty()) null else page.plus(1),
+                        prevKey = if (page == FLICKR_STARTING_PAGE_INDEX) null else page.minus(1),
+                        nextKey = nextKey
                     )
                 }
             } else {

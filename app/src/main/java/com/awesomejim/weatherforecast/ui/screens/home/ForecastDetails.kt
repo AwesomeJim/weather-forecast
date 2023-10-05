@@ -1,13 +1,14 @@
 package com.awesomejim.weatherforecast.ui.screens.home
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Canvas
+import android.graphics.PointF
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +47,9 @@ fun ForecastMoreDetails(
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp).fillMaxWidth()
+        modifier = modifier
+            .padding(horizontal = 2.dp, vertical = 2.dp)
+            .fillMaxWidth()
     ) {
         Column(modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)) {
             ConditionsLabelSection(modifier, R.drawable.ic_wind, R.string.wind_label)
@@ -106,6 +115,7 @@ fun HourlyDataElement(
         )
     }
 }
+
 /**
  * Render hourly temperature with curve-line chart
  * show with animation
@@ -115,39 +125,78 @@ fun LineChart(
     modifier: Modifier,
     hourlyWeatherData: List<HourlyWeatherData>
 ) {
-    val zipList: List<Pair<HourlyWeatherData, HourlyWeatherData>> = hourlyWeatherData.zipWithNext()
-    Row(modifier = modifier.padding(horizontal = 24.dp)) {
-        val max = hourlyWeatherData.maxBy { it.temperatureFloat }.temperatureFloat
-        val min = hourlyWeatherData.minBy { it.temperatureFloat }.temperatureFloat
+    val lineColor = MaterialTheme.colorScheme.primary
+    Spacer(
+        modifier = modifier
+            .padding(horizontal = 24.dp)
+            .fillMaxSize()
+            .drawWithCache {
+                val path = generateSmoothPath(hourlyWeatherData, size)
+                val filledPath = Path()
+                filledPath.addPath(path)
+                filledPath.relativeLineTo(0f, size.height)
+                filledPath.lineTo(0f, size.height)
+                filledPath.close()
+                onDrawBehind {
+                    drawPath(path, lineColor, style = Stroke(2.dp.toPx()))
 
-        val lineColor = MaterialTheme.colorScheme.primary
-
-        for (pair in zipList) {
-
-            val fromValuePercentage = getValuePercentageForRange(pair.first.temperatureFloat, max, min)
-            val toValuePercentage = getValuePercentageForRange(pair.second.temperatureFloat, max, min)
-
-            Canvas(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-                onDraw = {
-                    val fromPoint = Offset(x = 0f, y = size.height.times(1 - fromValuePercentage))
-                    val toPoint =
-                        Offset(x = size.width, y = size.height.times(1 - toValuePercentage))
-                    drawLine(
-                        color = lineColor,
-                        start = fromPoint,
-                        end = toPoint,
-                        strokeWidth = 3f
+                    drawPath(
+                        filledPath,
+                        brush = Brush.verticalGradient(
+                            listOf(
+                                lineColor.copy(alpha = 0.4f),
+                                Color.Transparent
+                            )
+                        ),
+                        style = Fill
                     )
-                })
-        }
-    }
+                }
+            }
+    )
+
+
+
+
 }
 
-private fun getValuePercentageForRange(value: Float, max: Float, min: Float) =
-    (value - min) / (max - min)
+fun generateSmoothPath(hourlyWeatherData: List<HourlyWeatherData>, size: Size): Path {
+    val path = Path()
+    val numberEntries = hourlyWeatherData.size - 1
+    val weekWidth = size.width / numberEntries
+
+    val max = hourlyWeatherData.maxBy { it.temperatureFloat }
+    val min = hourlyWeatherData.minBy { it.temperatureFloat } // will map to x= 0, y = height
+    val range = max.temperatureFloat - min.temperatureFloat
+    val heightPxPerTemp = size.height / range
+
+    var previousTempX = 0f
+    var previousTempY = size.height
+    hourlyWeatherData.forEachIndexed { i, hourlyData ->
+        if (i == 0) {
+            path.moveTo(
+                0f,
+                size.height - (hourlyData.temperatureFloat - min.temperatureFloat) *
+                        heightPxPerTemp
+            )
+
+        }
+        val tempX = i * weekWidth
+        val tempY = size.height - (hourlyData.temperatureFloat - min.temperatureFloat) *
+                heightPxPerTemp
+        // to do smooth curve graph - we use cubicTo, uncomment section below for non-curve
+        val controlPoint1 = PointF((tempX + previousTempX) / 2f, previousTempY)
+        val controlPoint2 = PointF((tempX + previousTempX) / 2f, tempY)
+        path.cubicTo(
+            controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y,
+            tempX, tempY
+        )
+        previousTempX = tempX
+        previousTempY = tempY
+    }
+    return path
+}
+
+
 
 @Composable
 fun HourlyDataElementRow(
@@ -172,10 +221,16 @@ fun ForecastMoreDetailsSection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(horizontal = 1.dp, vertical = 4.dp).fillMaxWidth()
+        modifier = modifier
+            .padding(horizontal = 1.dp, vertical = 4.dp)
+            .fillMaxWidth()
     ) {
         ForecastMoreDetails(forecastMoreDetails)
-        LineChart(Modifier.height(50.dp).fillMaxWidth(), forecastMoreDetails.hourlyWeatherData)
+        LineChart(
+            modifier = modifier
+                .height(50.dp)
+                .fillMaxWidth(), forecastMoreDetails.hourlyWeatherData
+        )
         HourlyDataElementRow(forecastMoreDetails.hourlyWeatherData)
     }
 }
