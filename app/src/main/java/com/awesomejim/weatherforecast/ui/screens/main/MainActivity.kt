@@ -101,6 +101,7 @@ class MainActivity : ComponentActivity() {
                 val title = rememberSaveable { (mutableStateOf("")) }
                 val canNavigateBackState = rememberSaveable { (mutableStateOf(false)) }
                 val refreshButtonState = rememberSaveable { (mutableStateOf(false)) }
+
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 when (navBackStackEntry?.destination?.route) {
@@ -123,6 +124,7 @@ class MainActivity : ComponentActivity() {
                         refreshButtonState.value = true
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
+
                     }
 
                     BottomNavItem.Search.screenRoute -> {
@@ -138,6 +140,14 @@ class MainActivity : ComponentActivity() {
                             stringResource(id = R.string.settings_screen_title)
                         if (!bottomBarState.value) bottomBarState.value = true
                         if (canNavigateBackState.value) canNavigateBackState.value = false
+                        if (refreshButtonState.value) refreshButtonState.value = false
+                    }
+
+                    BottomNavItem.MapsView.screenRoute -> {
+                        title.value =
+                            stringResource(id = R.string.saved_location_on_map_screen_title)
+                        bottomBarState.value = false
+                        canNavigateBackState.value = true
                         if (refreshButtonState.value) refreshButtonState.value = false
                     }
                 }
@@ -163,7 +173,7 @@ class MainActivity : ComponentActivity() {
                                 bottomNavigationItems
                             )
                         }
-                    }
+                    },
                 ) { paddingValues ->
                     Surface(
                         color = MaterialTheme.colorScheme.surface
@@ -217,7 +227,6 @@ class MainActivity : ComponentActivity() {
 //                    .addOnCanceledListener {
 //                        Timber.tag("MainViewModel").e("addOnCanceledListener ")
 //                    }
-                // WeatherAppScreensConfig(navController = rememberNavController())
                 NavigationGraph(navController = navController, mainViewModel, paddingValues)
             }
 

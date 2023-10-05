@@ -160,22 +160,21 @@ dependencies {
     implementation (libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewModelCompose)
 
-    //-----------Google Play Services------------------
-    implementation(libs.playservices.location)
-
     // --------Hilt Dependency Injection--------------
     implementation(libs.hilt.android)
+    implementation (libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
 
     //-----------COIL--------------------
     implementation(libs.coil.compose)
+
     //------------Lottie Amazing Animations ----------
     implementation(libs.lottie)
     implementation(libs.lottie.compose)
 
     //------------Timber logging----------
     implementation(libs.timber)
-    implementation (libs.androidx.hilt.navigation.compose)
+
 
     //-----------ROOM--------------------
     implementation(libs.androidx.room.runtime)
@@ -188,6 +187,21 @@ dependencies {
     implementation(libs.androidx.paging.common)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
+
+
+    //-----------Google Play Services & Maps------------------
+    implementation(libs.playservices.location)
+    implementation(libs.maps.compose)
+    // Optionally, you can include the Compose utils library for Clustering, etc.
+    implementation(libs.maps.compose.utils)
+
+    constraints {
+        // Volley is a transitive dependency of maps
+        implementation("com.android.volley:volley:1.2.1") {
+            because("Only volley 1.2.0 or newer are available on maven.google.com")
+        }
+    }
+
 
 
     //-----------Retrofit & okhttp--------------------
