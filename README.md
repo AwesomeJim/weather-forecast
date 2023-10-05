@@ -31,9 +31,10 @@ This app enable users to:
 | <img src="screenshots/maps_screen.png" width="300px" height="600px"> |
 
 
+
 |                                                                          Screen Recording                                                                          |
 |:------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| <video src="https://github.com/AwesomeJim/weather-forecast/screenshots/Screen_recording_20231005_155142.mov" controls="controls" width="630" height="300"></video> |
+| <video src="https://github.com/AwesomeJim/weather-forecast/assets/8529047/92305f75-1de8-464e-a159-f0fec662b20e" controls="controls" width="630" height="300"></video> |
 
 
 ## Tech-stack used 🛠
