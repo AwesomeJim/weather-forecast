@@ -31,9 +31,9 @@ This app enable users to:
 | <img src="screenshots/maps_screen.png" width="300px" height="600px"> |
 
 
-|                                                                           Screen Recording                                                                            |
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| <video src="https://github.com/AwesomeJim/weather-forecast/assets/8529047/6e0cd4cb-9dd2-4418-bb52-da91d6fcd975" controls="controls" width="630" height="300"></video> |
+|                                                                          Screen Recording                                                                          |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| <video src="https://github.com/AwesomeJim/weather-forecast/screenshots/Screen_recording_20231005_155142.mov" controls="controls" width="630" height="300"></video> |
 
 
 ## Tech-stack used 🛠
