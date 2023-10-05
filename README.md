@@ -26,10 +26,14 @@ This app enable users to:
 |:--------------------------------------------------------------------------:|:----------------------------------------------------------------------------:|
 | <img src="screenshots/seach_screen_dark.png" width="300px" height="600px"> | <img src="screenshots/search_screen_light.png" width="300px" height="600px"> |
 
+ |                                 Maps                                 |
+|:--------------------------------------------------------------------:|
+| <img src="screenshots/maps_screen.png" width="300px" height="600px"> |
+
+
 |                                                                           Screen Recording                                                                            |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | <video src="https://github.com/AwesomeJim/weather-forecast/assets/8529047/6e0cd4cb-9dd2-4418-bb52-da91d6fcd975" controls="controls" width="630" height="300"></video> |
-
 
 
 ## Tech-stack used 🛠
@@ -50,6 +54,7 @@ This app enable users to:
 | [AndroidX](https://developer.android.com/jetpack/androidx)                        | Android library for core functionalities                   |
 | [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) | Manage data and UI State in lifecycle-aware fashion        |
 | [Room DB](https://developer.android.com/topic/libraries/architecture/room)        | 💾  For local data storage                                 |
+ | [android-maps-compose ](https://github.com/googlemaps/android-maps-compose)       | Show saved locations on the Map                            |
 
 _**Testing**_ <br/>
 
@@ -96,6 +101,7 @@ With this loosely coupled architecture, it increases the usability of components
 **The Project uses 2 api :**
 1. [OpenWeather API 🔑](https://openweathermap.org/current) for Weather Data and.
 2. [The Flickr API 🔑](https://www.flickr.com/services/developer) to fetch paginated photos of a give location
+3. [Google Maps API key 🔑](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
 
 #### _⚙️ Setup Weather Data API_
 
@@ -114,6 +120,8 @@ How to create your Flickr API keys, go to [Flickr](https://www.flickr.com/servic
 1. Create an Application - You will first need to create an application. Click on “create your first”. 
 2. Request an API Key - Then, make a request for an API key by clicking on “Request an API Key - [check this guide with visuals](https://www.appypie.com/faqs/how-to-create-a-flickr-api-key)<br/>
 
+#### _⚙️ Setup Google Maps API key 🔑_
+1. Get a [Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
 
 in your `local.properties` you will need to add your API keys and copy the urls for the two apis
 
@@ -128,6 +136,9 @@ OPEN_WEATHER_ICONS_URL= http://openweathermap.org/img/wn/
 #Fliker
 FLICKR_PHOTOS_BASE_URL = https://www.flickr.com/services/rest/
 FLICKR_API_KEY = <insert your Flickr API Key>
+
+#Maps API Key
+MAPS_API_KEY = <insert YOUR Maps >
 ```
 
 This project uses the Hilt for dependency Injection. After opening this project in your Android Studio you might get some error which is due unavailability of a few classes. You need to `make a project` or try to build the project, this will generate all the required classes for Hilt.
