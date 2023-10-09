@@ -42,11 +42,11 @@ runner="1.5.2"
 compose-compiler = "1.4.8"
 composeVersion = "1.4.2"
 coreTestingVersion = "2.2.0"
-androidx-compose-bom = "2023.09.02" #Compose  Compose Bill of Materials (BOM)
-androidx-activity-compose = "1.7.2"
+androidx-compose-bom = "2023.10.00" #Compose  Compose Bill of Materials (BOM)
+androidx-activity-compose = "1.8.0"
 composeUi = "1.3.1"
 composeUiTooling = "1.4.2"
-navigationComposeVersion = "2.7.3"
+navigationComposeVersion = "2.7.4"
 composeViewModel = "2.6.2"
 
 # Play Services
