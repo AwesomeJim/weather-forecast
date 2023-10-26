@@ -128,6 +128,7 @@ android {
                 "META-INF/LICENSE-notice.md")
         }
     }
+
     testOptions {
         packaging {
             jniLibs {
