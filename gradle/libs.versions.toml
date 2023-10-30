@@ -4,8 +4,8 @@ android-gradle-plugin = "8.1.2"
 kotlin-android = "1.8.22"
 hilt-plugin = "2.48.1"
 ksp = "1.8.22-1.0.11"
-mapsCompose = "2.15.0"
-mapsComposeUtils = "2.15.0"
+mapsCompose = "4.1.1"
+mapsComposeUtils = "4.1.1"
 mapsplatform-secrets = "2.0.1"
 kotlin-serialization = "1.6.10"
 gradlePlugins-spotless = "6.17.0" #or latest version
@@ -18,7 +18,7 @@ jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
-hiltAndroidCompiler = "2.48"
+hiltAndroidCompiler = "2.48.1"
 hiltAndroidTesting = "2.48.1"
 hilt-nav-compose = "1.0.0"
 
@@ -66,9 +66,9 @@ roomRuntime = "2.6.0"
 
 #--------Others ----------
 materialVersion = "1.9.0"
-lottie = "6.0.1"
+lottie = "6.1.0"
 timber = "5.0.1"
-lottieCompose = "6.0.0"
+lottieCompose = "6.1.0"
 
 junit4 = "4.13.2"
 junit = "1.1.5"
