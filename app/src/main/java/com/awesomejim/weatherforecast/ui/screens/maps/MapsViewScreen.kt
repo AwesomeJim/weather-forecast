@@ -222,4 +222,8 @@ data class LocationItem(
     override fun getSnippet(): String =
         itemSnippet
 
+    override fun getZIndex(): Float? {
+        TODO("Not yet implemented")
+    }
+
 }

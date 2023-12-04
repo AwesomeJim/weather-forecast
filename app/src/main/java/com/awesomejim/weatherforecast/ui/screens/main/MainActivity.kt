@@ -101,7 +101,6 @@ class MainActivity : ComponentActivity() {
                 val title = rememberSaveable { (mutableStateOf("")) }
                 val canNavigateBackState = rememberSaveable { (mutableStateOf(false)) }
                 val refreshButtonState = rememberSaveable { (mutableStateOf(false)) }
-
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 when (navBackStackEntry?.destination?.route) {
