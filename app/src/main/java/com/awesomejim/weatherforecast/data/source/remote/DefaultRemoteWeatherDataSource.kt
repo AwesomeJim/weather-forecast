@@ -8,6 +8,7 @@ import com.awesomejim.weatherforecast.di.network.RetrialResult
 import com.awesomejim.weatherforecast.di.network.mapResponseCodeToThrowable
 import com.awesomejim.weatherforecast.di.network.toCoreModel
 import com.awesomejim.weatherforecast.di.network.toLocationItemDataList
+import com.awesomejim.weatherforecast.utilities.printTrace
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,6 +37,7 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
                 "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
                 e.message
             )
+            printTrace(e)
             throw e
         }
 
@@ -61,6 +63,7 @@ class DefaultRemoteWeatherDataSource @Inject constructor(
                 "<<<<<<<<<fetchWeatherDataWithCoordinates Exception>>>>>>>>>>: %s",
                 e.message
             )
+            printTrace(e)
             throw e
         }
 

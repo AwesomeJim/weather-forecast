@@ -1,11 +1,11 @@
 [versions]
 # --------plugins--------
-android-gradle-plugin = "8.1.3"
-kotlin-android = "1.8.22"
-hilt-plugin = "2.48.1"
-ksp = "1.8.22-1.0.11"
-mapsCompose = "4.2.0"
-mapsComposeUtils = "4.2.0"
+android-gradle-plugin = "8.2.0"
+kotlin-android = "1.9.10"
+hilt-plugin = "2.49"
+ksp = "1.9.10-1.0.13"
+mapsCompose = "4.3.0"
+mapsComposeUtils = "4.3.0"
 mapsplatform-secrets = "2.0.1"
 kotlin-serialization = "1.6.10"
 gradlePlugins-spotless = "6.17.0" #or latest version
@@ -18,8 +18,8 @@ jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
-hiltAndroidCompiler = "2.48.1"
-hiltAndroidTesting = "2.48.1"
+hiltAndroidCompiler = "2.49"
+hiltAndroidTesting = "2.49"
 hilt-nav-compose = "1.1.0"
 
 # --------androidx--------
@@ -39,11 +39,11 @@ rules="1.5.0"
 runner="1.5.2"
 
 # --------Jetpack Compose--------
-compose-compiler = "1.4.8"
+compose-compiler = "1.5.3"
 composeVersion = "1.4.2"
 coreTestingVersion = "2.2.0"
 androidx-compose-bom = "2023.10.01" #Compose  Compose Bill of Materials (BOM)
-androidx-activity-compose = "1.8.0"
+androidx-activity-compose = "1.8.1"
 composeUi = "1.3.1"
 composeUiTooling = "1.4.2"
 navigationComposeVersion = "2.7.5"
@@ -55,20 +55,20 @@ play-services-location = "21.0.1"
 #-------- Networking-------------
 retrofit = "2.9.0"
 coil-compose = "2.5.0"
-kotlinx-serialization = "1.6.1"
+kotlinx-serialization = "1.6.2"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines-android = "1.7.3"
-okhttp = "4.11.0"
+okhttp = "4.12.0"
 
 #--------Room DB --------
 roomCompiler = "2.5.2"
-roomRuntime = "2.6.0"
+roomRuntime = "2.6.1"
 
 #--------Others ----------
 materialVersion = "1.9.0"
-lottie = "6.1.0"
+lottie = "6.2.0"
 timber = "5.0.1"
-lottieCompose = "6.1.0"
+lottieCompose = "6.2.0"
 
 junit4 = "4.13.2"
 junit = "1.1.5"
@@ -177,7 +177,6 @@ mock-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
 com-android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-android" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-android" }
 org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-android" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-plugin" }
