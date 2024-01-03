@@ -1,5 +1,5 @@
 
-package com.awesomejim.weatherforecast.data.source.local.converter
+package com.awesomejim.weatherforecast.core.database.converter
 
 import androidx.room.TypeConverter
 import java.util.Date

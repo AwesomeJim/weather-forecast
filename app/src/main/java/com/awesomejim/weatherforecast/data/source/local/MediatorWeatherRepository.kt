@@ -1,8 +1,8 @@
 package com.awesomejim.weatherforecast.data.source.local
 
+import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationEntity
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.data.source.remote.RemoteDataSource
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MediatorWeatherRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val networkHelper: NetworkHelper,
-    private val locationItemDao: LocationItemDao
+    private val locationItemDao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 ) : MediatorRepository {
     /**
      * Fetch weather data with coordinates

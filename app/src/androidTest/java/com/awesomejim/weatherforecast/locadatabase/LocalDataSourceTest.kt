@@ -2,8 +2,8 @@ package com.awesomejim.weatherforecast.locadatabase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
-import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
-import com.awesomejim.weatherforecast.data.source.local.db.LocationDatabase
+import com.awesomejim.weatherforecast.core.database.LocationDatabase
+import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationEntity
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.fake.FakeLocalDataSource
@@ -31,8 +31,8 @@ class LocalDataSourceTest {
 
     @Inject
     @Named("test_db")
-    lateinit var database: LocationDatabase
-    private lateinit var locationItemDao: LocationItemDao
+    lateinit var database: com.awesomejim.weatherforecast.core.database.LocationDatabase
+    private lateinit var locationItemDao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 
     @Before
     fun setup() {

@@ -1,40 +1,41 @@
 package com.awesomejim.weatherforecast.data.source.mapper
 
+import com.awesomejim.weatherforecast.core.database.entity.LocationItemEntity
+import com.awesomejim.weatherforecast.core.database.entity.WeatherStatusInfoEntity
 import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
 import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
-import com.awesomejim.weatherforecast.data.source.local.entity.LocationItemEntity
-import com.awesomejim.weatherforecast.data.source.local.entity.WeatherStatusInfoEntity
 import com.awesomejim.weatherforecast.di.network.getFormattedWind
 
-fun LocationItemData.toLocationEntity() = LocationItemEntity(
-    locationId = locationId,
-    locationName = locationName,
-    locationTimeZoneShift = locationTimeZoneShift,
-    locationDataTime = locationDataTime,
-    locationLongitude = locationLongitude,
-    locationLatitude = locationLatitude,
-    locationWeatherDay = locationWeatherDay,
-    locationDataLastUpdate = locationDataLastUpdate,
-    isFavorite = false,
-    locationWeatherInfo = WeatherStatusInfoEntity(
-        weatherConditionId = locationWeatherInfo.weatherConditionId,
-        weatherCondition = locationWeatherInfo.weatherCondition,
-        weatherConditionDescription = locationWeatherInfo.weatherConditionDescription,
-        weatherConditionIcon = locationWeatherInfo.weatherConditionIcon,
-        weatherTemp = locationWeatherInfo.weatherTemp,
-        weatherTempMin = locationWeatherInfo.weatherTempMin,
-        weatherTempMax = locationWeatherInfo.weatherTempMax,
-        weatherTempFeelsLike = locationWeatherInfo.weatherTempFeelsLike,
-        weatherPressure = locationWeatherInfo.weatherPressure,
-        weatherHumidity = locationWeatherInfo.weatherHumidity,
-        weatherWindSpeed = locationWeatherInfo.weatherWindSpeed,
-        weatherWindDegrees = locationWeatherInfo.weatherWindDegrees,
-        weatherVisibility = locationWeatherInfo.weatherVisibility
+fun LocationItemData.toLocationEntity() =
+    com.awesomejim.weatherforecast.core.database.entity.LocationItemEntity(
+        locationId = locationId,
+        locationName = locationName,
+        locationTimeZoneShift = locationTimeZoneShift,
+        locationDataTime = locationDataTime,
+        locationLongitude = locationLongitude,
+        locationLatitude = locationLatitude,
+        locationWeatherDay = locationWeatherDay,
+        locationDataLastUpdate = locationDataLastUpdate,
+        isFavorite = false,
+        locationWeatherInfo = com.awesomejim.weatherforecast.core.database.entity.WeatherStatusInfoEntity(
+            weatherConditionId = locationWeatherInfo.weatherConditionId,
+            weatherCondition = locationWeatherInfo.weatherCondition,
+            weatherConditionDescription = locationWeatherInfo.weatherConditionDescription,
+            weatherConditionIcon = locationWeatherInfo.weatherConditionIcon,
+            weatherTemp = locationWeatherInfo.weatherTemp,
+            weatherTempMin = locationWeatherInfo.weatherTempMin,
+            weatherTempMax = locationWeatherInfo.weatherTempMax,
+            weatherTempFeelsLike = locationWeatherInfo.weatherTempFeelsLike,
+            weatherPressure = locationWeatherInfo.weatherPressure,
+            weatherHumidity = locationWeatherInfo.weatherHumidity,
+            weatherWindSpeed = locationWeatherInfo.weatherWindSpeed,
+            weatherWindDegrees = locationWeatherInfo.weatherWindDegrees,
+            weatherVisibility = locationWeatherInfo.weatherVisibility
+        )
     )
-)
 
-fun LocationItemEntity.toLocationItem(addSummary: Boolean = true): LocationItemData {
+fun com.awesomejim.weatherforecast.core.database.entity.LocationItemEntity.toLocationItem(addSummary: Boolean = true): LocationItemData {
     val locationItemData = LocationItemData(
         locationName = locationName,
         locationId = locationId,

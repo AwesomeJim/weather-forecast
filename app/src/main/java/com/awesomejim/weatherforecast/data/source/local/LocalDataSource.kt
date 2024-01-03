@@ -1,7 +1,7 @@
 package com.awesomejim.weatherforecast.data.source.local
 
+import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationEntity
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class LocalDataSource @Inject constructor(private val locationItemDao: LocationItemDao) {
+class LocalDataSource @Inject constructor(private val locationItemDao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao) {
 
     suspend fun getLocationDataById(id: Long): LocationItemData? = withContext(Dispatchers.IO) {
         return@withContext locationItemDao.getLocationById(id)?.toLocationItem()

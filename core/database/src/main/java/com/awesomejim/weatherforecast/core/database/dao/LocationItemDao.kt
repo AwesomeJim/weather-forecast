@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.data.source.local.dao
+package com.awesomejim.weatherforecast.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.awesomejim.weatherforecast.data.source.local.entity.LocationItemEntity
+import com.awesomejim.weatherforecast.core.database.entity.LocationItemEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

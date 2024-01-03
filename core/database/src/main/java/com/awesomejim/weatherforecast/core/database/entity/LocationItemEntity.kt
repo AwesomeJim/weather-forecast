@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.data.source.local.entity
+package com.awesomejim.weatherforecast.core.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded

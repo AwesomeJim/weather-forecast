@@ -2,11 +2,11 @@ package com.awesomejim.weatherforecast.remote
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import com.awesomejim.weatherforecast.core.database.LocationDatabase
+import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 import com.awesomejim.weatherforecast.data.model.DefaultLocation
 import com.awesomejim.weatherforecast.data.source.local.MediatorRepository
 import com.awesomejim.weatherforecast.data.source.local.MediatorWeatherRepository
-import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
-import com.awesomejim.weatherforecast.data.source.local.db.LocationDatabase
 import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.data.source.remote.DefaultRemoteWeatherDataSource
 import com.awesomejim.weatherforecast.data.source.remote.RemoteDataSource
@@ -43,8 +43,8 @@ class MediatorWeatherRepositoryTest {
 
     @Inject
     @Named("test_db")
-    lateinit var database: LocationDatabase
-    private lateinit var locationItemDao: LocationItemDao
+    lateinit var database: com.awesomejim.weatherforecast.core.database.LocationDatabase
+    private lateinit var locationItemDao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 
     @Before
     fun setup() {
@@ -107,7 +107,7 @@ class MediatorWeatherRepositoryTest {
         remoteWeatherDataSource: RemoteDataSource = DefaultRemoteWeatherDataSource(
             apiService = mockOpenWeatherService
         ),
-        dao: LocationItemDao = locationItemDao
+        dao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao = locationItemDao
     ): MediatorRepository = MediatorWeatherRepository(
         remoteDataSource = remoteWeatherDataSource,
         networkHelper = networkHelper,

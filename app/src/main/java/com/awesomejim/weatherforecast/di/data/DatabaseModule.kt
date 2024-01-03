@@ -2,8 +2,8 @@ package com.awesomejim.weatherforecast.di.data
 
 import android.content.Context
 import androidx.room.Room
-import com.awesomejim.weatherforecast.data.source.local.dao.LocationItemDao
-import com.awesomejim.weatherforecast.data.source.local.db.LocationDatabase
+import com.awesomejim.weatherforecast.core.database.LocationDatabase
+import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,17 +19,17 @@ class DatabaseModule {
     @Singleton
     fun provideAppDatabase(
         @ApplicationContext appContext: Context
-    ): LocationDatabase {
+    ): com.awesomejim.weatherforecast.core.database.LocationDatabase {
         return Room.databaseBuilder(
             appContext,
-            LocationDatabase::class.java,
+            com.awesomejim.weatherforecast.core.database.LocationDatabase::class.java,
             "weather_forecast_db"
         ).build()
     }
 
     @Provides
     @Singleton
-    fun provideLocationDao(appDatabase: LocationDatabase): LocationItemDao {
+    fun provideLocationDao(appDatabase: com.awesomejim.weatherforecast.core.database.LocationDatabase): com.awesomejim.weatherforecast.core.database.dao.LocationItemDao {
         return appDatabase.locationDao()
     }
 }
