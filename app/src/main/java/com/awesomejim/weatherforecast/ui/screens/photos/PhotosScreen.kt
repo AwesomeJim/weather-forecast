@@ -31,8 +31,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.di.flickr.FlickerPhotoResponse
+import com.awesomejim.weatherforecast.core.network.flickr.FlickerPhotoResponse
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import timber.log.Timber
@@ -40,10 +39,10 @@ import timber.log.Timber
 @Composable
 fun PhotosScreen(
     photosViewModel: PhotosViewModel,
-    defaultLocation: DefaultLocation
+    defaultLocation: com.awesomejim.weatherforecast.core.DefaultLocation
 ) {
     val photosList = photosViewModel.getLocationPhotos(
-        DefaultLocation(
+        com.awesomejim.weatherforecast.core.DefaultLocation(
             longitude = defaultLocation.longitude,
             latitude = defaultLocation.latitude
         )
@@ -111,7 +110,7 @@ fun PhotosScreen(
 }
 
 @Composable
-fun PhotoCard(photo: FlickerPhotoResponse, modifier: Modifier = Modifier) {
+fun PhotoCard(photo: com.awesomejim.weatherforecast.core.network.flickr.FlickerPhotoResponse, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(8.dp)

@@ -1,15 +1,14 @@
 package com.awesomejim.weatherforecast.repository
 
-import com.awesomejim.weatherforecast.data.DefaultWeatherRepository
-import com.awesomejim.weatherforecast.data.WeatherRepository
-import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.source.remote.DefaultRemoteWeatherDataSource
-import com.awesomejim.weatherforecast.data.source.remote.RemoteDataSource
-import com.awesomejim.weatherforecast.di.ApiService
-import com.awesomejim.weatherforecast.di.network.ErrorType
-import com.awesomejim.weatherforecast.di.network.NetworkHelper
-import com.awesomejim.weatherforecast.di.network.RetrialResult
-import com.awesomejim.weatherforecast.di.network.WeatherItemResponse
+import com.awesomejim.weatherforecast.core.data.DefaultWeatherRepository
+import com.awesomejim.weatherforecast.core.data.WeatherRepository
+import com.awesomejim.weatherforecast.core.data.source.remote.DefaultRemoteWeatherDataSource
+import com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource
+import com.awesomejim.weatherforecast.core.network.ApiService
+import com.awesomejim.weatherforecast.core.network.ErrorType
+import com.awesomejim.weatherforecast.core.network.NetworkHelper
+import com.awesomejim.weatherforecast.core.network.RetrialResult
+import com.awesomejim.weatherforecast.core.network.WeatherItemResponse
 import com.awesomejim.weatherforecast.fake.FakeResponseData.fakeSuccessMappedWeatherResponse
 import com.awesomejim.weatherforecast.fake.FakeResponseData.fakeSuccessWeatherResponse
 import com.google.common.truth.Truth
@@ -26,11 +25,11 @@ import java.io.IOException
 class DefaultRemoteWeatherDataSourceTest {
 
     @MockK
-    val mockOpenWeatherService = mockk<ApiService>(relaxed = true)
+    val mockOpenWeatherService = mockk<com.awesomejim.weatherforecast.core.network.ApiService>(relaxed = true)
 
     // 2. Mock Context and NetworkHelper
     @MockK
-    val mockNetworkHelper = mockk<NetworkHelper>()
+    val mockNetworkHelper = mockk<com.awesomejim.weatherforecast.core.network.NetworkHelper>()
 
     @Test
     fun `when we fetch location weather data successfully, a valid mapped result is emitted`() =
@@ -43,7 +42,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.success<WeatherItemResponse>(
+            } returns Response.success<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
                 fakeSuccessWeatherResponse
             )
 
@@ -52,14 +51,14 @@ class DefaultRemoteWeatherDataSourceTest {
             val expectedResult = fakeSuccessMappedWeatherResponse
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Success::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Success).data.locationId)
                 .isEqualTo(expectedResult.locationId)
         }
 
@@ -75,7 +74,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<WeatherItemResponse>(
+            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
                 503,
                 "{}".toResponseBody()
             )
@@ -83,15 +82,15 @@ class DefaultRemoteWeatherDataSourceTest {
             val weatherRepository = createWeatherRepository()
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
-                .isEqualTo(ErrorType.SERVER)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
+                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.SERVER)
         }
 
     @Test
@@ -106,7 +105,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<WeatherItemResponse>(
+            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
                 404,
                 "{}".toResponseBody()
             )
@@ -114,15 +113,15 @@ class DefaultRemoteWeatherDataSourceTest {
             val weatherRepository = createWeatherRepository()
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
-                .isEqualTo(ErrorType.CLIENT)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
+                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.CLIENT)
         }
 
     @Test
@@ -136,7 +135,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<WeatherItemResponse>(
+            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
                 401,
                 "{}".toResponseBody()
             )
@@ -144,16 +143,16 @@ class DefaultRemoteWeatherDataSourceTest {
             val weatherRepository = createWeatherRepository()
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
 
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
-                .isEqualTo(ErrorType.UNAUTHORIZED)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
+                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.UNAUTHORIZED)
         }
 
     @Test
@@ -167,7 +166,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<WeatherItemResponse>(
+            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
                 800,
                 "{}".toResponseBody()
             )
@@ -175,16 +174,16 @@ class DefaultRemoteWeatherDataSourceTest {
             val weatherRepository = createWeatherRepository()
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
 
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
-                .isEqualTo(ErrorType.GENERIC)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
+                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.GENERIC)
         }
 
     @Test
@@ -203,16 +202,16 @@ class DefaultRemoteWeatherDataSourceTest {
             val weatherRepository = createWeatherRepository()
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
 
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
-                .isEqualTo(ErrorType.IO_CONNECTION)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
+                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.IO_CONNECTION)
         }
 
     @Test
@@ -231,24 +230,25 @@ class DefaultRemoteWeatherDataSourceTest {
             val weatherRepository = createWeatherRepository()
 
             val actualResults = weatherRepository.fetchWeatherDataWithCoordinates(
-                defaultLocation = DefaultLocation(
+                defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = -122.084,
                     latitude = 37.4234
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
-                .isEqualTo(ErrorType.GENERIC)
+            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
+                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.GENERIC)
         }
 
     private fun createWeatherRepository(
-        networkHelper: NetworkHelper = mockNetworkHelper,
-        remoteWeatherDataSource: RemoteDataSource = DefaultRemoteWeatherDataSource(
+        networkHelper: com.awesomejim.weatherforecast.core.network.NetworkHelper = mockNetworkHelper,
+        remoteWeatherDataSource: com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource = com.awesomejim.weatherforecast.core.data.source.remote.DefaultRemoteWeatherDataSource(
             apiService = mockOpenWeatherService
         )
-    ): WeatherRepository = DefaultWeatherRepository(
-        remoteDataSource = remoteWeatherDataSource,
-        networkHelper = networkHelper
-    )
+    ): com.awesomejim.weatherforecast.core.data.WeatherRepository =
+        com.awesomejim.weatherforecast.core.data.DefaultWeatherRepository(
+            remoteDataSource = remoteWeatherDataSource,
+            networkHelper = networkHelper
+        )
 }

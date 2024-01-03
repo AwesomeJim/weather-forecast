@@ -2,10 +2,10 @@ package com.awesomejim.weatherforecast.locadatabase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationEntity
+import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.core.database.LocationDatabase
 import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
-import com.awesomejim.weatherforecast.data.source.mapper.toLocationEntity
-import com.awesomejim.weatherforecast.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.fake.FakeLocalDataSource
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule

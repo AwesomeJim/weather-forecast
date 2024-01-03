@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -53,10 +52,9 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
-import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
-import com.awesomejim.weatherforecast.di.network.getFormattedWind
+import com.awesomejim.weatherforecast.core.data.source.mapper.getFormattedWind
+import com.awesomejim.weatherforecast.core.getDate
+import com.awesomejim.weatherforecast.core.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.common.getDate
 import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.ErrorTextWithAction
@@ -68,7 +66,7 @@ import com.awesomejim.weatherforecast.utilities.SampleData
 import com.awesomejim.weatherforecast.utilities.WeatherUtils
 
 @Composable
-private fun CurrentWeatherWidget(currentWeather: LocationItemData, modifier: Modifier) {
+private fun CurrentWeatherWidget(currentWeather: com.awesomejim.weatherforecast.core.LocationItemData, modifier: Modifier) {
     val drawable = WeatherUtils
         .iconIdForWeatherCondition(currentWeather.locationWeatherInfo.weatherConditionId)
 //    val animateTween by rememberInfiniteTransition(label = "").animateFloat(
@@ -248,7 +246,7 @@ fun ConditionsLabelSection(
 
 @Composable
 fun OtherConditionsSection(
-    weatherDetails: WeatherStatusInfo,
+    weatherDetails: com.awesomejim.weatherforecast.core.WeatherStatusInfo,
     modifier: Modifier = Modifier
 ) {
     val humidity =
@@ -260,7 +258,8 @@ fun OtherConditionsSection(
      ****************************/
     /* Read wind speed (in MPH) and direction (in compass degrees) from the cursor  */
 
-    val windDirection: String = getFormattedWind(weatherDetails.weatherWindDegrees)
+    val windDirection: String =
+        com.awesomejim.weatherforecast.core.data.source.mapper.getFormattedWind(weatherDetails.weatherWindDegrees)
     val windString = stringResource(
         id = R.string.format_wind_kmh,
         weatherDetails.weatherWindSpeed.toFloat(),
@@ -310,8 +309,8 @@ fun OtherConditionsSection(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContentScreen(
-    currentWeather: LocationItemData,
-    forecastItem: List<LocationItemData>?,
+    currentWeather: com.awesomejim.weatherforecast.core.LocationItemData,
+    forecastItem: List<com.awesomejim.weatherforecast.core.LocationItemData>?,
     modifier: Modifier = Modifier
 ) {
 //    var bgColor: Color = grey_rainy
@@ -334,7 +333,7 @@ fun HomeContentScreen(
 //    }
 
     // Holds the data that is currently expanded to show its moredetails.
-    var expandedDate by remember { mutableStateOf<LocationItemData?>(null) }
+    var expandedDate by remember { mutableStateOf<com.awesomejim.weatherforecast.core.LocationItemData?>(null) }
 
     LazyColumn(
         modifier = modifier
@@ -399,7 +398,7 @@ fun ForecastItem(
     forecastDate: String,
     tempHigh: String,
     tempLow: String,
-    forecastMoreDetails: ForecastMoreDetails?,
+    forecastMoreDetails: com.awesomejim.weatherforecast.core.ForecastMoreDetails?,
     @DrawableRes drawable: Int,
     expanded: Boolean,
     onClick: () -> Unit,

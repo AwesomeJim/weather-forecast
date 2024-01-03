@@ -3,9 +3,8 @@ package com.awesomejim.weatherforecast.ui.screens.maps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.awesomejim.weatherforecast.data.SettingsRepository
-import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.source.local.LocalDataSource
+import com.awesomejim.weatherforecast.core.data.SettingsRepository
+import com.awesomejim.weatherforecast.core.data.source.local.LocalDataSource
 import com.awesomejim.weatherforecast.ui.screens.search.SavedLocationListUiState
 import com.awesomejim.weatherforecast.ui.screens.search.SearchViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,11 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
-    localDataSource: LocalDataSource,
-    private val settingsRepository: SettingsRepository
+    localDataSource: com.awesomejim.weatherforecast.core.data.source.local.LocalDataSource,
+    private val settingsRepository: com.awesomejim.weatherforecast.core.data.SettingsRepository
 ) : ViewModel() {
 
-     lateinit var currentLocation: DefaultLocation
+     lateinit var currentLocation: com.awesomejim.weatherforecast.core.DefaultLocation
 
     init {
         viewModelScope.launch {

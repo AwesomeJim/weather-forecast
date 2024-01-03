@@ -2,7 +2,7 @@ package com.awesomejim.weatherforecast.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.awesomejim.weatherforecast.data.SettingsRepository
+import com.awesomejim.weatherforecast.core.data.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: com.awesomejim.weatherforecast.core.data.SettingsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsScreenViewState())

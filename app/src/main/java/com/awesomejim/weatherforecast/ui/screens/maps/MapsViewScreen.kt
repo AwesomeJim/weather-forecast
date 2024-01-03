@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
@@ -80,7 +79,7 @@ fun MapsViewScreen(
 
 @Composable
 fun MapsViewContent(
-    exploreList: List<LocationItemData>,
+    exploreList: List<com.awesomejim.weatherforecast.core.LocationItemData>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -93,7 +92,7 @@ fun MapsViewContent(
 }
 
 @Composable
-fun GoogleMapCreateClusters(exploreList: List<LocationItemData>) {
+fun GoogleMapCreateClusters(exploreList: List<com.awesomejim.weatherforecast.core.LocationItemData>) {
     val items = remember { mutableStateListOf<LocationItem>() }
     LaunchedEffect(Unit) {
         for (item in exploreList) {

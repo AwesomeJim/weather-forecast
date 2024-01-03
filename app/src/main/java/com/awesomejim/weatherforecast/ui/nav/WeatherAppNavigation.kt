@@ -28,8 +28,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem.LocationPhotos.locationLatTypeArg
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem.LocationPhotos.locationlogTypeArg
@@ -161,7 +159,7 @@ fun NavigationGraph(
                 navBackStackEntry.arguments?.getFloat(locationLatTypeArg)
             val longitude =
                 navBackStackEntry.arguments?.getFloat(locationlogTypeArg)
-            val defaultLocation = DefaultLocation(
+            val defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                 longitude = longitude?.toDouble() ?: 0.0,
                 latitude = latitude?.toDouble() ?: 0.0
             )
@@ -215,7 +213,7 @@ fun NavigationGraph(
     }
 }
 
-private fun NavHostController.navigateToViewPhotos(locationItemData: LocationItemData) {
+private fun NavHostController.navigateToViewPhotos(locationItemData: com.awesomejim.weatherforecast.core.LocationItemData) {
     val locationNameTypeArg = locationItemData.locationName
     val locationLatTypeArg = locationItemData.locationLatitude.toFloat()
     val locationLogTypeArg = locationItemData.locationLongitude.toFloat()

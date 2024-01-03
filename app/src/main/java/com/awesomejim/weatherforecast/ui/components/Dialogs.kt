@@ -35,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.LocationItemData
 import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
@@ -114,7 +113,7 @@ fun DialogSearchSuccess(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     @DrawableRes conditionIcon: Int,
-    locationItemData: LocationItemData,
+    locationItemData: com.awesomejim.weatherforecast.core.LocationItemData,
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         // Draw a rectangle shape with rounded corners inside the dialog

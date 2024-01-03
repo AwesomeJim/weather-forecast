@@ -6,13 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.awesomejim.weatherforecast.data.SettingsRepository
-import com.awesomejim.weatherforecast.data.WeatherRepository
-import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.data.source.local.LocalDataSource
-import com.awesomejim.weatherforecast.data.source.local.MediatorRepository
-import com.awesomejim.weatherforecast.di.network.RetrialResult
+import com.awesomejim.weatherforecast.core.data.SettingsRepository
+import com.awesomejim.weatherforecast.core.data.WeatherRepository
+import com.awesomejim.weatherforecast.core.data.source.local.LocalDataSource
+import com.awesomejim.weatherforecast.core.data.source.local.MediatorRepository
+import com.awesomejim.weatherforecast.core.network.RetrialResult
 import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,10 +28,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val defaultWeatherRepository: WeatherRepository,
-    private val settingsRepository: SettingsRepository,
-    private val mediatorRepository: MediatorRepository,
-    private val localDataSource: LocalDataSource
+    private val defaultWeatherRepository: com.awesomejim.weatherforecast.core.data.WeatherRepository,
+    private val settingsRepository: com.awesomejim.weatherforecast.core.data.SettingsRepository,
+    private val mediatorRepository: com.awesomejim.weatherforecast.core.data.source.local.MediatorRepository,
+    private val localDataSource: com.awesomejim.weatherforecast.core.data.source.local.LocalDataSource
 ) : ViewModel() {
 
     private lateinit var preferredUnits: String
@@ -75,7 +73,7 @@ class SearchViewModel @Inject constructor(
      *
      * @param locationItemData location to be saved
      */
-    fun saveLocation(locationItemData: LocationItemData) {
+    fun saveLocation(locationItemData: com.awesomejim.weatherforecast.core.LocationItemData) {
         viewModelScope.launch {
             localDataSource.insertLocation(locationItemData)
         }
@@ -85,7 +83,7 @@ class SearchViewModel @Inject constructor(
      * Removes an location from the db.
      * @param locationItemData The location Item to be removed.
      */
-    fun deleteLocationItem(locationItemData: LocationItemData) {
+    fun deleteLocationItem(locationItemData: com.awesomejim.weatherforecast.core.LocationItemData) {
         viewModelScope.launch {
             localDataSource.deleteLocation(locationItemData)
         }
@@ -96,9 +94,9 @@ class SearchViewModel @Inject constructor(
      *
      * @param locationItemData
      */
-    fun refreshWeatherData(locationItemData: LocationItemData) {
+    fun refreshWeatherData(locationItemData: com.awesomejim.weatherforecast.core.LocationItemData) {
         viewModelScope.launch {
-            val location = DefaultLocation(
+            val location = com.awesomejim.weatherforecast.core.DefaultLocation(
                 longitude = locationItemData.locationLongitude,
                 latitude = locationItemData.locationLatitude
             )
@@ -109,11 +107,11 @@ class SearchViewModel @Inject constructor(
             )
             Timber.e("fetchWeatherDataWithCoordinates result:: $result")
             when (result) {
-                is RetrialResult.Success -> {
+                is com.awesomejim.weatherforecast.core.network.RetrialResult.Success -> {
                     Timber.e("weatherData result:: ${result.data}")
                 }
 
-                is RetrialResult.Error -> {
+                is com.awesomejim.weatherforecast.core.network.RetrialResult.Error -> {
                     Timber.e("Error :: ${result.errorType.toResourceId()}")
                 }
             }
@@ -172,7 +170,7 @@ class SearchViewModel @Inject constructor(
             )
             Timber.e("fetchWeatherDataWithCoordinates result:: $result")
             when (result) {
-                is RetrialResult.Success -> {
+                is com.awesomejim.weatherforecast.core.network.RetrialResult.Success -> {
                     val weatherData = result.data
                     Timber.e("weatherData result:: ${result.data}")
                     _uiState.update { currentState ->
@@ -186,7 +184,7 @@ class SearchViewModel @Inject constructor(
                     }
                 }
 
-                is RetrialResult.Error -> {
+                is com.awesomejim.weatherforecast.core.network.RetrialResult.Error -> {
                     Timber.e("Error :: ${result.errorType.toResourceId()}")
                     _uiState.update { currentState ->
                         currentState.copy(
@@ -223,4 +221,4 @@ class SearchViewModel @Inject constructor(
 /**
  * Saved data Ui State for HomeScreen
  */
-data class SavedLocationListUiState(val itemList: List<LocationItemData> = listOf())
+data class SavedLocationListUiState(val itemList: List<com.awesomejim.weatherforecast.core.LocationItemData> = listOf())

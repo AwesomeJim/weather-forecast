@@ -1,10 +1,10 @@
 package com.awesomejim.weatherforecast.utilities
 
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
-import com.awesomejim.weatherforecast.data.model.HourlyWeatherData
-import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.data.model.WeatherStatusInfo
+import com.awesomejim.weatherforecast.core.ForecastMoreDetails
+import com.awesomejim.weatherforecast.core.HourlyWeatherData
+import com.awesomejim.weatherforecast.core.LocationItemData
+import com.awesomejim.weatherforecast.core.WeatherStatusInfo
 import java.util.Date
 
 object SampleData {

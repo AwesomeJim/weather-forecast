@@ -74,7 +74,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.LocationItemData
+import com.awesomejim.weatherforecast.core.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.DialogSearchSuccess
 import com.awesomejim.weatherforecast.ui.components.DismissBackground
@@ -93,7 +93,7 @@ import timber.log.Timber
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel,
-    onViewPhotosClick: (LocationItemData) -> Unit = {},
+    onViewPhotosClick: (com.awesomejim.weatherforecast.core.LocationItemData) -> Unit = {},
     onViewOnMapClick: () -> Unit = {}
 ) {
     val savedLocationListUiState = searchViewModel
@@ -256,12 +256,12 @@ private fun LazyListState.isScrollingUp(): Boolean {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableLocationItem(
-    locationItemData: LocationItemData,
+    locationItemData: com.awesomejim.weatherforecast.core.LocationItemData,
     @DrawableRes conditionIcon: Int,
     modifier: Modifier = Modifier,
-    onRefresh: (LocationItemData) -> Unit,
-    onRemove: (LocationItemData) -> Unit,
-    onViewPhotosClick: (LocationItemData) -> Unit
+    onRefresh: (com.awesomejim.weatherforecast.core.LocationItemData) -> Unit,
+    onRemove: (com.awesomejim.weatherforecast.core.LocationItemData) -> Unit,
+    onViewPhotosClick: (com.awesomejim.weatherforecast.core.LocationItemData) -> Unit
 ) {
     val context = LocalContext.current
     var show by remember { mutableStateOf(true) }
@@ -403,8 +403,8 @@ fun SearchBar(
 @Composable
 fun SavedLocationItem(
     @DrawableRes conditionIcon: Int,
-    locationItemData: LocationItemData,
-    onViewPhotosClick: (LocationItemData) -> Unit,
+    locationItemData: com.awesomejim.weatherforecast.core.LocationItemData,
+    onViewPhotosClick: (com.awesomejim.weatherforecast.core.LocationItemData) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }

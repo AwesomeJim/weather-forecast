@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,14 +33,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.data.model.ForecastMoreDetails
-import com.awesomejim.weatherforecast.data.model.HourlyWeatherData
 import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.SampleData
 
 @Composable
 fun ForecastMoreDetails(
-    forecastMoreDetails: ForecastMoreDetails,
+    forecastMoreDetails: com.awesomejim.weatherforecast.core.ForecastMoreDetails,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -88,7 +85,7 @@ fun ForecastMoreDetails(
 
 @Composable
 fun HourlyDataElement(
-    hourlyWeatherData: HourlyWeatherData,
+    hourlyWeatherData: com.awesomejim.weatherforecast.core.HourlyWeatherData,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -123,7 +120,7 @@ fun HourlyDataElement(
 @Composable
 fun LineChart(
     modifier: Modifier,
-    hourlyWeatherData: List<HourlyWeatherData>
+    hourlyWeatherData: List<com.awesomejim.weatherforecast.core.HourlyWeatherData>
 ) {
     val lineColor = MaterialTheme.colorScheme.primary
     Spacer(
@@ -159,7 +156,7 @@ fun LineChart(
 
 }
 
-fun generateSmoothPath(hourlyWeatherData: List<HourlyWeatherData>, size: Size): Path {
+fun generateSmoothPath(hourlyWeatherData: List<com.awesomejim.weatherforecast.core.HourlyWeatherData>, size: Size): Path {
     val path = Path()
     val numberEntries = hourlyWeatherData.size - 1
     val weekWidth = size.width / numberEntries
@@ -200,7 +197,7 @@ fun generateSmoothPath(hourlyWeatherData: List<HourlyWeatherData>, size: Size): 
 
 @Composable
 fun HourlyDataElementRow(
-    hourlyWeatherData: List<HourlyWeatherData>,
+    hourlyWeatherData: List<com.awesomejim.weatherforecast.core.HourlyWeatherData>,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -216,7 +213,7 @@ fun HourlyDataElementRow(
 
 @Composable
 fun ForecastMoreDetailsSection(
-    forecastMoreDetails: ForecastMoreDetails,
+    forecastMoreDetails: com.awesomejim.weatherforecast.core.ForecastMoreDetails,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -244,7 +241,7 @@ fun ForecastMoreDetailsSection(
 @Composable
 fun HourlyDataElementPreview() {
     WeatherForecastTheme {
-        val hourlyWeatherData = HourlyWeatherData(
+        val hourlyWeatherData = com.awesomejim.weatherforecast.core.HourlyWeatherData(
             temperature = "23*",
             drawableIcon = R.drawable.art_light_rain,
             hourTime = "16:00"
@@ -266,7 +263,7 @@ fun HourlyDataElementPreview() {
 @Composable
 fun ForecastMoreDetailsPreview() {
     WeatherForecastTheme {
-        val forecastMoreDetails = ForecastMoreDetails(
+        val forecastMoreDetails = com.awesomejim.weatherforecast.core.ForecastMoreDetails(
             windDetails = "dolore",
             humidityDetails = "malorum",
             visibilityDetails = "libero",
