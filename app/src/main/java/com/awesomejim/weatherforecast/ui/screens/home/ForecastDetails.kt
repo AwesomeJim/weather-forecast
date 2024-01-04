@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,57 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.core.HourlyWeatherData
+import com.awesomejim.weatherforecast.feature.bookmarks.ForecastMoreDetails
 
-@Composable
-fun ForecastMoreDetails(
-    forecastMoreDetails: com.awesomejim.weatherforecast.core.ForecastMoreDetails,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(horizontal = 2.dp, vertical = 2.dp)
-            .fillMaxWidth()
-    ) {
-        Column(modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)) {
-            ConditionsLabelSection(modifier, R.drawable.ic_wind, R.string.wind_label)
-            ConditionsLabelSection(modifier, R.drawable.ic_humidity, R.string.humidity_label)
-            ConditionsLabelSection(modifier, R.drawable.ic_visibility, R.string.visibility_label)
-            ConditionsLabelSection(modifier, R.drawable.ic_pressure, R.string.pressure_label)
-        }
-        Column(modifier = modifier.padding(horizontal = 4.dp, vertical = 4.dp)) {
-            Text(
-                text = forecastMoreDetails.windDetails,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-            )
-            Text(
-                text = forecastMoreDetails.humidityDetails,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-            )
-            Text(
-                text = forecastMoreDetails.visibilityDetails,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-            )
-            Text(
-                text = forecastMoreDetails.pressureDetails,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-            )
-        }
-    }
-}
 
 @Composable
 fun HourlyDataElement(
-    hourlyWeatherData: com.awesomejim.weatherforecast.core.HourlyWeatherData,
+    hourlyWeatherData: HourlyWeatherData,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -119,7 +73,7 @@ fun HourlyDataElement(
 @Composable
 fun LineChart(
     modifier: Modifier,
-    hourlyWeatherData: List<com.awesomejim.weatherforecast.core.HourlyWeatherData>
+    hourlyWeatherData: List<HourlyWeatherData>
 ) {
     val lineColor = MaterialTheme.colorScheme.primary
     Spacer(
@@ -155,7 +109,7 @@ fun LineChart(
 
 }
 
-fun generateSmoothPath(hourlyWeatherData: List<com.awesomejim.weatherforecast.core.HourlyWeatherData>, size: Size): Path {
+fun generateSmoothPath(hourlyWeatherData: List<HourlyWeatherData>, size: Size): Path {
     val path = Path()
     val numberEntries = hourlyWeatherData.size - 1
     val weekWidth = size.width / numberEntries
@@ -196,7 +150,7 @@ fun generateSmoothPath(hourlyWeatherData: List<com.awesomejim.weatherforecast.co
 
 @Composable
 fun HourlyDataElementRow(
-    hourlyWeatherData: List<com.awesomejim.weatherforecast.core.HourlyWeatherData>,
+    hourlyWeatherData: List<HourlyWeatherData>,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -212,7 +166,7 @@ fun HourlyDataElementRow(
 
 @Composable
 fun ForecastMoreDetailsSection(
-    forecastMoreDetails: com.awesomejim.weatherforecast.core.ForecastMoreDetails,
+    forecastMoreDetailsItem: com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -221,13 +175,13 @@ fun ForecastMoreDetailsSection(
             .padding(horizontal = 1.dp, vertical = 4.dp)
             .fillMaxWidth()
     ) {
-        ForecastMoreDetails(forecastMoreDetails)
+        ForecastMoreDetails(forecastMoreDetailsItem)
         LineChart(
             modifier = modifier
                 .height(50.dp)
-                .fillMaxWidth(), forecastMoreDetails.hourlyWeatherData
+                .fillMaxWidth(), forecastMoreDetailsItem.hourlyWeatherData
         )
-        HourlyDataElementRow(forecastMoreDetails.hourlyWeatherData)
+        HourlyDataElementRow(forecastMoreDetailsItem.hourlyWeatherData)
     }
 }
 
@@ -262,7 +216,7 @@ fun HourlyDataElementPreview() {
 @Composable
 fun ForecastMoreDetailsPreview() {
     com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
-        val forecastMoreDetails = com.awesomejim.weatherforecast.core.ForecastMoreDetails(
+        val forecastMoreDetailsItem = com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem(
             windDetails = "dolore",
             humidityDetails = "malorum",
             visibilityDetails = "libero",
@@ -270,7 +224,7 @@ fun ForecastMoreDetailsPreview() {
             emptyList()
         )
         ForecastMoreDetails(
-            forecastMoreDetails
+            forecastMoreDetailsItem
         )
     }
 }
@@ -300,6 +254,6 @@ fun HourlyDataElementRowPreview() {
 @Composable
 fun ForecastMoreDetailsSectionPreview() {
     com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
-        ForecastMoreDetailsSection(com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetails)
+        ForecastMoreDetailsSection(com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetailsItem)
     }
 }

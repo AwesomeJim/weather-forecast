@@ -34,9 +34,9 @@ class MainViewModel @Inject constructor(
         _currentWeatherUiState.asStateFlow()
 
     private val _forecastListState =
-        MutableStateFlow<List<com.awesomejim.weatherforecast.core.LocationItemData>>(emptyList())
+        MutableStateFlow<List<LocationItemData>>(emptyList())
 
-    val forecastListState: StateFlow<List<com.awesomejim.weatherforecast.core.LocationItemData>> =
+    val forecastListState: StateFlow<List<LocationItemData>> =
         _forecastListState.asStateFlow()
 
     init {
@@ -191,7 +191,7 @@ sealed class MainViewUiState {
 }
 
 sealed interface CurrentWeatherUiState {
-    data class Success(val currentWeather: com.awesomejim.weatherforecast.core.LocationItemData) : CurrentWeatherUiState
+    data class Success(val currentWeather: LocationItemData) : CurrentWeatherUiState
     data class Error(val errorMessageId: Int) : CurrentWeatherUiState
     object Loading : CurrentWeatherUiState
 }

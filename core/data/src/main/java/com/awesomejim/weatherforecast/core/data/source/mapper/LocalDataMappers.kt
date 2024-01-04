@@ -1,6 +1,6 @@
 package com.awesomejim.weatherforecast.core.data.source.mapper
 
-import com.awesomejim.weatherforecast.core.ForecastMoreDetails
+import com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem
 import com.awesomejim.weatherforecast.core.LocationItemData
 import com.awesomejim.weatherforecast.core.WeatherStatusInfo
 import com.awesomejim.weatherforecast.core.database.entity.LocationItemEntity
@@ -64,7 +64,7 @@ fun LocationItemEntity.toLocationItem(addSummary: Boolean = true): LocationItemD
         val windDirection =
             getFormattedWind(locationItemData.locationWeatherInfo.weatherWindDegrees)
         val visibility = locationItemData.locationWeatherInfo.weatherVisibility / 1000
-        val forecastMoreDetails = ForecastMoreDetails(
+        val forecastMoreDetailsItem = ForecastMoreDetailsItem(
             windDetails = "%1\$1.0f km/h %2\$s".format(
                 locationItemData.locationWeatherInfo.weatherWindSpeed.toFloat(),
                 windDirection
@@ -77,7 +77,7 @@ fun LocationItemEntity.toLocationItem(addSummary: Boolean = true): LocationItemD
             hourlyWeatherData = listOf()
         )
 
-        locationItemData.forecastMoreDetails = forecastMoreDetails
+        locationItemData.forecastMoreDetailsItem = forecastMoreDetailsItem
     }
     return locationItemData
 }

@@ -12,7 +12,7 @@ data class LocationItemData(
     val locationWeatherInfo: WeatherStatusInfo,
     val locationWeatherDay: Int,
     val locationDataLastUpdate: Date,
-    var forecastMoreDetails: ForecastMoreDetails? = null
+    var forecastMoreDetailsItem: ForecastMoreDetailsItem? = null
 )
 
 data class WeatherStatusInfo(

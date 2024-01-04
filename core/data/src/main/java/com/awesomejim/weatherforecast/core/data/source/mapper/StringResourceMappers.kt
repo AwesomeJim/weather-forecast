@@ -2,7 +2,7 @@ package com.awesomejim.weatherforecast.core.data.source.mapper
 
 import androidx.annotation.StringRes
 import com.awesomejim.weatherforecast.core.data.R
-import com.awesomejim.weatherforecast.core.network.ErrorType
+import com.awesomejim.weatherforecast.core.data.utils.ErrorType
 
 @StringRes
 fun ErrorType.toResourceId(): Int = when (this) {

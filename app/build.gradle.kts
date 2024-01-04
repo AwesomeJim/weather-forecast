@@ -186,26 +186,6 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
 
-    //-----------PAGING------------------
-    implementation(libs.androidx.paging.common.ktx)
-    implementation(libs.androidx.paging.common)
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.paging.compose)
-
-
-    //-----------Google Play Services & Maps------------------
-    implementation(libs.playservices.location)
-    implementation(libs.maps.compose)
-    // Optionally, you can include the Compose utils library for Clustering, etc.
-    implementation(libs.maps.compose.utils)
-
-    constraints {
-        // Volley is a transitive dependency of maps
-        implementation("com.android.volley:volley:1.2.1") {
-            because("Only volley 1.2.0 or newer are available on maven.google.com")
-        }
-    }
-
 
     implementation(project(":core:model"))
     implementation(project(":core:data"))

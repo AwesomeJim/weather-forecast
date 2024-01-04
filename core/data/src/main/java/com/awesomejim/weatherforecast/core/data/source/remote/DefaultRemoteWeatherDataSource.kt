@@ -5,8 +5,8 @@ import com.awesomejim.weatherforecast.core.data.BuildConfig
 import com.awesomejim.weatherforecast.core.data.source.mapper.mapResponseCodeToThrowable
 import com.awesomejim.weatherforecast.core.data.source.mapper.toCoreModel
 import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationItemDataList
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import com.awesomejim.weatherforecast.core.network.ApiService
-import com.awesomejim.weatherforecast.core.network.RetrialResult
 import com.awesomejim.weatherforecast.core.printTrace
 import timber.log.Timber
 import javax.inject.Inject

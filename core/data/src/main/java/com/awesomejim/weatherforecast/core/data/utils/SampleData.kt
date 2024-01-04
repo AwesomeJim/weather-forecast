@@ -1,7 +1,7 @@
 package com.awesomejim.weatherforecast.core.data.utils
 
 
-import com.awesomejim.weatherforecast.core.ForecastMoreDetails
+import com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem
 import com.awesomejim.weatherforecast.core.HourlyWeatherData
 import com.awesomejim.weatherforecast.core.LocationItemData
 import com.awesomejim.weatherforecast.core.WeatherStatusInfo
@@ -61,7 +61,7 @@ object SampleData {
         )
     )
 
-    val forecastMoreDetails = ForecastMoreDetails(
+    val forecastMoreDetailsItem = ForecastMoreDetailsItem(
         windDetails = "dolore",
         humidityDetails = "malorum",
         visibilityDetails = "libero",
@@ -92,7 +92,7 @@ object SampleData {
             weatherVisibility = 86.87
         ),
         locationWeatherDay = 5771,
-        forecastMoreDetails = forecastMoreDetails,
+        forecastMoreDetailsItem = forecastMoreDetailsItem,
         locationDataLastUpdate = Date()
     )
 

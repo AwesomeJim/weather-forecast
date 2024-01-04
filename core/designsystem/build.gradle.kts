@@ -41,6 +41,10 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
 
+    //------------Lottie Amazing Animations ----------
+    implementation(libs.lottie)
+    implementation(libs.lottie.compose)
+
     testImplementation(libs.test.junit4)
     androidTestImplementation(libs.test.androidx.junit)
     androidTestImplementation(libs.test.androidx.test.espresso.core)

@@ -21,14 +21,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,12 +48,14 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.core.designsystem.component.ConditionsLabelSection
+import com.awesomejim.weatherforecast.core.designsystem.component.ErrorTextWithAction
+import com.awesomejim.weatherforecast.core.designsystem.component.ExpandItemButton
+import com.awesomejim.weatherforecast.core.designsystem.component.LoadingProgressScreens
+import com.awesomejim.weatherforecast.core.designsystem.component.Subtitle
+import com.awesomejim.weatherforecast.core.designsystem.component.SubtitleSmall
 import com.awesomejim.weatherforecast.core.getDate
 import com.awesomejim.weatherforecast.core.getUpdatedOnDate
-import com.awesomejim.weatherforecast.ui.components.ErrorTextWithAction
-import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
-import com.awesomejim.weatherforecast.ui.components.Subtitle
-import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
 
 @Composable
 private fun CurrentWeatherWidget(currentWeather: com.awesomejim.weatherforecast.core.LocationItemData, modifier: Modifier) {
@@ -210,33 +208,7 @@ fun ConditionsSection(
     }
 }
 
-@Composable
-fun ConditionsLabelSection(
-    modifier: Modifier,
-    @DrawableRes drawable: Int,
-    @StringRes conditionLabel: Int
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(horizontal = 2.dp, vertical = 2.dp)
-    ) {
-        Image(
-            painter = painterResource(drawable),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(12.dp),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-        )
-        Text(
-            text = stringResource(conditionLabel),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
 
-        )
-    }
-}
 
 @Composable
 fun OtherConditionsSection(
@@ -369,7 +341,7 @@ fun HomeContentScreen(
                         drawable =
                         com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
                             .iconIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
-                        forecastMoreDetails = item.forecastMoreDetails,
+                        forecastMoreDetailsItem = item.forecastMoreDetails,
                         expanded = expandedDate == item,
                         onClick = {
                             expandedDate = if (expandedDate == item) null else item
@@ -392,7 +364,7 @@ fun ForecastItem(
     forecastDate: String,
     tempHigh: String,
     tempLow: String,
-    forecastMoreDetails: com.awesomejim.weatherforecast.core.ForecastMoreDetails?,
+    forecastMoreDetailsItem: com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem?,
     @DrawableRes drawable: Int,
     expanded: Boolean,
     onClick: () -> Unit,
@@ -466,30 +438,13 @@ fun ForecastItem(
             )
         }
         if (expanded) {
-            forecastMoreDetails?.let {
-                ForecastMoreDetailsSection(forecastMoreDetails)
+            forecastMoreDetailsItem?.let {
+                ForecastMoreDetailsSection(forecastMoreDetailsItem)
             }
         }
     }
 }
 
-@Composable
-fun ExpandItemButton(
-    expanded: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-            contentDescription = stringResource(R.string.expand_button_content_description),
-            tint = MaterialTheme.colorScheme.secondary
-        )
-    }
-}
 
 @Preview(
     showBackground = true,
@@ -570,7 +525,7 @@ fun ForecastItemPreview() {
             tempHigh = "29*",
             tempLow = "12*",
             drawable = R.drawable.art_clear,
-            forecastMoreDetails = com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetails,
+            forecastMoreDetailsItem = com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetailsItem,
             expanded = false,
             onClick = {},
             modifier = Modifier.padding(0.dp)

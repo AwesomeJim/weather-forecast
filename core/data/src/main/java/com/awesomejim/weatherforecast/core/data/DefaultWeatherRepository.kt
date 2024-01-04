@@ -3,10 +3,9 @@ package com.awesomejim.weatherforecast.core.data
 import com.awesomejim.weatherforecast.core.LocationItemData
 import com.awesomejim.weatherforecast.core.data.source.mapper.mapThrowableToErrorType
 import com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource
-import com.awesomejim.weatherforecast.core.network.ErrorType
+import com.awesomejim.weatherforecast.core.data.utils.ErrorType
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import com.awesomejim.weatherforecast.core.network.NetworkHelper
-import com.awesomejim.weatherforecast.core.network.RetrialResult
-
 import timber.log.Timber
 import javax.inject.Inject
 

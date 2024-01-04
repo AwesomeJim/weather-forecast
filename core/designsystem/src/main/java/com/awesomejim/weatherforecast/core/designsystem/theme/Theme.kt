@@ -102,7 +102,7 @@ fun WeatherForecastTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = com.awesomejim.weatherforecast.core.designsystem.AppTypography,
+        typography = AppTypography,
         shapes = Shapes,
         content = content
     )

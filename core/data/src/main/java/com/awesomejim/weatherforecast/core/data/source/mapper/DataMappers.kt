@@ -1,15 +1,17 @@
 package com.awesomejim.weatherforecast.core.data.source.mapper
 
 import com.awesomejim.weatherforecast.core.ClientException
+import com.awesomejim.weatherforecast.core.FlickerPhoto
 import com.awesomejim.weatherforecast.core.GenericException
 import com.awesomejim.weatherforecast.core.HourlyWeatherData
 import com.awesomejim.weatherforecast.core.LocationItemData
 import com.awesomejim.weatherforecast.core.ServerException
 import com.awesomejim.weatherforecast.core.UnauthorizedException
 import com.awesomejim.weatherforecast.core.Units
+import com.awesomejim.weatherforecast.core.data.utils.ErrorType
 import com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
 import com.awesomejim.weatherforecast.core.getDate
-import com.awesomejim.weatherforecast.core.network.ErrorType
+import com.awesomejim.weatherforecast.core.network.flickr.FlickerPhotoResponse
 import com.awesomejim.weatherforecast.core.network.model.ForecastResponse
 import com.awesomejim.weatherforecast.core.network.model.WeatherItemResponse
 import java.io.IOException
@@ -19,6 +21,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 fun WeatherItemResponse.toCoreModel(addSummary: Boolean = false): LocationItemData {
     val locationItemData = LocationItemData(
@@ -57,7 +60,7 @@ fun WeatherItemResponse.toCoreModel(addSummary: Boolean = false): LocationItemDa
 
         val visibility = locationItemData.locationWeatherInfo.weatherVisibility / 1000
 
-        val forecastMoreDetails = com.awesomejim.weatherforecast.core.ForecastMoreDetails(
+        val forecastMoreDetailsItem = com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem(
             windDetails = "%1\$1.0f km/h %2\$s".format(
                 locationItemData.locationWeatherInfo.weatherWindSpeed.toFloat(),
                 windDirection
@@ -70,7 +73,7 @@ fun WeatherItemResponse.toCoreModel(addSummary: Boolean = false): LocationItemDa
             hourlyWeatherData = listOf()
         )
 
-        locationItemData.forecastMoreDetails = forecastMoreDetails
+        locationItemData.forecastMoreDetailsItem = forecastMoreDetailsItem
     }
     return locationItemData
 }
@@ -158,7 +161,7 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
             val windDirection = getFormattedWind(fList.locationWeatherInfo.weatherWindDegrees)
 
             val visibility = fList.locationWeatherInfo.weatherVisibility / 1000
-            val forecastMoreDetails = com.awesomejim.weatherforecast.core.ForecastMoreDetails(
+            val forecastMoreDetailsItem = com.awesomejim.weatherforecast.core.ForecastMoreDetailsItem(
                 windDetails = "%1\$1.0f km/h %2\$s"
                     .format(
                         fList.locationWeatherInfo.weatherWindSpeed.toFloat(),
@@ -172,7 +175,7 @@ fun ForecastResponse.toLocationItemDataList(units: String): List<LocationItemDat
                 hourlyWeatherData = hourlyWeatherDataList
             )
 
-            fList.forecastMoreDetails = forecastMoreDetails
+            fList.forecastMoreDetailsItem = forecastMoreDetailsItem
             result.add(fList)
         }
     }
@@ -265,3 +268,23 @@ fun getFormattedWind(degrees: Double): String {
     }
     return direction
 }
+
+
+fun List<FlickerPhotoResponse>.toCleanPhotos():List<FlickerPhoto> {
+    return this.map {
+        it.toCoreModule()
+    }
+}
+
+/**
+ * To core module - This is a fix to curb the issue of lazy column from crashing for having same item id
+ *
+ * @return
+ */
+fun FlickerPhotoResponse.toCoreModule(): FlickerPhoto =
+    FlickerPhoto(
+        photoId = this.photoId + Random.nextInt(),
+        photoTitle = this.photoTitle,
+        photoUrl = this.photoUrl
+
+    )

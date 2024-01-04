@@ -6,11 +6,10 @@ import com.awesomejim.weatherforecast.core.data.source.mapper.mapThrowableToErro
 import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationEntity
 import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource
+import com.awesomejim.weatherforecast.core.data.utils.ErrorType
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
-import com.awesomejim.weatherforecast.core.network.ErrorType
 import com.awesomejim.weatherforecast.core.network.NetworkHelper
-import com.awesomejim.weatherforecast.core.network.RetrialResult
-
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -4,13 +4,14 @@ package com.awesomejim.weatherforecast.core.data.flickr
 import android.net.http.HttpException
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.awesomejim.weatherforecast.core.FlickerPhoto
 
 import com.awesomejim.weatherforecast.core.GenericException
+import com.awesomejim.weatherforecast.core.data.source.mapper.toCleanPhotos
 import com.awesomejim.weatherforecast.core.network.BuildConfig
 import com.awesomejim.weatherforecast.core.network.NETWORK_PAGE_SIZE
-import com.awesomejim.weatherforecast.core.network.flickr.FlickerPhotoResponse
 import com.awesomejim.weatherforecast.core.network.flickr.FlickrApiService
-import com.awesomejim.weatherforecast.core.network.flickr.toCleanPhotos
+
 
 import timber.log.Timber
 import java.io.IOException
@@ -19,18 +20,18 @@ const val FLICKR_STARTING_PAGE_INDEX = 1
 class FlickrPagingSource(
     private val newsApiService: FlickrApiService,
     private val defaultLocation: com.awesomejim.weatherforecast.core.DefaultLocation
-) : PagingSource<Int, FlickerPhotoResponse>() {
+) : PagingSource<Int, FlickerPhoto>() {
 
     var errorMessage: String = "An error occurred please try again later"
 
-    override fun getRefreshKey(state: PagingState<Int, FlickerPhotoResponse>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, FlickerPhoto>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FlickerPhotoResponse> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FlickerPhoto> {
         return try {
             val page = params.key ?: FLICKR_STARTING_PAGE_INDEX
             Timber.tag("Photos PagingSource").e("load init: $page $defaultLocation")

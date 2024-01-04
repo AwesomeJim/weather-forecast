@@ -2,7 +2,7 @@ package com.awesomejim.weatherforecast.core.data.source.remote
 
 import com.awesomejim.weatherforecast.core.DefaultLocation
 import com.awesomejim.weatherforecast.core.LocationItemData
-import com.awesomejim.weatherforecast.core.network.RetrialResult
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 
 interface RemoteDataSource {
 
