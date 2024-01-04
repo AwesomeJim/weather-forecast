@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.com.google.dagger.hilt)
     id(libs.plugins.com.google.devtools.ksp.get().pluginId)
     alias(libs.plugins.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
 }
 
 android {

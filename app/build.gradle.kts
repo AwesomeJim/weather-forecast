@@ -119,7 +119,6 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-
     }
 
     packaging {
@@ -193,6 +192,10 @@ dependencies {
     implementation(project(":feature:photos"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:bookmarks"))
+    implementation(project(":feature:forecast"))
+
+    //-----------Google Play Services & Maps------------------
+    implementation(libs.playservices.location)
 
     //-----------Retrofit & okhttp--------------------
     implementation(libs.retrofit)

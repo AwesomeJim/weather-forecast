@@ -222,7 +222,7 @@ data class LocationItem(
         itemSnippet
 
     override fun getZIndex(): Float? {
-        TODO("Not yet implemented")
+       return 5.0.toFloat()
     }
 
 }

@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.ui.screens.home
+package com.awesomejim.weatherforecast.feature.forecast
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -47,7 +48,7 @@ import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.core.data.utils.SampleData
 import com.awesomejim.weatherforecast.core.designsystem.component.ConditionsLabelSection
 import com.awesomejim.weatherforecast.core.designsystem.component.ErrorTextWithAction
 import com.awesomejim.weatherforecast.core.designsystem.component.ExpandItemButton
@@ -274,7 +275,7 @@ fun OtherConditionsSection(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeContentScreen(
+fun ForecastHomeContentScreen(
     currentWeather: com.awesomejim.weatherforecast.core.LocationItemData,
     forecastItem: List<com.awesomejim.weatherforecast.core.LocationItemData>?,
     modifier: Modifier = Modifier
@@ -341,7 +342,7 @@ fun HomeContentScreen(
                         drawable =
                         com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
                             .iconIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
-                        forecastMoreDetailsItem = item.forecastMoreDetails,
+                        forecastMoreDetailsItem = item.forecastMoreDetailsItem,
                         expanded = expandedDate == item,
                         onClick = {
                             expandedDate = if (expandedDate == item) null else item
@@ -524,8 +525,8 @@ fun ForecastItemPreview() {
             forecastDate = "Tuesday, 24 Sep 2023",
             tempHigh = "29*",
             tempLow = "12*",
-            drawable = R.drawable.art_clear,
-            forecastMoreDetailsItem = com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetailsItem,
+            drawable = com.awesomejim.weatherforecast.core.data.R.drawable.art_clear,
+            forecastMoreDetailsItem = SampleData.forecastMoreDetailsItem,
             expanded = false,
             onClick = {},
             modifier = Modifier.padding(0.dp)
@@ -551,10 +552,10 @@ fun HomeContentScreenPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             val locationItemData =
-                com.awesomejim.weatherforecast.core.data.utils.SampleData.sampleLocationItemData
-            HomeContentScreen(
+                SampleData.sampleLocationItemData
+            ForecastHomeContentScreen(
                 locationItemData,
-                com.awesomejim.weatherforecast.core.data.utils.SampleData.foreCastList
+                SampleData.foreCastList
             )
         }
     }

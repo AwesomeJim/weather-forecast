@@ -3,7 +3,7 @@ package com.awesomejim.weatherforecast.ui.screens.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Location
-import android.location.LocationRequest
+
 import android.os.Bundle
 import android.os.Looper
 import androidx.activity.ComponentActivity
@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
     private val locationRequest = LocationRequest.Builder(30_000L)
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY) // PRIORITY_BALANCED_POWER_ACCURACY
         .build()
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val bottomNavigationItems = listOf(

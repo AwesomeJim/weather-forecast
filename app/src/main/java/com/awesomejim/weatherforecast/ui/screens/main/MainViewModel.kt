@@ -3,8 +3,10 @@ package com.awesomejim.weatherforecast.ui.screens.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.core.LocationItemData
+import com.awesomejim.weatherforecast.core.data.SettingsRepository
+import com.awesomejim.weatherforecast.core.data.WeatherRepository
 import com.awesomejim.weatherforecast.core.data.source.mapper.toResourceId
-import com.awesomejim.weatherforecast.core.network.RetrialResult
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val defaultWeatherRepository: com.awesomejim.weatherforecast.core.data.WeatherRepository,
-    private val settingsRepository: com.awesomejim.weatherforecast.core.data.SettingsRepository
+    private val defaultWeatherRepository: WeatherRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private lateinit var currentLocation: com.awesomejim.weatherforecast.core.DefaultLocation
@@ -76,14 +78,14 @@ class MainViewModel @Inject constructor(
             )
             Timber.e("fetchWeatherDataWithCoordinates result:: $result")
             when (result) {
-                is com.awesomejim.weatherforecast.core.network.RetrialResult.Success -> {
+                is RetrialResult.Success -> {
                     val weatherData = result.data
                     Timber.e("weatherData result:: ${result.data}")
                     Timber.i("Size :: ${weatherData.size}")
                     _forecastListState.emit(weatherData)
                 }
 
-                is com.awesomejim.weatherforecast.core.network.RetrialResult.Error -> {
+                is RetrialResult.Error -> {
                     Timber.e("Error :: ${result.errorType.toResourceId()}")
                 }
             }
@@ -122,18 +124,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun processCurrentWeatherResult(result: com.awesomejim.weatherforecast.core.network.RetrialResult<LocationItemData>):
+    private fun processCurrentWeatherResult(result: RetrialResult<LocationItemData>):
         CurrentWeatherUiState {
         isLoadingData = false
         return when (result) {
-            is com.awesomejim.weatherforecast.core.network.RetrialResult.Success -> {
+            is RetrialResult.Success -> {
                 val weatherData = result.data
                 Timber.e("weatherData result:: ${result.data}")
                 Timber.i("locationName :: ${weatherData.locationName}")
                 CurrentWeatherUiState.Success(result.data)
             }
 
-            is com.awesomejim.weatherforecast.core.network.RetrialResult.Error -> {
+            is RetrialResult.Error -> {
                 Timber.e("Error :: ${result.errorType.toResourceId()}")
                 CurrentWeatherUiState.Error(result.errorType.toResourceId())
             }

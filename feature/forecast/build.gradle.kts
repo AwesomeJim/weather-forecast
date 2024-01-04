@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.awesomejim.weatherforecast.feature.bookmarks"
+    namespace = "com.awesomejim.weatherforecast.feature.forecast"
     compileSdk = libs.versions.compile.sdk.get().toInt()
 
     defaultConfig {
@@ -26,7 +26,6 @@ android {
             )
         }
     }
-
     buildFeatures {
         compose = true
         buildConfig = true
@@ -60,23 +59,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
 
-    //-----------COIL--------------------
-    implementation(libs.coil.compose)
-
-    //-----------Google Play Services & Maps------------------
-    implementation(libs.playservices.location)
-    implementation(libs.maps.compose)
-    // Optionally, you can include the Compose utils library for Clustering, etc.
-    implementation(libs.maps.compose.utils)
-
-    constraints {
-        // Volley is a transitive dependency of maps
-        implementation("com.android.volley:volley:1.2.1") {
-            because("Only volley 1.2.0 or newer are available on maven.google.com")
-        }
-    }
-
-
     implementation(project(":core:model"))
     implementation(project(":core:data"))
     implementation(project(":core:designsystem"))
@@ -84,9 +66,6 @@ dependencies {
 
     //------------Timber logging----------
     implementation(libs.timber)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.appcompat)
 
     testImplementation(libs.test.junit4)
     androidTestImplementation(libs.test.androidx.junit)

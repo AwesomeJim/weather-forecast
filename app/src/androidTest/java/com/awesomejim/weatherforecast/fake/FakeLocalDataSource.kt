@@ -3,7 +3,7 @@ package com.awesomejim.weatherforecast.fake
 import java.util.Date
 
 object FakeLocalDataSource {
-    val locationList = listOf<com.awesomejim.weatherforecast.core.LocationItemData>(
+    val locationList = listOf(
         com.awesomejim.weatherforecast.core.LocationItemData(
             locationName = "Mountain View - US",
             locationId = 1695383,

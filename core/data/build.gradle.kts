@@ -74,6 +74,10 @@ dependencies {
     //------------Timber logging----------
     implementation(libs.timber)
 
+    //-----------Retrofit & okhttp--------------------
+    implementation(libs.retrofit)
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
 
 
     testImplementation(libs.test.junit4)

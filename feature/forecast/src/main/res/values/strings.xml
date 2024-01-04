@@ -1,22 +1,9 @@
-<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
-    <string name="app_name">Weather Forecast</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!--Home Screen-->
-    <string name="home_content_description_setting_icon">Setting Icon</string>
-    <string name="home_title_currently">Current Location</string>
-    <string name="home_feels_like_description">Feels like %1$s</string>
-    <string name="home_today_forecast_title">Today\'s Forecast</string>
     <string name="home_weekly_forecast_title">Next Days Forecast</string>
-    <string name="home_min_temp">Min %1$s</string>
-    <string name="home_max_temp">Max %1$s</string>
-
-    <string name="settings_confirm">Confirm</string>
-
-    <string name="settings_screen_title">Settings</string>
-
 
     <string name="visibility_label">Visibility</string>
-
     <string name="wind_label">Wind</string>
     <!-- Wind in kph -->
     <string name="format_wind_kmh">
@@ -49,10 +36,9 @@
     <string name="format_full_friendly_date">
         <xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g>
     </string>
-
     <!-- - - - - - - - - - - - - - - -
-     - Used by Weather Forecast Preferences  -
-     - - - - - - - - - - - - - - - -->
+  - Used by Weather Forecast Preferences  -
+  - - - - - - - - - - - - - - - -->
     <!-- Temperature format -->
     <string name="format_temperature">
         <xliff:g id="temp">%1.0f</xliff:g>\u00B0
@@ -63,20 +49,4 @@
         <xliff:g id="high">High: %1.0f</xliff:g>\u00B0
         <xliff:g id="low">Low: %1.0f</xliff:g>\u00B0
     </string>
-
-    <string name="internetErr">"No internet, Please check your internet connection"</string>
-    <string name="unexpected_error">There was an error completing your request. Please try again later</string>
-
-
-    <string name="saved_screen_title">My Saved Locations</string>
-    <string name="search_screen_title">Search</string>
-    <string name="saved_location_on_map_screen_title">Saved Locations</string>
-
-
-    <string name="retry">Retry</string>
-    <string name="loading">Loading</string>
-    <string name="loading_failed">Failed to load</string>
-
-
-    <string name="expand_button_content_description">See more or less information about forecast.</string>
 </resources>

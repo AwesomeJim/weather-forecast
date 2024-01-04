@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.dagger.hilt)
     id(libs.plugins.com.google.devtools.ksp.get().pluginId)
 }
 
@@ -50,6 +51,10 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
+    // --------Hilt Dependency Injection--------------
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.android.compiler)
 
     //-----------ROOM--------------------
     implementation(libs.androidx.room.runtime)

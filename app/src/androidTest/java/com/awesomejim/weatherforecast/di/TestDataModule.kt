@@ -2,7 +2,7 @@ package com.awesomejim.weatherforecast.di
 
 import android.content.Context
 import androidx.room.Room
-import com.awesomejim.weatherforecast.core.database.LocationDatabase
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ object TestDataModule {
     @Named("test_db")
     fun provideInMemoryDb(@ApplicationContext context: Context) =
         Room.inMemoryDatabaseBuilder(
-            context, com.awesomejim.weatherforecast.core.database.LocationDatabase::class.java
+            context, LocationDatabase::class.java
         ).allowMainThreadQueries()
             .build()
 }

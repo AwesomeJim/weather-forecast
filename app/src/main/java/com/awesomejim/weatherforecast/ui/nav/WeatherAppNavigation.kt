@@ -33,6 +33,8 @@ import com.awesomejim.weatherforecast.feature.bookmarks.SearchScreen
 import com.awesomejim.weatherforecast.feature.bookmarks.SearchViewModel
 import com.awesomejim.weatherforecast.feature.bookmarks.maps.MapsViewModel
 import com.awesomejim.weatherforecast.feature.bookmarks.maps.MapsViewScreen
+import com.awesomejim.weatherforecast.feature.forecast.ErrorScreen
+import com.awesomejim.weatherforecast.feature.forecast.ForecastHomeContentScreen
 import com.awesomejim.weatherforecast.feature.photos.PhotosScreen
 import com.awesomejim.weatherforecast.feature.photos.PhotosViewModel
 import com.awesomejim.weatherforecast.feature.settings.SettingsScreen
@@ -40,8 +42,6 @@ import com.awesomejim.weatherforecast.feature.settings.SettingsScreenUiState
 import com.awesomejim.weatherforecast.feature.settings.SettingsViewModel
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem.LocationPhotos.locationLatTypeArg
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem.LocationPhotos.locationlogTypeArg
-import com.awesomejim.weatherforecast.ui.screens.home.ErrorScreen
-import com.awesomejim.weatherforecast.ui.screens.home.HomeContentScreen
 import com.awesomejim.weatherforecast.ui.screens.main.CurrentWeatherUiState
 import com.awesomejim.weatherforecast.ui.screens.main.MainViewModel
 import timber.log.Timber
@@ -115,7 +115,7 @@ fun NavigationGraph(
                 }
 
                 is CurrentWeatherUiState.Success -> {
-                    HomeContentScreen(
+                    ForecastHomeContentScreen(
                         currentWeatherUiState.currentWeather,
                         forecastListState,
                         modifier = Modifier
