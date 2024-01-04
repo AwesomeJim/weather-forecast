@@ -3,10 +3,8 @@ package com.awesomejim.weatherforecast.ui.screens.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awesomejim.weatherforecast.core.LocationItemData
-import com.awesomejim.weatherforecast.core.data.SettingsRepository
-import com.awesomejim.weatherforecast.core.data.WeatherRepository
+import com.awesomejim.weatherforecast.core.data.source.mapper.toResourceId
 import com.awesomejim.weatherforecast.core.network.RetrialResult
-import com.awesomejim.weatherforecast.ui.common.toResourceId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

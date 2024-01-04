@@ -13,7 +13,7 @@ import javax.inject.Inject
 class DefaultWeatherRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val networkHelper: NetworkHelper
-) : com.awesomejim.weatherforecast.core.data.WeatherRepository {
+) : WeatherRepository {
     /**
      * Fetch weather data with coordinates
      *

@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 
 @Composable
 fun GeneralInfoScreens(@StringRes message: Int) {
@@ -46,7 +45,7 @@ fun EnableLocationSettingScreen() {
 @Preview(showBackground = true)
 @Composable
 fun RequiresPermissionsScreenPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         RequiresPermissionsScreen()
     }
 }
@@ -54,7 +53,7 @@ fun RequiresPermissionsScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun EnableLocationSettingScreenPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         EnableLocationSettingScreen()
     }
 }

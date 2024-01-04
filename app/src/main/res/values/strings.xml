@@ -19,12 +19,7 @@
     <string name="location_no_permission_screen_description">You need to grant location access to use the app</string>
     <string name="location_settings_not_enabled">Check your location settings and enable them</string>
 
-    <!--    Errors-->
-    <string name="error_unauthorized">You may need to log in or sign up to see this :)</string>
-    <string name="error_client">Oops,something fishy is up on your end :)</string>
-    <string name="error_server">Oops! Something is wrong on our end :(</string>
-    <string name="error_generic">Something is happening that\'s disturbing the force :(</string>
-    <string name="error_connection">Check your internet connection and try again</string>
+
 
     <string name="visibility_label">Visibility</string>
 

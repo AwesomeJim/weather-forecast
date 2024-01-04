@@ -33,8 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
-import com.awesomejim.weatherforecast.utilities.SampleData
+import com.awesomejim.weatherforecast.core.HourlyWeatherData
 
 @Composable
 fun ForecastMoreDetails(
@@ -240,8 +239,8 @@ fun ForecastMoreDetailsSection(
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun HourlyDataElementPreview() {
-    WeatherForecastTheme {
-        val hourlyWeatherData = com.awesomejim.weatherforecast.core.HourlyWeatherData(
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
+        val hourlyWeatherData = HourlyWeatherData(
             temperature = "23*",
             drawableIcon = R.drawable.art_light_rain,
             hourTime = "16:00"
@@ -262,7 +261,7 @@ fun HourlyDataElementPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun ForecastMoreDetailsPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         val forecastMoreDetails = com.awesomejim.weatherforecast.core.ForecastMoreDetails(
             windDetails = "dolore",
             humidityDetails = "malorum",
@@ -284,8 +283,8 @@ fun ForecastMoreDetailsPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun HourlyDataElementRowPreview() {
-    WeatherForecastTheme {
-        HourlyDataElementRow(hourlyWeatherData = SampleData.hourlyWeatherDataList)
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
+        HourlyDataElementRow(hourlyWeatherData = com.awesomejim.weatherforecast.core.data.utils.SampleData.hourlyWeatherDataList)
     }
 }
 
@@ -300,7 +299,7 @@ fun HourlyDataElementRowPreview() {
 )
 @Composable
 fun ForecastMoreDetailsSectionPreview() {
-    WeatherForecastTheme {
-        ForecastMoreDetailsSection(SampleData.forecastMoreDetails)
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
+        ForecastMoreDetailsSection(com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetails)
     }
 }

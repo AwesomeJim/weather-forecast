@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.ui.theme
+package com.awesomejim.weatherforecast.core.designsystem
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.awesomejim.weatherforecast.R
+
 
 val Lato = FontFamily(
     Font(R.font.lato_regular),

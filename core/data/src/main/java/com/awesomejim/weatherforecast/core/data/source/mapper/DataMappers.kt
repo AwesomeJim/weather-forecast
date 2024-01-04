@@ -7,6 +7,7 @@ import com.awesomejim.weatherforecast.core.LocationItemData
 import com.awesomejim.weatherforecast.core.ServerException
 import com.awesomejim.weatherforecast.core.UnauthorizedException
 import com.awesomejim.weatherforecast.core.Units
+import com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
 import com.awesomejim.weatherforecast.core.getDate
 import com.awesomejim.weatherforecast.core.network.ErrorType
 import com.awesomejim.weatherforecast.core.network.model.ForecastResponse

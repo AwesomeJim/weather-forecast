@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 
 /**
  * Created by awesome jim on.
@@ -89,7 +88,7 @@ fun WeatherTopAppBar(
 @Preview(showBackground = true)
 @Composable
 private fun TopAppBarPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         WeatherTopAppBar("Awesome Jim")
     }
 }

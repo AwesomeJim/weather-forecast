@@ -33,7 +33,6 @@ import coil.request.ImageRequest
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.core.network.flickr.FlickerPhotoResponse
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import timber.log.Timber
 
 @Composable
@@ -173,7 +172,7 @@ fun PhotosErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         PhotosLoadingScreen(
             Modifier
                 .fillMaxSize()
@@ -185,7 +184,7 @@ fun LoadingScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ErrorScreenPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         PhotosErrorScreen({}, Modifier.fillMaxSize())
     }
 }

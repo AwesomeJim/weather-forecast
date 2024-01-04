@@ -1,10 +1,11 @@
-package com.awesomejim.weatherforecast.utilities
+package com.awesomejim.weatherforecast.core.data.utils
 
-import com.awesomejim.weatherforecast.R
+
 import com.awesomejim.weatherforecast.core.ForecastMoreDetails
 import com.awesomejim.weatherforecast.core.HourlyWeatherData
 import com.awesomejim.weatherforecast.core.LocationItemData
 import com.awesomejim.weatherforecast.core.WeatherStatusInfo
+import com.awesomejim.weatherforecast.core.data.R
 import java.util.Date
 
 object SampleData {
@@ -67,6 +68,7 @@ object SampleData {
         pressureDetails = "eloquentiam",
         hourlyWeatherData = hourlyWeatherDataList
     )
+
     val sampleLocationItemData = LocationItemData(
         locationName = "Terra Clarke",
         locationId = 2101,

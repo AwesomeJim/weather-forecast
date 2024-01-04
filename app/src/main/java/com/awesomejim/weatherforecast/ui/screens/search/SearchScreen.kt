@@ -75,7 +75,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.core.getUpdatedOnDate
-import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.DialogSearchSuccess
 import com.awesomejim.weatherforecast.ui.components.DismissBackground
 import com.awesomejim.weatherforecast.ui.components.SearchFloatingActionButton
@@ -83,9 +82,6 @@ import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
 import com.awesomejim.weatherforecast.ui.screens.home.ExpandItemButton
 import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
-import com.awesomejim.weatherforecast.utilities.SampleData
-import com.awesomejim.weatherforecast.utilities.WeatherUtils
 import kotlinx.coroutines.delay
 import timber.log.Timber
 
@@ -106,7 +102,7 @@ fun SearchScreen(
     //
     if (searchUiState.isSearchingSuccessful) {
         searchUiState.searchResultWeatherData?.let { searchResults ->
-            val weatherIcon = WeatherUtils
+            val weatherIcon = com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
                 .iconIdForWeatherCondition(searchResults.locationWeatherInfo.weatherConditionId)
             DialogSearchSuccess(
                 onDismissRequest = {
@@ -168,7 +164,7 @@ fun SearchScreen(
                 // Provide a unique key based on the item  content, for our case we use locationId
                 key = { _, item -> item.locationId }
             ) { _, location ->
-                val drawable = WeatherUtils
+                val drawable = com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
                     .iconIdForWeatherCondition(location.locationWeatherInfo.weatherConditionId)
                 EditableLocationItem(
                     locationItemData = location,
@@ -547,10 +543,10 @@ fun SavedLocationItem(
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SavedLocationItemPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         SavedLocationItem(
             conditionIcon = R.drawable.art_light_clouds,
-            locationItemData = SampleData.sampleLocationItemData,
+            locationItemData = com.awesomejim.weatherforecast.core.data.utils.SampleData.sampleLocationItemData,
             onViewPhotosClick = {}
         )
     }
@@ -564,7 +560,7 @@ fun SavedLocationItemPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SearchBarPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         SearchBar(
             searchTerm = "",
             isSearchWordValid = true,
@@ -627,7 +623,7 @@ fun AlertDialogError(
 )
 @Composable
 fun AlertDialogPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         AlertDialogError(
             onDismissRequest = { },
             onConfirmation = {

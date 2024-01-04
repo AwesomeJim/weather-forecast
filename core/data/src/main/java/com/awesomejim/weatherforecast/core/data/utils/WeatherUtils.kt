@@ -1,6 +1,6 @@
-package com.awesomejim.weatherforecast.utilities
+package com.awesomejim.weatherforecast.core.data.utils
 
-import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.core.data.R
 import timber.log.Timber
 
 object WeatherUtils {

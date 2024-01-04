@@ -34,7 +34,6 @@ import com.awesomejim.weatherforecast.ui.components.WeatherTopAppBar
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
 import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -95,7 +94,7 @@ class MainActivity : ComponentActivity() {
         // Create an instance of the FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
-            WeatherForecastTheme {
+            com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
                 navController = rememberNavController()
                 val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
                 val title = rememberSaveable { (mutableStateOf("")) }

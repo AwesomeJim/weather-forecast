@@ -52,22 +52,16 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.R
-import com.awesomejim.weatherforecast.core.data.source.mapper.getFormattedWind
 import com.awesomejim.weatherforecast.core.getDate
 import com.awesomejim.weatherforecast.core.getUpdatedOnDate
-import com.awesomejim.weatherforecast.ui.common.getDate
-import com.awesomejim.weatherforecast.ui.common.getUpdatedOnDate
 import com.awesomejim.weatherforecast.ui.components.ErrorTextWithAction
 import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
 import com.awesomejim.weatherforecast.ui.components.Subtitle
 import com.awesomejim.weatherforecast.ui.components.SubtitleSmall
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
-import com.awesomejim.weatherforecast.utilities.SampleData
-import com.awesomejim.weatherforecast.utilities.WeatherUtils
 
 @Composable
 private fun CurrentWeatherWidget(currentWeather: com.awesomejim.weatherforecast.core.LocationItemData, modifier: Modifier) {
-    val drawable = WeatherUtils
+    val drawable = com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
         .iconIdForWeatherCondition(currentWeather.locationWeatherInfo.weatherConditionId)
 //    val animateTween by rememberInfiniteTransition(label = "").animateFloat(
 //        initialValue = -1f,
@@ -373,7 +367,7 @@ fun HomeContentScreen(
                         tempHigh = weatherTempMax,
                         tempLow = weatherTempMin,
                         drawable =
-                        WeatherUtils
+                        com.awesomejim.weatherforecast.core.data.utils.WeatherUtils
                             .iconIdForWeatherCondition(item.locationWeatherInfo.weatherConditionId),
                         forecastMoreDetails = item.forecastMoreDetails,
                         expanded = expandedDate == item,
@@ -509,7 +503,7 @@ fun ExpandItemButton(
 )
 @Composable
 fun ConditionsSectionPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         ConditionsSection(
             conditionText = "1km/h SE",
             conditionLabel = R.string.wind_label,
@@ -530,8 +524,9 @@ fun ConditionsSectionPreview() {
 )
 @Composable
 fun OtherConditionsSectionPreview() {
-    WeatherForecastTheme {
-        val locationItemData = SampleData.sampleLocationItemData
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
+        val locationItemData =
+            com.awesomejim.weatherforecast.core.data.utils.SampleData.sampleLocationItemData
         OtherConditionsSection(
             weatherDetails = locationItemData.locationWeatherInfo,
             modifier = Modifier.padding(8.dp)
@@ -568,14 +563,14 @@ fun ErrorScreen(errorMsgId: Int, onTryAgainClicked: () -> Unit) {
 )
 @Composable
 fun ForecastItemPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         ForecastItem(
             conditionText = "Partly Sunny",
             forecastDate = "Tuesday, 24 Sep 2023",
             tempHigh = "29*",
             tempLow = "12*",
             drawable = R.drawable.art_clear,
-            forecastMoreDetails = SampleData.forecastMoreDetails,
+            forecastMoreDetails = com.awesomejim.weatherforecast.core.data.utils.SampleData.forecastMoreDetails,
             expanded = false,
             onClick = {},
             modifier = Modifier.padding(0.dp)
@@ -595,13 +590,17 @@ fun ForecastItemPreview() {
 )
 @Composable
 fun HomeContentScreenPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val locationItemData = SampleData.sampleLocationItemData
-            HomeContentScreen(locationItemData, SampleData.foreCastList)
+            val locationItemData =
+                com.awesomejim.weatherforecast.core.data.utils.SampleData.sampleLocationItemData
+            HomeContentScreen(
+                locationItemData,
+                com.awesomejim.weatherforecast.core.data.utils.SampleData.foreCastList
+            )
         }
     }
 }

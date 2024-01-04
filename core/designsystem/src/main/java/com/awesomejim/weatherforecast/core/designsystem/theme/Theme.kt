@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.ui.theme
+package com.awesomejim.weatherforecast.core.designsystem.theme
 
 import android.app.Activity
 import android.os.Build
@@ -102,7 +102,7 @@ fun WeatherForecastTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+        typography = com.awesomejim.weatherforecast.core.designsystem.AppTypography,
         shapes = Shapes,
         content = content
     )

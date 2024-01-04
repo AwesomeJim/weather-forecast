@@ -36,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.awesomejim.weatherforecast.R
 import com.awesomejim.weatherforecast.ui.screens.home.ForecastMoreDetails
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
-import com.awesomejim.weatherforecast.utilities.SampleData
 
 @Composable
 fun PermissionRationaleDialog(
@@ -227,12 +225,12 @@ fun DialogSearchSuccess(
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun SearchBarPreview() {
-    WeatherForecastTheme {
+    com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
         DialogSearchSuccess(
             onDismissRequest = {},
             onConfirmation = {},
             conditionIcon = R.drawable.art_light_clouds,
-            locationItemData = SampleData.sampleLocationItemData
+            locationItemData = com.awesomejim.weatherforecast.core.data.utils.SampleData.sampleLocationItemData
         )
     }
 }
