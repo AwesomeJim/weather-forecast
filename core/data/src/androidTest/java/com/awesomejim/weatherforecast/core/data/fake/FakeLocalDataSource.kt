@@ -1,17 +1,19 @@
-package com.awesomejim.weatherforecast.fake
+package com.awesomejim.weatherforecast.core.data.fake
 
+import com.awesomejim.weatherforecast.core.LocationItemData
+import com.awesomejim.weatherforecast.core.WeatherStatusInfo
 import java.util.Date
 
 object FakeLocalDataSource {
     val locationList = listOf(
-        com.awesomejim.weatherforecast.core.LocationItemData(
+        LocationItemData(
             locationName = "Mountain View - US",
             locationId = 1695383,
             locationTimeZoneShift = -25200,
             locationDataTime = 1695455230,
             locationLongitude = -122.084,
             locationLatitude = 37.4234,
-            locationWeatherInfo = com.awesomejim.weatherforecast.core.WeatherStatusInfo(
+            locationWeatherInfo = WeatherStatusInfo(
                 weatherConditionId = 804,
                 weatherCondition = "Clouds",
                 weatherConditionDescription = "overcast clouds", weatherConditionIcon = "04n",
@@ -28,14 +30,14 @@ object FakeLocalDataSource {
             locationWeatherDay = 5,
             locationDataLastUpdate = Date()
         ),
-        com.awesomejim.weatherforecast.core.LocationItemData(
+        LocationItemData(
             locationName = "Nairobi View - US",
             locationId = 184745,
             locationTimeZoneShift = -25200,
             locationDataTime = 1695455230,
             locationLongitude = -122.084,
             locationLatitude = 37.4234,
-            locationWeatherInfo = com.awesomejim.weatherforecast.core.WeatherStatusInfo(
+            locationWeatherInfo = WeatherStatusInfo(
                 weatherConditionId = 804,
                 weatherCondition = "Clouds",
                 weatherConditionDescription = "overcast clouds", weatherConditionIcon = "04n",
@@ -52,14 +54,14 @@ object FakeLocalDataSource {
             locationWeatherDay = 6,
             locationDataLastUpdate = Date()
         ),
-        com.awesomejim.weatherforecast.core.LocationItemData(
+       LocationItemData(
             locationName = "Kisumu- KE",
             locationId = 5375480,
             locationTimeZoneShift = -25200,
             locationDataTime = 1695455230,
             locationLongitude = -122.084,
             locationLatitude = 37.4234,
-            locationWeatherInfo = com.awesomejim.weatherforecast.core.WeatherStatusInfo(
+            locationWeatherInfo = WeatherStatusInfo(
                 weatherConditionId = 804,
                 weatherCondition = "Clouds",
                 weatherConditionDescription = "Overcast clouds", weatherConditionIcon = "04n",

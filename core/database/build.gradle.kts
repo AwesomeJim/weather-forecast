@@ -43,6 +43,16 @@ android {
         jvmTarget = libs.versions.jvm.target.get()
         freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
+
+    packaging {
+        resources {
+            excludes += listOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -66,4 +76,16 @@ dependencies {
     testImplementation(libs.test.junit4)
     androidTestImplementation(libs.test.androidx.junit)
     androidTestImplementation(libs.test.androidx.test.espresso.core)
+
+    implementation(project(":core:model"))
+
+    //-----------instrumentation test-----------
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.test.testingcore)
+    androidTestImplementation(libs.test.coroutines.test)
+    androidTestImplementation(libs.test.truth)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.mock.android)
+    androidTestImplementation(libs.mock.agent)
 }

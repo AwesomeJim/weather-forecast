@@ -1,16 +1,17 @@
-package com.awesomejim.weatherforecast.repository
+package com.awesomejim.weatherforecast.core.data.repository
 
 import com.awesomejim.weatherforecast.core.data.DefaultWeatherRepository
 import com.awesomejim.weatherforecast.core.data.WeatherRepository
+
+import com.awesomejim.weatherforecast.core.data.fake.FakeResponseData.fakeSuccessMappedWeatherResponse
+import com.awesomejim.weatherforecast.core.data.fake.FakeResponseData.fakeSuccessWeatherResponse
 import com.awesomejim.weatherforecast.core.data.source.remote.DefaultRemoteWeatherDataSource
 import com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource
+import com.awesomejim.weatherforecast.core.data.utils.ErrorType
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import com.awesomejim.weatherforecast.core.network.ApiService
-import com.awesomejim.weatherforecast.core.network.ErrorType
 import com.awesomejim.weatherforecast.core.network.NetworkHelper
-import com.awesomejim.weatherforecast.core.network.RetrialResult
-import com.awesomejim.weatherforecast.core.network.WeatherItemResponse
-import com.awesomejim.weatherforecast.fake.FakeResponseData.fakeSuccessMappedWeatherResponse
-import com.awesomejim.weatherforecast.fake.FakeResponseData.fakeSuccessWeatherResponse
+import com.awesomejim.weatherforecast.core.network.model.WeatherItemResponse
 import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.every
@@ -25,11 +26,11 @@ import java.io.IOException
 class DefaultRemoteWeatherDataSourceTest {
 
     @MockK
-    val mockOpenWeatherService = mockk<com.awesomejim.weatherforecast.core.network.ApiService>(relaxed = true)
+    val mockOpenWeatherService = mockk<ApiService>(relaxed = true)
 
     // 2. Mock Context and NetworkHelper
     @MockK
-    val mockNetworkHelper = mockk<com.awesomejim.weatherforecast.core.network.NetworkHelper>()
+    val mockNetworkHelper = mockk<NetworkHelper>()
 
     @Test
     fun `when we fetch location weather data successfully, a valid mapped result is emitted`() =
@@ -42,7 +43,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.success<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
+            } returns Response.success<WeatherItemResponse>(
                 fakeSuccessWeatherResponse
             )
 
@@ -57,8 +58,8 @@ class DefaultRemoteWeatherDataSourceTest {
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Success::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Success).data.locationId)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
                 .isEqualTo(expectedResult.locationId)
         }
 
@@ -74,7 +75,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
+            } returns Response.error<WeatherItemResponse>(
                 503,
                 "{}".toResponseBody()
             )
@@ -88,9 +89,9 @@ class DefaultRemoteWeatherDataSourceTest {
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
-                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.SERVER)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.SERVER)
         }
 
     @Test
@@ -105,7 +106,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
+            } returns Response.error<WeatherItemResponse>(
                 404,
                 "{}".toResponseBody()
             )
@@ -119,9 +120,9 @@ class DefaultRemoteWeatherDataSourceTest {
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
-                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.CLIENT)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.CLIENT)
         }
 
     @Test
@@ -135,7 +136,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
+            } returns Response.error<WeatherItemResponse>(
                 401,
                 "{}".toResponseBody()
             )
@@ -150,9 +151,9 @@ class DefaultRemoteWeatherDataSourceTest {
                 units = "metric"
             )
 
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
-                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.UNAUTHORIZED)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.UNAUTHORIZED)
         }
 
     @Test
@@ -166,7 +167,7 @@ class DefaultRemoteWeatherDataSourceTest {
                     any(),
                     any()
                 )
-            } returns Response.error<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
+            } returns Response.error<WeatherItemResponse>(
                 800,
                 "{}".toResponseBody()
             )
@@ -181,9 +182,9 @@ class DefaultRemoteWeatherDataSourceTest {
                 units = "metric"
             )
 
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
-                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.GENERIC)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.GENERIC)
         }
 
     @Test
@@ -209,9 +210,9 @@ class DefaultRemoteWeatherDataSourceTest {
                 units = "metric"
             )
 
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
-                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.IO_CONNECTION)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.IO_CONNECTION)
         }
 
     @Test
@@ -236,18 +237,18 @@ class DefaultRemoteWeatherDataSourceTest {
                 ),
                 units = "metric"
             )
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Error::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Error).errorType)
-                .isEqualTo(com.awesomejim.weatherforecast.core.network.ErrorType.GENERIC)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Error::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Error).errorType)
+                .isEqualTo(ErrorType.GENERIC)
         }
 
     private fun createWeatherRepository(
-        networkHelper: com.awesomejim.weatherforecast.core.network.NetworkHelper = mockNetworkHelper,
-        remoteWeatherDataSource: com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource = com.awesomejim.weatherforecast.core.data.source.remote.DefaultRemoteWeatherDataSource(
+        networkHelper: NetworkHelper = mockNetworkHelper,
+        remoteWeatherDataSource: RemoteDataSource = DefaultRemoteWeatherDataSource(
             apiService = mockOpenWeatherService
         )
-    ): com.awesomejim.weatherforecast.core.data.WeatherRepository =
-        com.awesomejim.weatherforecast.core.data.DefaultWeatherRepository(
+    ): WeatherRepository =
+        DefaultWeatherRepository(
             remoteDataSource = remoteWeatherDataSource,
             networkHelper = networkHelper
         )

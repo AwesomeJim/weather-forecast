@@ -1,7 +1,8 @@
-package com.awesomejim.weatherforecast.di
+package com.awesomejim.weatherforecast.core.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.awesomejim.weatherforecast.core.database.LocationDatabase
 
 import dagger.Module
 import dagger.Provides

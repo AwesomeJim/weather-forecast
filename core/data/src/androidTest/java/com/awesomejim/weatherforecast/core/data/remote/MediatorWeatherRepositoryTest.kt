@@ -1,19 +1,19 @@
-package com.awesomejim.weatherforecast.remote
+package com.awesomejim.weatherforecast.core.data.remote
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import com.awesomejim.weatherforecast.core.data.fake.FakeResponseData
 import com.awesomejim.weatherforecast.core.data.source.local.MediatorRepository
 import com.awesomejim.weatherforecast.core.data.source.local.MediatorWeatherRepository
 import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.core.data.source.remote.DefaultRemoteWeatherDataSource
 import com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import com.awesomejim.weatherforecast.core.database.LocationDatabase
 import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
 import com.awesomejim.weatherforecast.core.network.ApiService
 import com.awesomejim.weatherforecast.core.network.NetworkHelper
-import com.awesomejim.weatherforecast.core.network.RetrialResult
-import com.awesomejim.weatherforecast.core.network.WeatherItemResponse
-import com.awesomejim.weatherforecast.fake.FakeResponseData
+import com.awesomejim.weatherforecast.core.network.model.WeatherItemResponse
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,8 +42,8 @@ class MediatorWeatherRepositoryTest {
 
     @Inject
     @Named("test_db")
-    lateinit var database: com.awesomejim.weatherforecast.core.database.LocationDatabase
-    private lateinit var locationItemDao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
+    lateinit var database: LocationDatabase
+    private lateinit var locationItemDao: LocationItemDao
 
     @Before
     fun setup() {
@@ -57,10 +57,10 @@ class MediatorWeatherRepositoryTest {
     }
 
     @MockK
-    val mockOpenWeatherService = mockk<com.awesomejim.weatherforecast.core.network.ApiService>(relaxed = true)
+    val mockOpenWeatherService = mockk<ApiService>(relaxed = true)
 
     @MockK
-    val mockNetworkHelper = mockk<com.awesomejim.weatherforecast.core.network.NetworkHelper>()
+    val mockNetworkHelper = mockk<NetworkHelper>()
 
     @Test
     fun assert_when_we_fetch_location_weather_data_successfully_a_mapped_result_is_emitted() =
@@ -73,8 +73,8 @@ class MediatorWeatherRepositoryTest {
                     any(),
                     any()
                 )
-            } returns Response.success<com.awesomejim.weatherforecast.core.network.WeatherItemResponse>(
-                FakeResponseData.fakeSuccessWeatherResponse
+            } returns Response.success<WeatherItemResponse>(
+               FakeResponseData.fakeSuccessWeatherResponse
             )
 
             val weatherRepository = createWeatherRepository()
@@ -90,8 +90,8 @@ class MediatorWeatherRepositoryTest {
                 locationId = 1695383
             )
             // val actualResults = expectMostRecentItem()
-            Truth.assertThat(actualResults).isInstanceOf(com.awesomejim.weatherforecast.core.network.RetrialResult.Success::class.java)
-            Truth.assertThat((actualResults as com.awesomejim.weatherforecast.core.network.RetrialResult.Success).data.locationId)
+            Truth.assertThat(actualResults).isInstanceOf(RetrialResult.Success::class.java)
+            Truth.assertThat((actualResults as RetrialResult.Success).data.locationId)
                 .isEqualTo(expectedResult.locationId)
             val locationItemData = FakeResponseData.fakeSuccessMappedWeatherResponse
 
@@ -102,13 +102,13 @@ class MediatorWeatherRepositoryTest {
         }
 
     private fun createWeatherRepository(
-        networkHelper: com.awesomejim.weatherforecast.core.network.NetworkHelper = mockNetworkHelper,
-        remoteWeatherDataSource: com.awesomejim.weatherforecast.core.data.source.remote.RemoteDataSource = com.awesomejim.weatherforecast.core.data.source.remote.DefaultRemoteWeatherDataSource(
+        networkHelper: NetworkHelper = mockNetworkHelper,
+        remoteWeatherDataSource: RemoteDataSource = DefaultRemoteWeatherDataSource(
             apiService = mockOpenWeatherService
         ),
-        dao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao = locationItemDao
-    ): com.awesomejim.weatherforecast.core.data.source.local.MediatorRepository =
-        com.awesomejim.weatherforecast.core.data.source.local.MediatorWeatherRepository(
+        dao: LocationItemDao = locationItemDao
+    ): MediatorRepository =
+        MediatorWeatherRepository(
             remoteDataSource = remoteWeatherDataSource,
             networkHelper = networkHelper,
             locationItemDao = dao

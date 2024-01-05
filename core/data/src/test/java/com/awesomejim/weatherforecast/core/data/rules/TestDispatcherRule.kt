@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast.rules
+package com.awesomejim.weatherforecast.core.data.rules
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,7 +11,7 @@ import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
 class TestDispatcherRule(
-    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
+    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
 ) : TestWatcher() {
 
     override fun starting(description: Description) {

@@ -1,12 +1,12 @@
-package com.awesomejim.weatherforecast.locadatabase
+package com.awesomejim.weatherforecast.core.data.locadatabase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import com.awesomejim.weatherforecast.core.data.fake.FakeLocalDataSource
 import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationEntity
 import com.awesomejim.weatherforecast.core.data.source.mapper.toLocationItem
 import com.awesomejim.weatherforecast.core.database.LocationDatabase
 import com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
-import com.awesomejim.weatherforecast.fake.FakeLocalDataSource
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -31,8 +31,8 @@ class LocalDataSourceTest {
 
     @Inject
     @Named("test_db")
-    lateinit var database: com.awesomejim.weatherforecast.core.database.LocationDatabase
-    private lateinit var locationItemDao: com.awesomejim.weatherforecast.core.database.dao.LocationItemDao
+    lateinit var database: LocationDatabase
+    private lateinit var locationItemDao: LocationItemDao
 
     @Before
     fun setup() {
@@ -51,7 +51,7 @@ class LocalDataSourceTest {
         locationItemDao.insertLocation(locationItemData.toLocationEntity())
         // When the repository emits a value
         // Returns the first item in the flow
-        val actual = locationItemDao.getLocationById(locationItemData.locationId)?.toLocationItem()
+        val actual = locationItemDao.getLocationById(locationItemData.locationId)?.toLocationItem(false)
 
         assertThat(locationItemData).isEqualTo(actual)
     }
@@ -72,7 +72,7 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun assert_DeletedItem_ShouldNot_be_present_inFlow() = runBlocking {
+    fun assert_DeletedItem_ShouldNot_be_present_inFlow(): Unit = runBlocking {
         val locationItemDataList = FakeLocalDataSource.locationList
         // Insert the 3 fake items into the list
         locationItemDataList.forEach { item ->
@@ -87,12 +87,12 @@ class LocalDataSourceTest {
         // deleted item should not exits in the db
         val actual = locationItemDao
             .getLocationById(locationItemDataList[1].locationId)
-            ?.toLocationItem()
+            ?.toLocationItem(false)
         assertThat(actual).isNull()
     }
 
     @Test
-    fun assert_getLocationById_of_non_existing_item_Should_Not_not_return_item_inFlow() =
+    fun assert_getLocationById_of_non_existing_item_Should_Not_not_return_item_inFlow(): Unit =
         runBlocking {
             // try to load a dummy location using a dummy id
             val actual = locationItemDao.getLocationById(637733)?.toLocationItem()

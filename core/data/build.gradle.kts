@@ -18,7 +18,8 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner = "com.awesomejim.weatherforecast.core.data.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -48,6 +49,16 @@ android {
         jvmTarget = libs.versions.jvm.target.get()
         freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
+
+    packaging {
+        resources {
+            excludes += listOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -61,6 +72,9 @@ dependencies {
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose)
 
     implementation(project(":core:model"))
     implementation(project(":core:database"))
@@ -79,8 +93,42 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
 
+    //-----------ROOM--------------------
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+
+
+    //-----------Testing dependencies-----------
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.test.junit4)
     androidTestImplementation(libs.test.androidx.junit)
     androidTestImplementation(libs.test.androidx.test.espresso.core)
+    androidTestImplementation(libs.test.androidx.test.espresso.contrib)
+
+    //-----------local unit test-----------
+    testImplementation(libs.test.truth)
+    testImplementation(libs.test.junit4)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mock.android)
+    testImplementation(libs.mock.agent)
+    testImplementation(libs.test.truth)
+    testImplementation(libs.test.coroutines.test)
+    testImplementation(libs.turbine)
+
+    //-----------instrumentation test-----------
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.test.testingcore)
+    androidTestImplementation(libs.test.coroutines.test)
+    androidTestImplementation(libs.test.truth)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.mock.android)
+    androidTestImplementation(libs.mock.agent)
+
 }

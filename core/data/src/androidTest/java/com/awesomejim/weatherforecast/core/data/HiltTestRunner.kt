@@ -1,4 +1,4 @@
-package com.awesomejim.weatherforecast
+package com.awesomejim.weatherforecast.core.data
 
 import android.app.Application
 import android.content.Context
