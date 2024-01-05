@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="home_weekly_forecast_title">Next Days Forecast</string>
+
+    <string name="visibility_label">Visibility</string>
+    <string name="wind_label">Wind</string>
+    <!-- Wind in kph -->
+    <string name="format_wind_kmh">
+        <xliff:g id="speed">%1$1.0f</xliff:g> km/h
+        <xliff:g id="direction">%2$s</xliff:g>
+    </string>
+    <string name="pressure_label">Pressure</string>
+    <!-- Pressure format -->
+    <string name="format_pressure">
+        <xliff:g id="pressure">%1.0f</xliff:g> hPa
+    </string>
+
+    <string name="humidity_label">Humidity</string>
+    <!-- Humidity format -->
+    <string name="format_humidity">
+        <xliff:g id="humidity">%1.0f</xliff:g> %%
+    </string>
+
+    <!-- - - - - - - - - - - - - - -
+          - Used by DateUtils  -
+          - - - - - - - - - - - - - - -->
+
+    <!-- For labelling today's forecast -->
+    <string name="today">Today</string>
+
+    <!-- For labelling tomorrow's forecast -->
+    <string name="tomorrow">Tomorrow</string>
+
+    <!-- Date format -->
+    <string name="format_full_friendly_date">
+        <xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g>
+    </string>
+    <!-- - - - - - - - - - - - - - - -
+  - Used by Weather Forecast Preferences  -
+  - - - - - - - - - - - - - - - -->
+    <!-- Temperature format -->
+    <string name="format_temperature">
+        <xliff:g id="temp">%1.0f</xliff:g>\u00B0
+    </string>
+
+    <!-- Temperature format -->
+    <string name="format_high_low_temperature">
+        <xliff:g id="high">High: %1.0f</xliff:g>\u00B0
+        <xliff:g id="low">Low: %1.0f</xliff:g>\u00B0
+    </string>
+</resources>

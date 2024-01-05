@@ -1,5 +1,5 @@
 import java.io.FileInputStream
-import java.util.*
+import java.util.Properties
 
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
@@ -69,7 +69,8 @@ android {
             resValue("string", "app_version", "v${defaultConfig.versionName}")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro")
+                "proguard-rules.pro"
+            )
         }
 
         release {
@@ -81,7 +82,8 @@ android {
             }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro")
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -95,7 +97,7 @@ android {
         }
         create("prod") {
             dimension = "version"
-           // resValue("string", "app_name", "Weather Forecast")
+            // resValue("string", "app_name", "Weather Forecast")
             applicationId = "com.awesome.weatherforecast.prod"
         }
     }
@@ -117,7 +119,6 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-
     }
 
     packaging {
@@ -125,7 +126,8 @@ android {
             excludes += listOf(
                 "/META-INF/{AL2.0,LGPL2.1}",
                 "META-INF/LICENSE.md",
-                "META-INF/LICENSE-notice.md")
+                "META-INF/LICENSE-notice.md"
+            )
         }
     }
 
@@ -157,13 +159,13 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
-    implementation (libs.androidx.lifecycle.livedata.ktx)
-    implementation (libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewModelCompose)
 
     // --------Hilt Dependency Injection--------------
     implementation(libs.hilt.android)
-    implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
 
     //-----------COIL--------------------
@@ -183,27 +185,17 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
 
-    //-----------PAGING------------------
-    implementation(libs.androidx.paging.common.ktx)
-    implementation(libs.androidx.paging.common)
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.paging.compose)
 
+    implementation(project(":core:model"))
+    implementation(project(":core:data"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":feature:photos"))
+    implementation(project(":feature:settings"))
+    implementation(project(":feature:bookmarks"))
+    implementation(project(":feature:forecast"))
 
     //-----------Google Play Services & Maps------------------
     implementation(libs.playservices.location)
-    implementation(libs.maps.compose)
-    // Optionally, you can include the Compose utils library for Clustering, etc.
-    implementation(libs.maps.compose.utils)
-
-    constraints {
-        // Volley is a transitive dependency of maps
-        implementation("com.android.volley:volley:1.2.1") {
-            because("Only volley 1.2.0 or newer are available on maven.google.com")
-        }
-    }
-
-
 
     //-----------Retrofit & okhttp--------------------
     implementation(libs.retrofit)
@@ -278,7 +270,8 @@ fun setupAndroidReporting() {
             dependsOn(tasks.findByName(testTaskName))
 
             group = "Reporting"
-            description = "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
+            description =
+                "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
 
             reports {
                 xml.required.set(true)
@@ -325,10 +318,10 @@ fun setupAndroidReporting() {
                 "**/*Screen*.*"
             )
 
-            val javaTree = fileTree("${project.buildDir}/intermediates/javac/$sourceName/classes"){
+            val javaTree = fileTree("${project.buildDir}/intermediates/javac/$sourceName/classes") {
                 exclude(fileFilter)
             }
-            val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/$sourceName"){
+            val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/$sourceName") {
                 exclude(fileFilter)
             }
             classDirectories.setFrom(files(javaTree, kotlinTree))

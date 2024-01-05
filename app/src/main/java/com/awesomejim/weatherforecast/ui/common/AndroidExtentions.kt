@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
-import com.awesomejim.weatherforecast.ui.components.PermissionRationaleDialog
+import com.awesomejim.weatherforecast.core.designsystem.component.PermissionRationaleDialog
 
 @Composable
 fun Activity.OnPermissionDenied(

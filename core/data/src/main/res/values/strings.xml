@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Errors-->
+    <string name="error_unauthorized">You may need to log in or sign up to see this :)</string>
+    <string name="error_client">Oops,something fishy is up on your end :)</string>
+    <string name="error_server">Oops! Something is wrong on our end :(</string>
+    <string name="error_generic">Something is happening that\'s disturbing the force :(</string>
+    <string name="error_connection">Check your internet connection and try again</string>
+</resources>

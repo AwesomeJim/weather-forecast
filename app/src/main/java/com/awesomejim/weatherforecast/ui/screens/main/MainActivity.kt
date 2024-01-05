@@ -3,6 +3,7 @@ package com.awesomejim.weatherforecast.ui.screens.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Location
+
 import android.os.Bundle
 import android.os.Looper
 import androidx.activity.ComponentActivity
@@ -25,16 +26,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.awesomejim.weatherforecast.R
+import com.awesomejim.weatherforecast.core.designsystem.component.EnableLocationSettingScreen
+import com.awesomejim.weatherforecast.core.designsystem.component.LoadingProgressScreens
+import com.awesomejim.weatherforecast.core.designsystem.component.RequiresPermissionsScreen
+import com.awesomejim.weatherforecast.core.designsystem.component.WeatherTopAppBar
 import com.awesomejim.weatherforecast.ui.common.CheckForPermissions
 import com.awesomejim.weatherforecast.ui.common.OnPermissionDenied
-import com.awesomejim.weatherforecast.ui.components.EnableLocationSettingScreen
-import com.awesomejim.weatherforecast.ui.components.LoadingProgressScreens
-import com.awesomejim.weatherforecast.ui.components.RequiresPermissionsScreen
-import com.awesomejim.weatherforecast.ui.components.WeatherTopAppBar
 import com.awesomejim.weatherforecast.ui.nav.AppBottomNavigationItem
 import com.awesomejim.weatherforecast.ui.nav.BottomNavItem
 import com.awesomejim.weatherforecast.ui.nav.NavigationGraph
-import com.awesomejim.weatherforecast.ui.theme.WeatherForecastTheme
 import com.awesomejim.weatherforecast.utilities.createLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
     private val locationRequest = LocationRequest.Builder(30_000L)
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY) // PRIORITY_BALANCED_POWER_ACCURACY
         .build()
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val bottomNavigationItems = listOf(
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
         // Create an instance of the FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
-            WeatherForecastTheme {
+            com.awesomejim.weatherforecast.core.designsystem.theme.WeatherForecastTheme {
                 navController = rememberNavController()
                 val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
                 val title = rememberSaveable { (mutableStateOf("")) }

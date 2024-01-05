@@ -2,12 +2,11 @@ package com.awesomejim.weatherforecast.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.awesomejim.weatherforecast.data.SettingsRepository
-import com.awesomejim.weatherforecast.data.WeatherRepository
-import com.awesomejim.weatherforecast.data.model.DefaultLocation
-import com.awesomejim.weatherforecast.data.model.LocationItemData
-import com.awesomejim.weatherforecast.di.network.RetrialResult
-import com.awesomejim.weatherforecast.ui.common.toResourceId
+import com.awesomejim.weatherforecast.core.LocationItemData
+import com.awesomejim.weatherforecast.core.data.SettingsRepository
+import com.awesomejim.weatherforecast.core.data.WeatherRepository
+import com.awesomejim.weatherforecast.core.data.source.mapper.toResourceId
+import com.awesomejim.weatherforecast.core.data.utils.RetrialResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +22,7 @@ class MainViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private lateinit var currentLocation: DefaultLocation
+    private lateinit var currentLocation: com.awesomejim.weatherforecast.core.DefaultLocation
     private lateinit var preferredUnits: String
     private var isLoadingData = false
 
@@ -105,7 +104,7 @@ class MainViewModel @Inject constructor(
             }
 
             is MainViewUiState.ReceiveLocation -> {
-                val defaultLocation = DefaultLocation(
+                val defaultLocation = com.awesomejim.weatherforecast.core.DefaultLocation(
                     longitude = mainViewUiState.longitude,
                     latitude = mainViewUiState.latitude
                 )
@@ -178,7 +177,7 @@ class MainViewModel @Inject constructor(
 data class MainViewState(
     val isPermissionGranted: Boolean = false,
     val isLocationSettingEnabled: Boolean = false,
-    val defaultLocation: DefaultLocation? = null
+    val defaultLocation: com.awesomejim.weatherforecast.core.DefaultLocation? = null
 )
 
 /**
