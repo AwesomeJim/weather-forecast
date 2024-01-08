@@ -1,14 +1,14 @@
 [versions]
 # --------plugins--------
-android-gradle-plugin = "8.2.0"
-kotlin-android = "1.9.10"
-hilt-plugin = "2.49"
-ksp = "1.9.10-1.0.13"
+android-gradle-plugin = "8.2.1"
+kotlin-android = "1.9.21"
+hilt-plugin = "2.50"
+ksp = "1.9.21-1.0.16"
 mapsCompose = "4.3.0"
 mapsComposeUtils = "4.3.0"
 mapsplatform-secrets = "2.0.1"
-kotlin-serialization = "1.6.10"
-gradlePlugins-spotless = "6.17.0" #or latest version
+kotlin-serialization = "1.9.21"
+gradlePlugins-spotless = "6.23.3" #or latest version
 
 # --------SDK--------
 min-sdk = "23"
@@ -18,8 +18,8 @@ jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
-hiltAndroidCompiler = "2.49"
-hiltAndroidTesting = "2.49"
+hiltAndroidCompiler = "2.50"
+hiltAndroidTesting = "2.50"
 hilt-nav-compose = "1.1.0"
 
 # --------androidx--------
@@ -39,14 +39,14 @@ rules="1.5.0"
 runner="1.5.2"
 
 # --------Jetpack Compose--------
-compose-compiler = "1.5.3"
+compose-compiler = "1.5.7"
 composeVersion = "1.4.2"
 coreTestingVersion = "2.2.0"
 androidx-compose-bom = "2023.10.01" #Compose  Compose Bill of Materials (BOM)
-androidx-activity-compose = "1.8.1"
+androidx-activity-compose = "1.8.2"
 composeUi = "1.3.1"
 composeUiTooling = "1.4.2"
-navigationComposeVersion = "2.7.5"
+navigationComposeVersion = "2.7.6"
 composeViewModel = "2.6.2"
 
 # Play Services
@@ -66,17 +66,17 @@ roomRuntime = "2.6.1"
 
 #--------Others ----------
 materialVersion = "1.9.0"
-lottie = "6.2.0"
+lottie = "6.3.0"
 timber = "5.0.1"
-lottieCompose = "6.2.0"
+lottieCompose = "6.3.0"
 
 junit4 = "4.13.2"
 junit = "1.1.5"
-truth = "1.1.5"
+truth = "1.2.0"
 testingcore = "2.2.0"
 coroutines = "1.7.3"
 turbine = "1.0.0"
-mockk = "1.13.8"
+mockk = "1.13.9"
 appcompat = "1.6.1"
 material = "1.11.0"
 
