@@ -1,5 +1,6 @@
 package com.awesomejim.weatherforecast.ui.screens.main
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Location
@@ -14,11 +15,19 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +52,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -103,6 +113,13 @@ class MainActivity : ComponentActivity() {
                 val canNavigateBackState = rememberSaveable { (mutableStateOf(false)) }
                 val refreshButtonState = rememberSaveable { (mutableStateOf(false)) }
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+                var shouldShowPermissionRationale by remember {
+                    mutableStateOf(false)
+                }
+
+                val scope = rememberCoroutineScope()
+                val snackbarHostState = remember { SnackbarHostState() }
 
                 when (navBackStackEntry?.destination?.route) {
                     BottomNavItem.LocationPhotos.routeWithArgs -> {
@@ -166,6 +183,9 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     },
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState)
+                    },
                     bottomBar = {
                         if (bottomBarState.value) {
                             AppBottomNavigationItem(
@@ -180,17 +200,39 @@ class MainActivity : ComponentActivity() {
                     ) {
                         val state = mainViewModel.state.collectAsStateWithLifecycle().value
                         CheckForPermissions(
-                            onPermissionGranted =
-                            {
+                            onPermissionGranted = {
                                 mainViewModel.processIntent(
                                     MainViewUiState
                                         .GrantPermission(isGranted = true)
                                 )
+                                shouldShowPermissionRationale = false
                             },
                             onPermissionDenied = {
                                 OnPermissionDenied(activityPermissionResult = permissionRequestLauncher)
+                                shouldShowPermissionRationale = true
                             }
                         )
+                        if (shouldShowPermissionRationale) {
+                            LaunchedEffect(Unit) {
+                                scope.launch {
+                                    val userAction = snackbarHostState.showSnackbar(
+                                        message ="Please authorize location permissions",
+                                        actionLabel = "Approve",
+                                        duration = SnackbarDuration.Indefinite,
+                                        withDismissAction = true
+                                    )
+                                    when (userAction) {
+                                        SnackbarResult.ActionPerformed -> {
+                                            shouldShowPermissionRationale = false
+                                            permissionRequestLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+                                        }
+                                        SnackbarResult.Dismissed -> {
+                                            shouldShowPermissionRationale = false
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         InitMainScreen(state, paddingValues)
                     }
                 }
