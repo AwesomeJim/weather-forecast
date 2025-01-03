@@ -6,6 +6,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.com.google.dagger.hilt)
     id(libs.plugins.com.google.devtools.ksp.get().pluginId)
     alias(libs.plugins.mapsplatform.secrets.gradle.plugin)
@@ -318,15 +319,15 @@ fun setupAndroidReporting() {
                 "**/*Screen*.*"
             )
 
-            val javaTree = fileTree("${project.buildDir}/intermediates/javac/$sourceName/classes") {
+            val javaTree = fileTree("${layout.buildDirectory}/intermediates/javac/$sourceName/classes") {
                 exclude(fileFilter)
             }
-            val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/$sourceName") {
+            val kotlinTree = fileTree("${layout.buildDirectory}/tmp/kotlin-classes/$sourceName") {
                 exclude(fileFilter)
             }
             classDirectories.setFrom(files(javaTree, kotlinTree))
 
-            executionData.setFrom(files("${project.buildDir}/jacoco/${testTaskName}.exec"))
+            executionData.setFrom(files("${layout.buildDirectory}/jacoco/${testTaskName}.exec"))
             val coverageSourceDirs = listOf(
                 "${project.projectDir}/src/main/java",
                 "${project.projectDir}/src/$buildTypeName/java"

@@ -1,13 +1,13 @@
 [versions]
 # --------plugins--------
-android-gradle-plugin = "8.3.0"
-kotlin-android = "1.9.21"
-hilt-plugin = "2.51"
-ksp = "1.9.21-1.0.16"
-mapsCompose = "4.3.3"
-mapsComposeUtils = "4.3.3"
+android-gradle-plugin = "8.7.3"
+kotlin-android = "2.0.21"
+hilt-plugin = "2.54"
+ksp = "2.0.21-1.0.25"
+mapsCompose = "6.4.1"
+mapsComposeUtils = "6.4.1"
 mapsplatform-secrets = "2.0.1"
-kotlin-serialization = "1.9.21"
+kotlin-serialization = "2.0.21"
 gradlePlugins-spotless = "6.23.3" #or latest version
 
 # --------SDK--------
@@ -18,46 +18,46 @@ jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
-hiltAndroidCompiler = "2.51"
-hiltAndroidTesting = "2.51"
+hiltAndroidCompiler = "2.54"
+hiltAndroidTesting = "2.54"
 hilt-nav-compose = "1.2.0"
 
 # --------androidx--------
-androidx-corektx = "1.12.0"
+androidx-corektx = "1.15.0"
 androidx-preference-ktx = "1.2.1"
 androidx-lifecycle-extensions = "2.2.0"
-androidx-lifecycle-ktx = "2.7.0"
+androidx-lifecycle-ktx = "2.8.7"
 androidx-test = "1.5.0"
-androidx-test-espresso = "3.5.1"
-androidx-test-ext-junit = "1.1.5"
+androidx-test-espresso = "3.6.1"
+androidx-test-ext-junit = "1.2.1"
 androidx-test-ext-truth = "1.5.0"
 hiltNavigationCompose="1.2.0"
-lifecycleVersion="2.7.0"
-androidx-datastore = "1.0.0"
-pagingCommon="3.2.1"
-rules="1.5.0"
-runner="1.5.2"
+lifecycleVersion="2.8.7"
+androidx-datastore = "1.1.1"
+pagingCommon="3.3.5"
+rules="1.6.1"
+runner="1.6.2"
 
 # --------Jetpack Compose--------
 compose-compiler = "1.5.7"
 composeVersion = "1.4.2"
 coreTestingVersion = "2.2.0"
-androidx-compose-bom = "2024.02.01" #Compose  Compose Bill of Materials (BOM)
-androidx-activity-compose = "1.8.2"
+androidx-compose-bom = "2024.12.01" #Compose  Compose Bill of Materials (BOM)
+androidx-activity-compose = "1.9.3"
 composeUi = "1.3.1"
 composeUiTooling = "1.4.2"
-navigationComposeVersion = "2.7.7"
-composeViewModel = "2.7.0"
+navigationComposeVersion = "2.8.5"
+composeViewModel = "2.8.7"
 
 # Play Services
-play-services-location = "21.1.0"
+play-services-location = "21.3.0"
 
 #-------- Networking-------------
-retrofit = "2.9.0"
-coil-compose = "2.6.0"
-kotlinx-serialization = "1.6.3"
+retrofit = "2.11.0"
+coil-compose = "2.7.0"
+kotlinx-serialization = "1.7.3"
 kotlinx-serialization-converter = "1.0.0"
-kotlinx-coroutines-android = "1.8.0"
+kotlinx-coroutines-android = "1.10.1"
 okhttp = "4.12.0"
 
 #--------Room DB --------
@@ -66,19 +66,19 @@ roomRuntime = "2.6.1"
 
 #--------Others ----------
 materialVersion = "1.9.0"
-lottie = "6.3.0"
+lottie = "6.6.2"
 timber = "5.0.1"
-lottieCompose = "6.3.0"
+lottieCompose = "6.6.2"
 
 junit4 = "4.13.2"
 junit = "1.1.5"
-truth = "1.4.2"
+truth = "1.4.4"
 testingcore = "2.2.0"
-coroutines = "1.8.0"
-turbine = "1.0.0"
-mockk = "1.13.10"
-appcompat = "1.6.1"
-material = "1.11.0"
+coroutines = "1.10.1"
+turbine = "1.2.0"
+mockk = "1.13.14"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 [libraries]
 # --------androidx--------
@@ -180,6 +180,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
+
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-android" }
 org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-android" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
