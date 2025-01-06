@@ -8,6 +8,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,19 +38,18 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -250,7 +250,6 @@ private fun LazyListState.isScrollingUp(): Boolean {
  * @param locationItemData The location message to display.
  * @param onRemove Callback invoked when the location item is dismissed.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableLocationItem(
     locationItemData: LocationItemData,
@@ -262,33 +261,32 @@ fun EditableLocationItem(
 ) {
     val context = LocalContext.current
     var show by remember { mutableStateOf(true) }
-    // var dismissValue by remember { mutableStateOf<DismissValue>(DismissValue.Default) }
+
     val currentItem by rememberUpdatedState(locationItemData)
-    val dismissState = rememberDismissState(
+    val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             // dismissValue = it
-            if (it == DismissValue.DismissedToStart) {
+            if (it == SwipeToDismissBoxValue.EndToStart) {
                 onRefresh(currentItem)
             }
-            if (it == DismissValue.DismissedToEnd) {
+            if (it == SwipeToDismissBoxValue.StartToEnd) {
                 show = false
                 true
             } else false
         },
-        positionalThreshold = {
-            150.dp.toPx()
-        }
+        positionalThreshold =
+            { it * .25f }
     )
     AnimatedVisibility(
         show, exit = fadeOut(spring())
     ) {
-        SwipeToDismiss(
+        SwipeToDismissBox(
             state = dismissState,
             modifier = modifier,
-            background = {
+            backgroundContent = {
                 DismissBackground(dismissState)
             },
-            dismissContent = {
+            content = {
                 SavedLocationItem(
                     conditionIcon = conditionIcon,
                     locationItemData = locationItemData,
@@ -352,8 +350,14 @@ fun SearchBar(
                 onValueChange = onSearchTermChanged,
                 leadingIcon = {
                     Icon(
+                        modifier = Modifier.clickable {
+                            if(isSearchWordValid) {
+                                onKeyboardDone()
+                            }
+                        },
                         imageVector = Icons.Default.Search,
-                        contentDescription = null
+                        contentDescription = null,
+
                     )
                 },
                 isError = searchTerm.isNotEmpty() && !isSearchWordValid,

@@ -16,11 +16,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,15 +34,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.awesomejim.weatherforecast.core.designsystem.R
 
-
 @Composable
-fun DismissBackground(dismissState: DismissState) {
-    val color  by animateColorAsState(
-    when (dismissState.dismissDirection) {
-        DismissDirection.StartToEnd -> Color.Red
-        DismissDirection.EndToStart -> Color.Green
-        null -> Color.Transparent
-    }, label = "Swipe to Dismiss"
+fun DismissBackground(dismissState: SwipeToDismissBoxState) {
+    val color by animateColorAsState(
+        when (dismissState.dismissDirection) {
+            SwipeToDismissBoxValue.StartToEnd -> Color.Red
+            SwipeToDismissBoxValue.EndToStart -> Color.Green
+            SwipeToDismissBoxValue.Settled -> Color.Transparent
+        }, label = "Swipe to Dismiss"
     )
     val direction = dismissState.dismissDirection
     Row(
@@ -53,13 +52,13 @@ fun DismissBackground(dismissState: DismissState) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        if (direction == DismissDirection.StartToEnd) Icon(
+        if (direction == SwipeToDismissBoxValue.StartToEnd) Icon(
             Icons.Default.Delete,
             contentDescription = "Delete",
             tint = Color.White
         )
         Spacer(modifier = Modifier)
-        if (direction == DismissDirection.EndToStart) Icon(
+        if (direction == SwipeToDismissBoxValue.EndToStart) Icon(
             Icons.Default.Refresh,
             contentDescription = "Refresh",
             tint = Color.White

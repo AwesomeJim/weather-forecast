@@ -12,8 +12,8 @@ gradlePlugins-spotless = "6.23.3" #or latest version
 
 # --------SDK--------
 min-sdk = "23"
-target-sdk = "34"
-compile-sdk = "34"
+target-sdk = "35"
+compile-sdk = "35"
 jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
