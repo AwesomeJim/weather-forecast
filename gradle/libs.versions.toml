@@ -1,6 +1,6 @@
 [versions]
 # --------plugins--------
-android-gradle-plugin = "8.7.3"
+android-gradle-plugin = "8.13.1"
 kotlin-android = "2.0.21"
 hilt-plugin = "2.54"
 ksp = "2.0.21-1.0.25"
