@@ -347,7 +347,7 @@ fun ForecastHomeContentScreen(
                         onClick = {
                             expandedDate = if (expandedDate == item) null else item
                         },
-                        modifier = Modifier.animateItemPlacement()
+                        modifier = Modifier.animateItem()
                     )
                 }
             } else {

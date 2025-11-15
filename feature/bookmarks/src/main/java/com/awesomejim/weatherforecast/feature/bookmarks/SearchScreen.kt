@@ -170,7 +170,7 @@ fun SearchScreen(
                 EditableLocationItem(
                     locationItemData = location,
                     conditionIcon = drawable,
-                    modifier = Modifier.animateItemPlacement(),
+                    modifier = Modifier.animateItem(),
                     onRefresh = { locationItemData ->
                         Timber.e("dismissValue onRemove ${locationItemData.locationId}")
                         searchViewModel.refreshWeatherData(locationItemData)

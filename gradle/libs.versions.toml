@@ -1,53 +1,53 @@
 [versions]
 # --------plugins--------
 android-gradle-plugin = "8.13.1"
-kotlin-android = "2.0.21"
-hilt-plugin = "2.54"
-ksp = "2.0.21-1.0.25"
-mapsCompose = "6.4.1"
-mapsComposeUtils = "6.4.1"
+kotlin-android = "2.2.21"
+hilt-plugin = "2.57.2"
+ksp = "2.2.21-2.0.4"
+mapsCompose = "6.12.2"
+mapsComposeUtils = "6.12.2"
 mapsplatform-secrets = "2.0.1"
-kotlin-serialization = "2.0.21"
-gradlePlugins-spotless = "6.23.3" #or latest version
+kotlin-serialization = "2.2.21"
+gradlePlugins-spotless = "8.0.0" #or latest version
 
 # --------SDK--------
 min-sdk = "23"
-target-sdk = "35"
-compile-sdk = "35"
+target-sdk = "36"
+compile-sdk = "36"
 jvm-target = "17"
 buildToolsVersion = "33.0.2"
 
 # --------Hilt --------
-hiltAndroidCompiler = "2.54"
-hiltAndroidTesting = "2.54"
-hilt-nav-compose = "1.2.0"
+hiltAndroidCompiler = "2.57.2"
+hiltAndroidTesting = "2.57.2"
+hilt-nav-compose = "1.3.0"
 
 # --------androidx--------
-androidx-corektx = "1.15.0"
+androidx-corektx = "1.17.0"
 androidx-preference-ktx = "1.2.1"
 androidx-lifecycle-extensions = "2.2.0"
-androidx-lifecycle-ktx = "2.8.7"
+androidx-lifecycle-ktx = "2.9.4"
 androidx-test = "1.5.0"
-androidx-test-espresso = "3.6.1"
-androidx-test-ext-junit = "1.2.1"
+androidx-test-espresso = "3.7.0"
+androidx-test-ext-junit = "1.3.0"
 androidx-test-ext-truth = "1.5.0"
-hiltNavigationCompose="1.2.0"
-lifecycleVersion="2.8.7"
-androidx-datastore = "1.1.1"
-pagingCommon="3.3.5"
-rules="1.6.1"
-runner="1.6.2"
+hiltNavigationCompose="1.3.0"
+lifecycleVersion="2.9.4"
+androidx-datastore = "1.1.7"
+pagingCommon="3.3.6"
+rules="1.7.0"
+runner="1.7.0"
 
 # --------Jetpack Compose--------
 compose-compiler = "1.5.7"
 composeVersion = "1.4.2"
 coreTestingVersion = "2.2.0"
-androidx-compose-bom = "2024.12.01" #Compose  Compose Bill of Materials (BOM)
-androidx-activity-compose = "1.9.3"
+androidx-compose-bom = "2025.11.00" #Compose  Compose Bill of Materials (BOM)
+androidx-activity-compose = "1.11.0"
 composeUi = "1.3.1"
 composeUiTooling = "1.4.2"
-navigationComposeVersion = "2.8.5"
-composeViewModel = "2.8.7"
+navigationComposeVersion = "2.9.6"
+composeViewModel = "2.9.4"
 
 # Play Services
 play-services-location = "21.3.0"
@@ -55,30 +55,30 @@ play-services-location = "21.3.0"
 #-------- Networking-------------
 retrofit = "2.11.0"
 coil-compose = "2.7.0"
-kotlinx-serialization = "1.7.3"
+kotlinx-serialization = "1.9.0"
 kotlinx-serialization-converter = "1.0.0"
-kotlinx-coroutines-android = "1.10.1"
-okhttp = "4.12.0"
+kotlinx-coroutines-android = "1.10.2"
+okhttp = "5.3.0"
 
 #--------Room DB --------
 roomCompiler = "2.5.2"
-roomRuntime = "2.6.1"
+roomRuntime = "2.8.3"
 
 #--------Others ----------
 materialVersion = "1.9.0"
-lottie = "6.6.2"
+lottie = "6.7.1"
 timber = "5.0.1"
-lottieCompose = "6.6.2"
+lottieCompose = "6.7.1"
 
 junit4 = "4.13.2"
 junit = "1.1.5"
-truth = "1.4.4"
+truth = "1.4.5"
 testingcore = "2.2.0"
-coroutines = "1.10.1"
-turbine = "1.2.0"
-mockk = "1.13.14"
-appcompat = "1.7.0"
-material = "1.12.0"
+coroutines = "1.10.2"
+turbine = "1.2.1"
+mockk = "1.14.6"
+appcompat = "1.7.1"
+material = "1.13.0"
 
 [libraries]
 # --------androidx--------

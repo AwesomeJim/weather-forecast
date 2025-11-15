@@ -1,5 +1,8 @@
 import java.io.FileInputStream
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import java.util.Locale
 
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
@@ -108,9 +111,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = libs.versions.jvm.target.get()
-        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+            freeCompilerArgs.set(listOf("-Xopt-in=kotlin.RequiresOptIn"))
+        }
     }
 
     buildFeatures {
@@ -141,9 +146,9 @@ android {
         unitTests.isReturnDefaultValues = true
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = libs.versions.jvm.target.get()
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
             suppressWarnings = true
         }
     }
@@ -264,7 +269,13 @@ fun setupAndroidReporting() {
 
     buildTypes.forEach { buildTypeName ->
         val sourceName = buildTypeName
-        val testTaskName = "test${sourceName.capitalize()}UnitTest"
+        val testTaskName = "test${
+            sourceName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }
+        }UnitTest"
         println("Task -> $testTaskName")
 
         tasks.register<JacocoReport>("${testTaskName}Coverage") {
@@ -272,7 +283,13 @@ fun setupAndroidReporting() {
 
             group = "Reporting"
             description =
-                "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
+                "Generate Jacoco coverage reports on the ${
+                    sourceName.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }
+                } build."
 
             reports {
                 xml.required.set(true)

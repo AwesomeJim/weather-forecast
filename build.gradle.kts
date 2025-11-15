@@ -13,9 +13,8 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
 }
 
-true // Needed to make the Suppress annotation work for the plugins block
 tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }
 
 val ktlintVersion = "0.46.1"
@@ -27,7 +26,7 @@ subprojects {
         extensions.configure<com.diffplug.gradle.spotless.SpotlessExtension> {
             kotlin {
                 target("**/*.kt")
-                targetExclude("$buildDir/**/*.kt")
+                targetExclude("${layout.buildDirectory}/**/*.kt")
                 ktlint(ktlintVersion)
                     .setEditorConfigPath("${project.rootDir}/spotless/.editorconfig").editorConfigOverride(
                         mapOf(
