@@ -11,10 +11,10 @@ import com.awesomejim.weatherforecast.feature.bookmarks.SearchViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -33,9 +33,21 @@ class MapsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            currentLocation = settingsRepository.getDefaultLocation().first()
+            settingsRepository.getDefaultLocation().collect { defaultLocation ->
+                Timber.tag("MapsViewModel").e("currentLocation ${defaultLocation.latitude}")
+                currentLocation = defaultLocation
+            }
         }
     }
+
+    fun getCurrentLocation(): DefaultLocation? {
+        return if (this::currentLocation.isInitialized) {
+            currentLocation
+        } else {
+            null
+        }
+    }
+
 
     val savedLocationListUiState: StateFlow<SavedLocationListUiState> =
         localDataSource.loadAllLocation().map { list ->

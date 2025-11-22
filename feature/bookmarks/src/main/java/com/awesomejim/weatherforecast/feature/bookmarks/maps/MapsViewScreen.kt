@@ -64,13 +64,14 @@ fun MapsViewScreen(
     val savedLocationListUiState = viewModel
         .savedLocationListUiState
         .collectAsStateWithLifecycle().value
-    val defaultLocation = viewModel.currentLocation
+    val defaultLocation = viewModel.getCurrentLocation()
 
-    //
-    myCurrentLocation = LatLng(
-        defaultLocation.latitude,
-        defaultLocation.longitude
-    )
+    defaultLocation?.let {
+        myCurrentLocation = LatLng(
+            defaultLocation.latitude,
+            defaultLocation.longitude
+        )
+    }
     //
     if (savedLocationListUiState.itemList.isNotEmpty()) {
         MapsViewContent(savedLocationListUiState.itemList, modifier.fillMaxSize())
@@ -222,7 +223,7 @@ data class LocationItem(
         itemSnippet
 
     override fun getZIndex(): Float? {
-       return 5.0.toFloat()
+        return 5.0.toFloat()
     }
 
 }
