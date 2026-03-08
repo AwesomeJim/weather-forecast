@@ -29,7 +29,7 @@ class MapsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-     lateinit var currentLocation: DefaultLocation
+    private lateinit var currentLocation: DefaultLocation
 
     init {
         viewModelScope.launch {

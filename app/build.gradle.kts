@@ -8,7 +8,6 @@ import java.util.Locale
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.com.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.com.google.dagger.hilt)
     id(libs.plugins.com.google.devtools.ksp.get().pluginId)
@@ -230,6 +229,11 @@ dependencies {
     testImplementation(libs.mock.android)
     testImplementation(libs.mock.agent)
     testImplementation(libs.test.truth)
+    testImplementation(libs.test.junit4)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mock.android)
+    testImplementation(libs.mock.agent)
+    testImplementation(libs.test.truth)
     testImplementation(libs.test.coroutines.test)
     testImplementation(libs.turbine)
 
@@ -279,7 +283,7 @@ fun setupAndroidReporting() {
         println("Task -> $testTaskName")
 
         tasks.register<JacocoReport>("${testTaskName}Coverage") {
-            dependsOn(tasks.findByName(testTaskName))
+           // dependsOn(tasks.findByName(testTaskName))
 
             group = "Reporting"
             description =
