@@ -1,14 +1,14 @@
 [versions]
 # --------plugins--------
-android-gradle-plugin = "9.1.0"
-kotlin-android = "2.3.10"
+android-gradle-plugin = "9.2.0"
+kotlin-android = "2.3.21"
 hilt-plugin = "2.59.2"
 ksp = "2.3.2"
-mapsCompose = "8.2.0"
-mapsComposeUtils = "8.2.0"
+mapsCompose = "8.3.0"
+mapsComposeUtils = "8.3.0"
 mapsplatform-secrets = "2.0.1"
-kotlin-serialization = "2.3.10"
-gradlePlugins-spotless = "8.3.0" #or latest version
+kotlin-serialization = "2.3.21"
+gradlePlugins-spotless = "8.4.0" #or latest version
 
 # --------SDK--------
 min-sdk = "23"
@@ -23,7 +23,7 @@ hiltAndroidTesting = "2.59.2"
 hilt-nav-compose = "1.3.0"
 
 # --------androidx--------
-androidx-corektx = "1.17.0"
+androidx-corektx = "1.18.0"
 androidx-preference-ktx = "1.2.1"
 androidx-lifecycle-extensions = "2.2.0"
 androidx-lifecycle-ktx = "2.10.0"
@@ -33,8 +33,8 @@ androidx-test-ext-junit = "1.3.0"
 androidx-test-ext-truth = "1.5.0"
 hiltNavigationCompose="1.3.0"
 lifecycleVersion="2.10.0"
-androidx-datastore = "1.2.0"
-pagingCommon="3.4.1"
+androidx-datastore = "1.2.1"
+pagingCommon="3.4.2"
 rules="1.7.0"
 runner="1.7.0"
 
@@ -42,11 +42,11 @@ runner="1.7.0"
 compose-compiler = "1.5.7"
 composeVersion = "1.4.2"
 coreTestingVersion = "2.2.0"
-androidx-compose-bom = "2026.02.01" #Compose  Compose Bill of Materials (BOM)
-androidx-activity-compose = "1.12.4"
+androidx-compose-bom = "2026.04.01" #Compose  Compose Bill of Materials (BOM)
+androidx-activity-compose = "1.13.0"
 composeUi = "1.3.1"
 composeUiTooling = "1.4.2"
-navigationComposeVersion = "2.9.7"
+navigationComposeVersion = "2.9.8"
 composeViewModel = "2.10.0"
 
 # Play Services
@@ -55,7 +55,7 @@ play-services-location = "21.3.0"
 #-------- Networking-------------
 retrofit = "3.0.0"
 coil-compose = "2.7.0"
-kotlinx-serialization = "1.10.0"
+kotlinx-serialization = "1.11.0"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines-android = "1.10.2"
 okhttp = "5.3.2"
